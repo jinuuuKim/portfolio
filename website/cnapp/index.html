@@ -84,6 +84,11 @@
        두 클라우드에 흩어진 보안 신호를 하나의 파이프라인으로 통합했다.
        2인 협업으로 9개 영역을 반씩 나누어 병렬 개발했다.</p>
 
+    <figure>
+      <img src="../assets/img/cnapp-dashboard.png"
+           alt="관제 콘솔 보안 대시보드. 전체 finding·OPEN·Critical·공격 경로 집계와 AWS·Azure Secure Score, 크로스클라우드 공격 경로 3건이 한 화면에 있다.">
+      <figcaption>관제 콘솔 대시보드. 개발 단계 스냅샷이라 건수는 최종 라이브 검증(432건)과 다르다.</figcaption>
+    </figure>
   </div>
 </section>
 
@@ -104,9 +109,9 @@
     </ul>
 
     <figure>
-      <img src="../assets/img/cnapp-argocd.png"
-           alt="ArgoCD Applications 목록 화면. 여러 애플리케이션이 Synced / Healthy 상태로 표시돼 있다.">
-      <figcaption>ArgoCD가 GitOps로 동기화 중인 애플리케이션 목록. 배포가 수동 개입 없이 유지되는 상태.</figcaption>
+      <img src="../assets/img/cnapp-roles.png"
+           alt="2인 팀의 역할 분담 도식. 9개 영역이 두 사람에게 나뉘어 표시돼 있다.">
+      <figcaption>9개 영역을 어떻게 갈랐는지. 위 목록이 이 그림의 왼쪽 절반이다.</figcaption>
     </figure>
   </div>
 </section>
@@ -203,9 +208,20 @@
 
     <figure>
       <img src="../assets/img/cnapp-attack-path.png"
-           alt="관제 콘솔의 공격 경로 화면. 개별 finding이 노드로, 그 사이의 이동 가능성이 간선으로 이어진 그래프.">
-      <figcaption>관제 콘솔이 실제로 그린 공격 경로. 노드 하나하나가 개별 finding이고, 이어진 선이 상관 규칙이 찾아낸 이동 경로다.</figcaption>
+           alt="관제 콘솔의 공격 경로 화면. 왼쪽에 경로 3건 목록, 오른쪽에 AWS 워크로드에서 Azure 신원으로 넘어가는 노드 그래프. 클라우드 경계를 넘는 간선은 빨간 점선이다.">
+      <figcaption>붉은 점선이 클라우드 경계를 넘는 간선이다. 왼쪽 목록의 #1이 오른쪽 그래프로 펼쳐진 상태.</figcaption>
     </figure>
+
+    <p>엔진이 이 경로에 붙인 서사는 다음과 같다.</p>
+
+    <blockquote class="quote">
+      <p>공격자가 product의 취약 이미지(KEV CVE)로 침투해 order 파드의 과도 IRSA 권한을 탈취(측면 이동)하고,
+         그 권한으로 member의 공개 S3 버킷에서 회원 PII를 탈취했다. 동시에 order 파드 평문 시크릿에 노출된
+         Azure 자격증명으로 클라우드 경계를 넘어, Azure Entra ID의 과도권한 App Registration을 장악해
+         디렉터리 전체 통제권을 확보했다. 단일 finding은 각각 중간 위험이나, 묶으면 AWS 워크로드 → Azure 신원을
+         가로지르는 Critical 탈취 경로가 된다.</p>
+      <cite>공격 서사 (REASONING) — 상관 엔진 생성</cite>
+    </blockquote>
 
     <!-- 4-5 에이전틱 -->
     <h3 class="sub-h">에이전틱 엔진 — 4단계 조사 루프</h3>
@@ -236,8 +252,8 @@
 
     <figure>
       <img src="../assets/img/cnapp-evidence.png"
-           alt="관제 콘솔의 Evidence 탭. AI가 조사 과정에서 호출한 API와 그 결과가 시간순 타임라인으로 쌓여 있다.">
-      <figcaption>AI가 스스로 모은 증거 타임라인. 어떤 API를 왜 불렀고 무엇을 확인했는지가 그대로 남는다.</figcaption>
+           alt="Evidence 탭의 능동 수집 증거 목록. s3:GetBucketPublicAccessBlock, s3:GetBucketAcl, s3:GetBucketPolicy, iam:GetRolePolicy, iam:ListAttachedRolePolicies 5회 호출과 각각의 확인 결과가 번호 순으로 쌓여 있다.">
+      <figcaption>AI가 스스로 고른 read-only API 5회 호출과 그 결과. 어떤 근거로 판정했는지가 그대로 남는다.</figcaption>
     </figure>
 
     <!-- 4-6 RAG -->
@@ -250,6 +266,67 @@
       <img src="../assets/img/cnapp-chat.png"
            alt="관제 콘솔의 질의 화면. 답변 아래에 근거로 사용한 문서 청크가 인용으로 붙어 있다.">
       <figcaption>답변마다 근거 청크가 함께 인용된다. 인용이 없으면 답하지 않는다.</figcaption>
+    </figure>
+
+    <!-- 4-7 인증 -->
+    <h3 class="sub-h">인증 — SSO 3단계</h3>
+    <p>콘솔은 자체 계정을 만들지 않는다. 조직 신원(Entra ID)으로만 들어온다.</p>
+    <div class="steps">
+      <div class="step"><span class="n">1</span><div>
+        <h4>Microsoft Entra ID</h4>
+        <p>조직 계정으로 인증한다(IdP).</p></div></div>
+      <div class="step"><span class="n">2</span><div>
+        <h4>Amazon Cognito</h4>
+        <p>SAML을 받아 User Pool로 넘기고 <code>custom:groups</code>(GUID)를 매핑한다.</p></div></div>
+      <div class="step"><span class="n">3</span><div>
+        <h4>SPA (PKCE)</h4>
+        <p>ID 토큰을 받아 <code>Authorization: Bearer</code>로 백엔드에 붙인다.</p></div></div>
+    </div>
+
+    <figure class="narrow">
+      <img src="../assets/img/cnapp-login.png"
+           alt="관제 콘솔 로그인 화면. Microsoft Entra ID로 로그인 버튼과 SSO 인증 흐름 3단계가 표시돼 있다.">
+      <figcaption>로그인 화면이 곧 인증 설계도다. 하단 문구는 read-only first · 조치는 승인(HITL) 경로로만.</figcaption>
+    </figure>
+
+    <!-- 4-8 운영 관측 -->
+    <h3 class="sub-h">운영 관측</h3>
+    <p>단순 인프라 관측을 넘어, <strong>AI 에이전틱 루프 자체를 관측 대상으로</strong> 삼았다.</p>
+    <ul>
+      <li><strong>X-Ray 분산 추적</strong> — <code>ingest → normalize → correlation → orchestrator</code> 전 구간이
+          하나의 트레이스로 이어진다. AI가 자율적으로 호출한 read-only API까지 같은 화면에 나타난다</li>
+      <li><strong>Grafana 6종 대시보드</strong> — CloudWatch(Application · Infra · AI) · X-Ray · Prometheus ·
+          PostgreSQL 네 개 데이터소스를 하나로 연결</li>
+      <li><strong>엔진 전용 커스텀 지표</strong> — 엔진 바깥엔 지표가 없어 EMF로 직접 계측했다.
+          Bedrock 토큰을 합산해 <strong>AI 판단 1건당 비용</strong>을 보고,
+          호출된 read-only API별 횟수로 <strong>조사 행동 패턴</strong>을 관측한다</li>
+      <li><strong>알림</strong> — CloudTrail·CloudWatch가 지표를 수집하고 SNS·Lambda가 Teams·이메일로 전송.
+          채널 3종(Cost · Login · Alerts)</li>
+    </ul>
+
+    <figure>
+      <img src="../assets/img/cnapp-grafana-list.png"
+           alt="Grafana Dashboards 목록. CNAPP 이름이 붙은 대시보드 6종이 나열돼 있다.">
+      <figcaption>"6종"은 주장이 아니라 목록이다.</figcaption>
+    </figure>
+
+    <figure>
+      <img src="../assets/img/cnapp-grafana-ai.png"
+           alt="Grafana의 CNAPP AI 대시보드. Bedrock 토큰 추이, 케이스별 비용, read-only tool별 호출 횟수 등 엔진 전용 커스텀 패널 9개.">
+      <figcaption>9개 패널 전부 엔진 전용 커스텀 지표다. <code>read-only tool별 호출 횟수</code> 패널의
+        <code>s3:GetBucketPublicAccessBlock</code>이 <a href="#trouble">트러블슈팅 ①</a>에서 고친 바로 그 액션명이다.</figcaption>
+    </figure>
+
+    <figure class="narrow">
+      <img src="../assets/img/cnapp-teams-alert.png"
+           alt="Teams 채널에 도착한 알림 3건. AWS 콘솔 로그인 감지, 관제 콘솔 로그인 감지, 어제 AWS 사용 비용.">
+      <figcaption>로그인·비용 알림이 실제로 도착한 상태. IP는 마스킹했다.</figcaption>
+    </figure>
+
+    <figure class="narrow">
+      <img src="../assets/img/cnapp-observ-flow.png"
+           alt="지표 수집부터 알림 전송까지의 관측 구성도. CloudTrail과 CloudWatch가 수집하고 SNS와 Lambda가 전송한다.">
+      <figcaption>수집에서 알림까지의 경로.</figcaption>
     </figure>
   </div>
 </section>
@@ -292,9 +369,9 @@
     </div>
 
     <figure>
-      <img src="../assets/img/cnapp-ci.png"
-           alt="GitHub Actions 워크플로 실행 목록. 계약 검사와 회귀 테스트가 매 실행마다 통과 표시로 남아 있다.">
-      <figcaption>매 PR마다 도는 계약 검사. 여기서 막히면 병합이 안 된다.</figcaption>
+      <img src="../assets/img/cnapp-ci-contracts.png"
+           alt="GitHub Actions 잡의 스텝 목록. contracts 정합(계약 4-assert)과 전 영역 run_demo + end-to-end 회귀 스텝이 모두 통과 표시다.">
+      <figcaption>매 PR마다 도는 스텝. <code>contracts 정합 (계약 4-assert)</code>와 <code>전 영역 run_demo + end-to-end 회귀</code>가 여기서 막히면 병합이 안 된다.</figcaption>
     </figure>
   </div>
 </section>
@@ -321,10 +398,16 @@
       </dl>
 
       <figure>
-        <img src="../assets/img/cnapp-xray.png"
-             alt="X-Ray 서비스 맵. ingest부터 orchestrator까지 노드가 하나의 트레이스로 이어져 있고, AI가 호출한 API 노드도 함께 표시돼 있다.">
-        <figcaption>X-Ray 서비스 맵. ingest부터 orchestrator까지 전 구간이 하나의 트레이스로 이어지고,
-          AI가 자율적으로 호출한 API도 같은 화면에 나타난다.</figcaption>
+        <img src="../assets/img/cnapp-xray-before.png"
+             alt="수정 전 X-Ray 서비스 맵. member-pii-prod, IAM, macie2, S3, access-analyzer, EC2 노드가 노란 Error 표시다.">
+        <figcaption><strong>Before</strong> — member-pii-prod · IAM · macie2 · S3 · access-analyzer · EC2가 Error.
+          콘솔에는 아무 문제도 보이지 않던 상태다.</figcaption>
+      </figure>
+
+      <figure>
+        <img src="../assets/img/cnapp-xray-after.png"
+             alt="수정 후 X-Ray 서비스 맵. 모든 노드가 초록 Success 표시다.">
+        <figcaption><strong>After</strong> — 액션명 6곳을 정정한 뒤 전 노드 Success.</figcaption>
       </figure>
     </div>
 
@@ -365,7 +448,7 @@
 <section class="band" id="result">
   <div class="wrap">
     <p class="band-label">RESULT</p>
-    <h2>성과</h2>
+    <div class="sec-h"><span class="sec-n">07</span><h2>성과</h2></div>
 
     <dl class="band-grid">
       <div>
@@ -440,10 +523,77 @@
   <span class="rule" aria-hidden="true"></span>
 </div>
 
-<!-- ===== 09 이 기술이 무엇인가 ===== -->
+
+<!-- ===== 09 관제 콘솔 둘러보기 ===== -->
+<section class="section" id="gallery">
+  <div class="wrap">
+    <div class="sec-h"><span class="sec-n">09</span><h2>관제 콘솔 둘러보기</h2></div>
+    <p class="sec-sub">위에서 잘라 쓴 화면들의 전체 모습이다. 탭을 누르면 해당 화면으로 바뀐다.</p>
+
+    <h3 class="sub-h">관제 콘솔</h3>
+    <div class="tabs" data-tabs>
+      <div class="tablist" role="tablist" aria-label="관제 콘솔 화면">
+        <button role="tab" id="tb-dash"  aria-controls="tp-dash"  aria-selected="true">대시보드</button>
+        <button role="tab" id="tb-find"  aria-controls="tp-find"  aria-selected="false">Findings</button>
+        <button role="tab" id="tb-path"  aria-controls="tp-path"  aria-selected="false">Attack-path</button>
+        <button role="tab" id="tb-evid"  aria-controls="tp-evid"  aria-selected="false">Evidence</button>
+        <button role="tab" id="tb-chat"  aria-controls="tp-chat"  aria-selected="false">AI 챗</button>
+        <button role="tab" id="tb-sys"   aria-controls="tp-sys"   aria-selected="false">시스템</button>
+      </div>
+
+      <div role="tabpanel" id="tp-dash" aria-labelledby="tb-dash">
+        <figure><img src="../assets/img/cnapp-dashboard.png"
+          alt="관제 콘솔 대시보드 전체 화면."><figcaption>대시보드 — 점수 · 집계 · 공격 경로 요약</figcaption></figure>
+      </div>
+      <div role="tabpanel" id="tp-find" aria-labelledby="tb-find">
+        <figure><img src="../assets/img/gallery-findings.png" loading="lazy"
+          alt="Findings 목록 화면. finding이 심각도와 기둥별로 나열돼 있다."><figcaption>Findings — 정규화된 finding 목록</figcaption></figure>
+      </div>
+      <div role="tabpanel" id="tp-path" aria-labelledby="tb-path">
+        <figure><img src="../assets/img/gallery-attack-path.png" loading="lazy"
+          alt="Attack-path 화면 전체. 경로 목록, 그래프, 공격 서사가 모두 보인다."><figcaption>Attack-path — 목록 · 그래프 · 공격 서사까지</figcaption></figure>
+      </div>
+      <div role="tabpanel" id="tp-evid" aria-labelledby="tb-evid">
+        <figure><img src="../assets/img/gallery-evidence.png" loading="lazy"
+          alt="Evidence 탭 전체. 판정, 트리아지 게이트, 가설, 수집 증거, 판정 근거, 토큰 사용량이 모두 보인다."><figcaption>Evidence — 트리아지부터 판정·토큰 비용까지 한 화면</figcaption></figure>
+      </div>
+      <div role="tabpanel" id="tp-chat" aria-labelledby="tb-chat">
+        <figure><img src="../assets/img/cnapp-chat.png" loading="lazy"
+          alt="AI 챗 화면. 질문에 대한 답변과 근거 인용이 표시돼 있다."><figcaption>AI 챗 — 근거 인용이 붙은 답변</figcaption></figure>
+      </div>
+      <div role="tabpanel" id="tp-sys" aria-labelledby="tb-sys">
+        <figure><img src="../assets/img/cnapp-system.png" loading="lazy"
+          alt="시스템 화면. 파이프라인 구성 요소의 상태가 표시돼 있다."><figcaption>시스템 — 구성 요소 상태</figcaption></figure>
+      </div>
+    </div>
+
+    <h3 class="sub-h">배포 · CI</h3>
+    <div class="tabs" data-tabs>
+      <div class="tablist" role="tablist" aria-label="배포와 CI 화면">
+        <button role="tab" id="tb-argo" aria-controls="tp-argo" aria-selected="true">ArgoCD</button>
+        <button role="tab" id="tb-ci"   aria-controls="tp-ci"   aria-selected="false">CI 실행 이력</button>
+        <button role="tab" id="tb-eks"  aria-controls="tp-eks"  aria-selected="false">Grafana — EKS</button>
+      </div>
+      <div role="tabpanel" id="tp-argo" aria-labelledby="tb-argo">
+        <figure><img src="../assets/img/cnapp-argocd.png"
+          alt="ArgoCD Applications 목록. 애플리케이션이 Synced / Healthy 상태다."><figcaption>ArgoCD — GitOps 동기화 상태</figcaption></figure>
+      </div>
+      <div role="tabpanel" id="tp-ci" aria-labelledby="tb-ci">
+        <figure><img src="../assets/img/gallery-ci-runs.png" loading="lazy"
+          alt="GitHub Actions 워크플로 실행 이력 목록."><figcaption>CI — 실행 이력</figcaption></figure>
+      </div>
+      <div role="tabpanel" id="tp-eks" aria-labelledby="tb-eks">
+        <figure><img src="../assets/img/gallery-grafana-eks.png" loading="lazy"
+          alt="Grafana EKS 개요 대시보드."><figcaption>Grafana — EKS 개요</figcaption></figure>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 10 이 기술이 무엇인가 ===== -->
 <section class="section" id="what">
   <div class="wrap">
-    <div class="sec-h"><span class="sec-n">09</span><h2>이 기술이 무엇인가</h2></div>
+    <div class="sec-h"><span class="sec-n">10</span><h2>이 기술이 무엇인가</h2></div>
     <p class="sec-sub">한 문장으로 — 클라우드에 뭐가 잘못 설정돼 있는지 찾아주고,
        그게 왜 위험한지 AI가 스스로 조사해 설명하고, 승인하면 고쳐주는 보안 관제 플랫폼이다.</p>
 
@@ -525,7 +675,7 @@
 <!-- ===== 10 CNAPP 6기둥 ===== -->
 <section class="section" id="pillars">
   <div class="wrap">
-    <div class="sec-h"><span class="sec-n">10</span><h2>CNAPP 6기둥</h2></div>
+    <div class="sec-h"><span class="sec-n">11</span><h2>CNAPP 6기둥</h2></div>
     <p class="sec-sub">CNAPP은 이 6가지 관점의 점검을 하나의 그래프로 묶는다.
        각 기둥이 무엇을 보고 어떤 도구를 쓰는지.</p>
 
@@ -573,7 +723,7 @@
 <!-- ===== 11 기술 스택 · 용어집 ===== -->
 <section class="section" id="stack">
   <div class="wrap">
-    <div class="sec-h"><span class="sec-n">11</span><h2>기술 스택 · 용어집</h2></div>
+    <div class="sec-h"><span class="sec-n">12</span><h2>기술 스택 · 용어집</h2></div>
     <p class="sec-sub">2인 팀 프로젝트의 <strong>전체 스택</strong>이다. 내 담당 영역을 함께 표기했다.</p>
 
     <div class="legend">
@@ -663,32 +813,6 @@
         </tbody>
       </table>
     </div>
-
-    <h3 class="sub-h">관측 구성</h3>
-    <p>지표는 CloudTrail·CloudWatch가 모으고, 알림은 SNS와 Lambda가 보낸다.</p>
-    <ul>
-      <li><strong>Grafana 대시보드 6종</strong> — CloudWatch Application · Infra · AI / X-Ray / Prometheus / PostgreSQL</li>
-      <li><strong>Teams 알림 채널 3종</strong> — Cost · Login · Alerts</li>
-    </ul>
-
-    <figure>
-      <img src="../assets/img/cnapp-observ-flow.png"
-           alt="지표 수집부터 알림 전송까지의 관측 구성도. CloudTrail과 CloudWatch가 수집하고 SNS와 Lambda가 전송한다.">
-      <figcaption>수집에서 알림까지의 경로.</figcaption>
-    </figure>
-
-    <figure>
-      <img src="../assets/img/cnapp-grafana.png"
-           alt="Grafana 차트 두 개. 왼쪽은 Bedrock 토큰 사용량 추이, 오른쪽은 read-only API별 호출 횟수.">
-      <figcaption>좌 — 능동 조사에 쓰인 Bedrock 토큰 합산 추이. AI 판단 1건당 비용을 시간순으로 관측한다.<br>
-        우 — AI가 실제 호출한 read-only API별 호출 횟수. 조사 과정의 행동 패턴이 드러난다.</figcaption>
-    </figure>
-
-    <figure>
-      <img src="../assets/img/cnapp-system.png"
-           alt="관제 콘솔의 시스템 상태 화면.">
-      <figcaption>콘솔에서 바로 확인하는 시스템 상태.</figcaption>
-    </figure>
 
     <h3 class="sub-h">용어집</h3>
     <p class="sec-sub">클릭하면 펼쳐진다.</p>

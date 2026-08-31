@@ -1,8 +1,10 @@
 /* ==========================================================================
    김진우 포트폴리오 — 공통 스크립트
+   0) 이메일 조립 (소스에 평문 주소를 남기지 않음)
    1) scroll spy (홈 앵커)
    2) 이미지 라이트박스
    3) 이미지 미배치 시 자리 표시 (파일을 넣으면 자동으로 사라짐)
+   4) 탭 갤러리 (JS 미동작 시 세로 나열)
    ========================================================================== */
 
 (function () {
@@ -20,6 +22,7 @@
     el.textContent = '';
     el.appendChild(a);
   });
+
 
   /* --- 1. scroll spy ------------------------------------------------------ */
   // 홈에서만 동작. 프로젝트 페이지는 nav의 is-active가 HTML에 고정돼 있다.
@@ -137,5 +140,40 @@
     if (!img.closest('figure, .profile-photo')) return;
     if (img.complete) { if (!img.naturalWidth) mark(img); }
     else img.addEventListener('error', function () { mark(img); });
+  });
+
+  /* --- 4. 탭 갤러리 ------------------------------------------------------- */
+  // 마크업은 전부 펼쳐진 상태로 오고, 여기서 탭 UI로 승격한다.
+  // 이 코드가 안 돌면 화면이 세로로 나열될 뿐 정보는 그대로 남는다.
+
+  Array.prototype.forEach.call(document.querySelectorAll('[data-tabs]'), function (box) {
+    var tabs = [].slice.call(box.querySelectorAll('[role="tab"]'));
+    var panels = tabs.map(function (t) { return document.getElementById(t.getAttribute('aria-controls')); });
+    if (!tabs.length) return;
+
+    var select = function (i, focus) {
+      tabs.forEach(function (t, n) {
+        var on = n === i;
+        t.setAttribute('aria-selected', on ? 'true' : 'false');
+        t.tabIndex = on ? 0 : -1;
+        if (panels[n]) panels[n].hidden = !on;
+      });
+      if (focus) tabs[i].focus();
+    };
+
+    tabs.forEach(function (t, i) {
+      t.addEventListener('click', function () { select(i); });
+      t.addEventListener('keydown', function (e) {
+        var k = e.key, next = null;
+        if (k === 'ArrowRight') next = (i + 1) % tabs.length;
+        else if (k === 'ArrowLeft') next = (i - 1 + tabs.length) % tabs.length;
+        else if (k === 'Home') next = 0;
+        else if (k === 'End') next = tabs.length - 1;
+        if (next !== null) { e.preventDefault(); select(next, true); }
+      });
+    });
+
+    box.classList.add('is-ready');
+    select(0);
   });
 })();

@@ -814,3 +814,64 @@ pre code{ background:none; border:0; padding:0; font-size:inherit; }
 /* 세로로 긴 도식은 폭을 줄여 세로 점유를 낮춘다 (예: 스캐너 구성도 1296×1640) */
 figure.narrow img{ max-width:400px; margin:0 auto; }
 figure.narrow figcaption{ text-align:center; }
+
+/* --- 19. 인용문 (엔진이 생성한 서사) ------------------------------------- */
+
+.quote{
+  margin:16px 0;
+  padding:14px 16px;
+  border-left:3px solid var(--band);
+  background:var(--bg-alt);
+  border-radius:0 var(--radius) var(--radius) 0;
+}
+.quote p{ font-size:13.3px; color:var(--text-2); }
+.quote cite{
+  display:block;
+  margin-top:9px;
+  font-family:var(--mono);
+  font-size:10.5px;
+  letter-spacing:.06em;
+  color:var(--text-3);
+  font-style:normal;
+}
+
+/* --- 20. 탭 갤러리 (§5.13) ------------------------------------------------ */
+/* 기본은 전부 세로 나열 = JS 미동작 시의 모습.
+   main.js가 data-tabs를 초기화하면서 탭 UI로 승격한다. */
+
+.tabs{ margin:16px 0 26px; }
+
+.tablist{
+  display:none;
+  flex-wrap:wrap;
+  gap:6px;
+  margin-bottom:14px;
+  border-bottom:1px solid var(--line);
+  padding-bottom:10px;
+}
+.tabs.is-ready .tablist{ display:flex; }
+
+.tablist button{
+  font-family:var(--sans);
+  font-size:12.5px;
+  color:var(--text-2);
+  background:var(--bg);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  padding:6px 12px;
+  cursor:pointer;
+}
+.tablist button:hover{ color:var(--text); background:var(--bg-alt); }
+.tablist button[aria-selected="true"]{
+  color:#fff;
+  background:var(--band);
+  border-color:var(--band);
+}
+
+/* JS 없을 때: 패널마다 무슨 화면인지 캡션이 이미 있으므로 그대로 쌓인다 */
+.tabs [role="tabpanel"] figure{ margin-top:0; }
+.tabs.is-ready [role="tabpanel"][hidden]{ display:none; }
+
+/* 파란 밴드 위의 번호칩 — 밴드와 같은 파랑이면 안 보이므로 반전 */
+.band .sec-n{ background:#fff; color:var(--band); }
+.band .sec-h h2{ color:#fff; }

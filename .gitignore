@@ -7,3 +7,7 @@ SITE-SPEC.md
 # 이미지 배치 안내 — website/ 안에 있으면 사이트로 같이 배포돼 공개된다.
 # 내부 메모(원본 페이지 번호·수치 충돌 경고 등)라 배포 대상에서 제외한다.
 website/assets/img/README.md
+
+# 폐기 이미지 보관함 — 마스킹 전 원본이 들어 있다.
+# website/ 안에 있으면 Pages로 그대로 배포되므로 반드시 제외한다.
+website/assets/img/_unused/
