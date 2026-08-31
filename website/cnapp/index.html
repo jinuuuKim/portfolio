@@ -1,0 +1,735 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CNAPP-Agentic — 김진우 포트폴리오</title>
+<meta name="description" content="멀티클라우드 보안 신호를 OCSF로 통합하고, Bedrock 기반 Agentic AI가 스스로 증거를 수집해 위험을 판정하는 CNAPP 보안 플랫폼.">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="nav-brand" href="../index.html">jinwoo.kim</a>
+    <div class="nav-links">
+      <a href="../index.html#profile">프로필</a>
+      <a href="../index.html#resume">이력</a>
+      <a href="../index.html#skills">기술</a>
+      <a href="../index.html#projects">프로젝트</a>
+      <span class="nav-sep" aria-hidden="true"></span>
+      <a href="index.html" class="is-active" aria-current="page">CNAPP</a>
+      <a href="../stockops/index.html">StockOps</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ===== 히어로 ===== -->
+<header class="hero">
+  <div class="wrap">
+    <span class="hero-cat">PROJECT 01 / SECURITY PLATFORM</span>
+    <h1>CNAPP-Agentic</h1>
+    <p class="hero-lead">
+      멀티클라우드 보안 신호를 OCSF로 통합하고, Bedrock 기반 Agentic AI가
+      스스로 증거를 수집해 위험을 판정하는 CNAPP 보안 플랫폼
+    </p>
+
+    <dl class="hero-meta">
+      <div><dt>TEAM</dt><dd>2인</dd></div>
+      <div><dt>PERIOD</dt><dd>2026.06.27 – 07.31 (5주)</dd></div>
+      <div><dt>ROLE</dt><dd>정규화 · 엔진 · 상관 · RAG · 관측</dd></div>
+    </dl>
+
+    <div class="hero-links">
+      <a class="btn-ink" href="https://github.com/jun0601/cnapp-agentic" target="_blank" rel="noopener">
+        <span class="k">GITHUB</span> cnapp-agentic
+      </a>
+      <a class="btn-ink" href="../pdf/CNAPP-Agentic.pdf">
+        <span class="k">PDF</span> 포트폴리오 22p
+      </a>
+      <a class="btn-ink" href="https://youtu.be/YaPADbf3t94" target="_blank" rel="noopener">
+        <span class="k">DEMO</span> 시연 영상 1분 30초
+      </a>
+    </div>
+  </div>
+</header>
+
+<!-- ══════════ 포트폴리오 ══════════ -->
+<div class="divider">
+  <span class="rule" aria-hidden="true"></span>
+  <span class="label">
+    포트폴리오
+    <span class="note">내가 무엇을 했는가</span>
+  </span>
+  <span class="rule" aria-hidden="true"></span>
+</div>
+
+<main>
+
+<!-- ===== 01 프로젝트 개요 ===== -->
+<section class="section" id="overview">
+  <div class="wrap">
+    <div class="sec-h"><span class="sec-n">01</span><h2>프로젝트 개요</h2></div>
+
+    <p>기존 CNAPP도 findings 우선순위는 매기지만,
+       <strong>그게 진짜 위험인지 조사해 판정하는 건 여전히 사람 몫</strong>이었다.
+       이 프로세스를 AI가 스스로 해낼 수 있다면 어떨까 싶어
+       AI를 핵심 축으로 CNAPP을 구현했다.</p>
+
+    <p style="margin-top:12px">AWS를 워크로드의 주인, Azure(Entra ID)를 신원의 주인으로 정의하고,
+       두 클라우드에 흩어진 보안 신호를 하나의 파이프라인으로 통합했다.
+       2인 협업으로 9개 영역을 반씩 나누어 병렬 개발했다.</p>
+
+    <figure>
+      <img src="../assets/img/cnapp-context.png"
+           alt="기획 배경과 문제 정의를 정리한 도표">
+      <figcaption>기획 배경 · 문제 정의. 원본 포트폴리오 3페이지.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ===== 02 내가 담당한 것 ===== -->
+<section class="section" id="role">
+  <div class="wrap">
+    <div class="sec-h"><span class="sec-n">02</span><h2>내가 담당한 것</h2></div>
+
+    <ul>
+      <li>이기종 스캐너 출력(ASFF · OCSF · trivy-json 등)을 공통 finding 스키마로 정규화하는 파이프라인</li>
+      <li>워크로드 취약점 스캐너(Trivy · kube-bench) 및 Azure Entra ID CIEM 스캐너</li>
+      <li>크로스클라우드 공격경로 상관 엔진(R1~R5 규칙) 및 내러티브 생성</li>
+      <li>Agentic 엔진의 Hypothesis · Reasoning · Orchestrator (조사 루프 전체 지휘)</li>
+      <li>RAG 검색(pgvector) 및 Bedrock 기반 설명 생성기</li>
+      <li>운영 관측 전반 — X-Ray 분산 추적(5개 Lambda 전 구간) · Grafana 대시보드 6종(CloudWatch · Prometheus · PostgreSQL · X-Ray 4개 소스 통합) · CloudWatch 알람 · Teams 알림</li>
+      <li>GitHub Actions 기반 보안 스캔 자동화(Prowler 정기 스캔 → S3 → 파이프라인 합류)</li>
+      <li>Azure / Entra ID 테넌트 구성, App Registration, 키리스 인증(Federated Credential)</li>
+    </ul>
+
+    <figure>
+      <img src="../assets/img/cnapp-roles.png"
+           alt="2인 팀의 역할 분담과 협업 구조를 나타낸 도표. 9개 영역이 두 사람에게 나뉘어 있다.">
+      <figcaption>역할 분담 &amp; 협업 구조 — 9개 영역을 어떻게 갈랐는지. 원본 포트폴리오 4페이지.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ===== 03 아키텍처 ===== -->
+<section class="section" id="architecture">
+  <div class="wrap">
+    <div class="sec-h"><span class="sec-n">03</span><h2>아키텍처</h2></div>
+
+    <p class="sec-sub">AWS = 워크로드(EKS · 컨테이너 · 데이터)의 주인,
+       Azure = 신원(Entra ID)의 주인. 스캐너는 두 계정을 read-only로만 훑는다.</p>
+
+    <figure>
+      <img src="../assets/img/cnapp-arch.png"
+           alt="CNAPP-Agentic 전체 아키텍처 다이어그램. 스캐너 6기둥, 수집·정규화 파이프라인, 에이전틱 AI 엔진, Azure Entra ID, 관측 구성이 표시돼 있다.">
+      <figcaption>전체 아키텍처. 원본 포트폴리오 5페이지에서 우측 설명 패널을 제거한 크롭본.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ===== 04 동작 방식 ===== -->
+<section class="section" id="how">
+  <div class="wrap">
+    <div class="sec-h"><span class="sec-n">04</span><h2>동작 방식</h2></div>
+
+<pre><code>스캔(입력) → EventBridge → SQS → Lambda
+  → 정규화 (OCSF-lite)
+  → 상관 엔진 (attack-path)
+  → Agentic 엔진 (Triage → Hypothesis → Evidence → Reasoning)
+  → RDS 저장 → 관제 콘솔 표시</code></pre>
+
+    <!-- 4-1 정규화 -->
+    <h3 class="sub-h">정규화 규칙 3종</h3>
+    <div class="steps">
+      <div class="step">
+        <span class="n">1</span>
+        <div>
+          <h4><code>resource_id</code> 캐논화</h4>
+          <p>ARN·Azure 고유 ID를 <code>cloud:type:native_id</code> 형식으로 통일한다.
+             표기가 다르면 같은 리소스를 다른 것으로 세게 된다.</p>
+        </div>
+      </div>
+      <div class="step">
+        <span class="n">2</span>
+        <div>
+          <h4><code>control_id</code> 매핑</h4>
+          <p>스캐너마다 다른 체크 ID를 내부 control 카탈로그로 역인덱스해 맞춘다.</p>
+        </div>
+      </div>
+      <div class="step">
+        <span class="n">3</span>
+        <div>
+          <h4><code>dedup_key</code> 병합</h4>
+          <p><code>resource_id|control_id</code> 기준으로 동일 위험을 1건으로 합치고,
+             어느 스캐너가 잡았는지는 <code>sources</code>에 누적한다.</p>
+        </div>
+      </div>
+    </div>
+
+    <figure>
+      <img src="../assets/img/cnapp-normalize.png"
+           alt="서로 다른 스캐너 출력 포맷을 OCSF-lite 공통 스키마로 정규화하는 과정을 나타낸 도표">
+      <figcaption>OCSF-lite — 포맷 이질성 해소. 원본 포트폴리오 8페이지.</figcaption>
+    </figure>
+
+    <!-- 4-2 상관 -->
+    <h3 class="sub-h">상관 엔진 — attack-path</h3>
+    <p>R1~R5 상관 규칙이 개별 finding을 엮어 공격 경로 그래프를 만든다.
+       개별로는 중간 위험인 결함도 한 줄로 이어지면 등급이 올라간다.</p>
+
+    <figure>
+      <img src="../assets/img/cnapp-attack-path.png"
+           alt="개별 finding들이 R1~R5 규칙으로 엮여 크로스클라우드 공격 경로 그래프를 이루는 화면">
+      <figcaption>상관 엔진 + 공격 경로 그래프. 원본 포트폴리오 9페이지.</figcaption>
+    </figure>
+
+    <!-- 4-3 에이전틱 -->
+    <h3 class="sub-h">에이전틱 엔진 — 4단계 조사 루프</h3>
+    <div class="steps">
+      <div class="step">
+        <span class="n">1</span>
+        <div><h4>Triage</h4>
+          <p>무엇을 조사할지 고른다. <code>severity_id ≤ 2</code>이거나
+             공격 경로에 속한 finding만 통과시킨다.</p></div>
+      </div>
+      <div class="step">
+        <span class="n">2</span>
+        <div><h4>Hypothesis</h4>
+          <p>"이게 실제로 악용 가능한가"에 대한 가설을 세운다.</p></div>
+      </div>
+      <div class="step">
+        <span class="n">3</span>
+        <div><h4>Evidence</h4>
+          <p>Bedrock(Claude)이 <strong>스스로 read-only API를 골라 호출</strong>해
+             실제 클라우드 상태를 확인한다. 챗봇과 갈리는 지점이 여기다.</p></div>
+      </div>
+      <div class="step">
+        <span class="n">4</span>
+        <div><h4>Reasoning</h4>
+          <p>모은 증거로 CONFIRMED / REFUTED를 판정하고 근거를 서술한다.</p></div>
+      </div>
+    </div>
+
+    <figure>
+      <img src="../assets/img/cnapp-agentic-loop.png"
+           alt="Triage에서 Reasoning까지 이어지는 4단계 능동 조사 루프와 read-only API 허용목록 2중 강제 구조도">
+      <figcaption>4단계 능동 조사 루프 + 허용목록 2중 강제. 원본 포트폴리오 11페이지.</figcaption>
+    </figure>
+
+    <!-- 4-4 RAG -->
+    <h3 class="sub-h">RAG 설명 생성</h3>
+    <p>Titan 임베딩으로 색인한 문서를 pgvector로 유사도 검색한 뒤,
+       Bedrock이 <strong>검색된 근거 청크 안에서만</strong> 답하게 했다.
+       "왜 위험하고 어떻게 고치나"를 지어내지 않게 하는 장치다.</p>
+
+    <figure>
+      <img src="../assets/img/cnapp-rag.png"
+           alt="pgvector 검색 결과를 근거로 인용해 답변을 생성하는 RAG 구조도">
+      <figcaption>근거 인용의 신뢰성 — RAG 구성. 원본 포트폴리오 10페이지.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ===== 05 설계에서 고민한 것 ===== -->
+<section class="section" id="design">
+  <div class="wrap">
+    <div class="sec-h"><span class="sec-n">05</span><h2>설계에서 고민한 것</h2></div>
+
+    <div class="block is-key">
+      <h4>왜 계약을 먼저 고정했나</h4>
+      <p>2인이 9개 영역을 동시에 개발하려면 서로의 결과물을 기다리는 순간 병렬성이 깨진다.
+         finding · case · attack-path 등 공통 스키마 7종을 JSON Schema로 먼저 확정하고,
+         상대 영역은 목업으로 대체하며 각자 진행했다.</p>
+      <p>CI가 매 PR마다 계약 4-assert와 회귀 10종을 검사해 계약 위반을 병합 전에 차단했다.
+         결과적으로 합칠 때 인터페이스 마찰이 거의 없었다.</p>
+    </div>
+
+    <div class="block is-key">
+      <h4>AI에게 얼마나 맡길 것인가 — 비용과 권한의 경계</h4>
+      <p>LLM이 자율적으로 API를 부르면 호출 수와 비용이 예측되지 않는다. 세 곳에서 경계를 잡았다.</p>
+      <ul>
+        <li><strong>무엇을 조사할지</strong> — Triage 게이트로 <code>severity_id ≤ 2</code> 또는 공격 경로에 속한 finding만 통과</li>
+        <li><strong>무엇을 부를 수 있는지</strong> — read-only API allowlist를 계약에 정의하고 스키마 단계(tool enum)와 실행 직전 두 번 강제</li>
+        <li><strong>얼마나 자주 깨울지</strong> — 실 스캐너를 붙이자 엔진 기동이 시간당 5배로 폭증. 배치 창을 두고 신규 open finding일 때만 깨우도록 수정</li>
+      </ul>
+      <p>세 번째는 저볼륨 시절엔 안 보이다가 실 스캐너를 붙이자마자 드러났다.
+         <strong>조사 대상을 제한하는 것과 엔진을 얼마나 자주 깨우는가는 별개의 축</strong>이었다.</p>
+    </div>
+
+    <div class="block is-key">
+      <h4>어디까지가 이 프로젝트의 범위인가</h4>
+      <p>GuardDuty를 붙여보니 기능적으로는 동작했다. 그런데 세 가지가 어긋났다 —
+         다른 도구는 전부 정적 스캔인데 GuardDuty만 상시 감시형이고,
+         6기둥 어디에도 안 맞았고, Findings 탭이 '고치면 사라지는 상태' 모델인데
+         GuardDuty가 잡는 건 '사건'이었다.</p>
+      <p>세 문제가 전부 하나의 경계를 가리키고 있었다 — <strong>CSPM인가 SOC인가.</strong>
+         만든 걸 전부 되돌리고, 코어와 분리된 독립 폴더에 확장 훅 데모로만 남겼다.
+         '될 수 있다'와 '이 프로젝트에 속한다'는 다른 질문이었다.</p>
+    </div>
+
+    <figure>
+      <img src="../assets/img/cnapp-contract-ci.png"
+           alt="CI가 매 PR마다 계약 검사를 수행해 병합 전에 차단하는 하드 게이트 구성도">
+      <figcaption>계약 위반을 병합 전에 막는 CI 하드 게이트. 원본 포트폴리오 17페이지.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ===== 06 트러블슈팅 ===== -->
+<section class="section" id="trouble">
+  <div class="wrap">
+    <div class="sec-h"><span class="sec-n">06</span><h2>트러블슈팅</h2></div>
+
+    <div class="ts">
+      <h4>① 콘솔은 멀쩡한데 X-Ray에는 Error 노드가 5개</h4>
+      <dl>
+        <dt>증상</dt>
+        <dd>앱이 예외를 중립 결과로 강등해 정상 종료했기 때문에 관제 화면에는 아무 문제도 안 보임</dd>
+        <dt>원인</dt>
+        <dd>AWS가 요구하는 IAM 액션명(<code>s3:GetBucketPublicAccessBlock</code>)이
+            API 오퍼레이션명(<code>s3:GetPublicAccessBlock</code>)과 다름.
+            이 도구는 구현 이후 <strong>한 번도 성공한 적이 없었으나</strong> 예외 처리에 가려져 있었음</dd>
+        <dt>해결</dt>
+        <dd><code>batch-get-traces</code>로 실제 예외를 열어 예상된 실패와 실버그를 분리 →
+            액션명 6곳 일괄 정정 → IAM 정책 시뮬레이터로 검증</dd>
+        <dt>결과</dt>
+        <dd><strong>AI 조사 확증률 33% → 60%</strong>, 판정이 inconclusive → confirmed로 전환</dd>
+      </dl>
+    </div>
+
+    <div class="ts">
+      <h4>② Inspector finding이 한 건도 안 보임</h4>
+      <dl>
+        <dt>가설</dt><dd>"EventBridge가 꺼져 있을 것이다"</dd>
+        <dt>반증</dt>
+        <dd>규칙 5개 전부 ENABLED, Security Hub에는 이미 273건이 들어와 있었음. 파이프는 열려 있었다</dd>
+        <dt>원인</dt>
+        <dd>Inspector가 보내는 finding은 <code>ProductFields</code>·<code>Compliance</code> 값이
+            명시적 <code>null</code>인데, 파서가 항상 dict라고 가정해 배치 전체가 크래시</dd>
+        <dt>해결</dt><dd>None-safety 확보 + 기본 status 교정 → <strong>실 CVE 27건 정상 병합</strong></dd>
+        <dt>교훈</dt><dd>파이프가 열려있다고 데이터가 처리된다는 보장은 없다</dd>
+      </dl>
+    </div>
+
+    <div class="ts">
+      <h4>③ "Azure 구독 자체가 비정상이라 불가" — 오판을 뒤집음</h4>
+      <dl>
+        <dt>최초 판단</dt>
+        <dd><code>az role assignment</code>가 <code>MissingSubscription</code>으로 죽어
+            구독 문제로 결론, Azure 스캔을 범위에서 제외</dd>
+        <dt>재검증</dt>
+        <dd>같은 조회를 <code>az rest</code>(raw ARM API)로 치니 정상 작동.
+            구독은 멀쩡했고 <strong>CLI 래퍼 버그</strong>였음</dd>
+        <dt>해결</dt>
+        <dd><code>az rest</code>로 구독 범위 Reader 직접 부여 → Prowler Azure 완주 →
+            수집·정규화·RDS 전 구간 관통</dd>
+        <dt>교훈</dt>
+        <dd>CLI 특정 명령이 이상하게 실패하면 래퍼 버그와 실 리소스 상태를 구분할 것</dd>
+      </dl>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 07 성과 ===== -->
+<section class="band" id="result">
+  <div class="wrap">
+    <p class="band-label">RESULT</p>
+    <h2>성과</h2>
+
+    <dl class="band-grid">
+      <div>
+        <dt>실 스캔 통합</dt>
+        <p class="num">432건</p>
+        <dd>open 32 · 준수 63 · 노이즈 억제 337</dd>
+      </div>
+      <div>
+        <dt>스캐너</dt>
+        <p class="num">6종</p>
+        <dd>Prowler · kube-bench · Trivy · IAM Access Analyzer · Macie · Inspector</dd>
+      </div>
+      <div>
+        <dt>공격 경로</dt>
+        <p class="num">3개</p>
+        <dd>개별 finding을 엮어 도출</dd>
+      </div>
+      <div>
+        <dt>AI 미조사</dt>
+        <p class="num">0건</p>
+        <dd>Triage 통과 24건 전부 조사 완료</dd>
+      </div>
+      <div>
+        <dt>완결 루프</dt>
+        <p class="num">3 → 1</p>
+        <dd>공개 S3 버킷 조치를 승인하면 관련 공격 경로가 실시간으로 사라진다</dd>
+      </div>
+    </dl>
+
+    <p class="band-foot">설계 → 목업 검증 → 실 클라우드 전환 → 라이브 검증까지 완주.
+       AWS·Azure 실 계정에 전 레이어 배포 후 실 스캔·실 Bedrock 조사·SSO 로그인·HITL 조치 실행까지 확인했다.</p>
+  </div>
+</section>
+
+<!-- ===== 08 산출물 ===== -->
+<section class="section" id="output">
+  <div class="wrap">
+    <div class="sec-h"><span class="sec-n">08</span><h2>산출물</h2></div>
+
+    <div class="pdf-viewer">
+      <object data="../pdf/CNAPP-Agentic.pdf#view=FitH" type="application/pdf" width="100%" height="620">
+        <p>브라우저가 PDF 미리보기를 지원하지 않습니다.
+           <a href="../pdf/CNAPP-Agentic.pdf">PDF 다운로드</a></p>
+      </object>
+    </div>
+
+    <div class="pdf-fallback">
+      <p class="sec-sub">이 화면 크기에서는 미리보기 대신 다운로드로 확인해 주세요.</p>
+    </div>
+
+    <div class="btn-row">
+      <a class="btn" href="../pdf/CNAPP-Agentic.pdf" download>
+        <span class="k">PDF</span> 다운로드 (2.42 MB, 22p)
+      </a>
+      <a class="btn" href="https://github.com/jun0601/cnapp-agentic" target="_blank" rel="noopener">
+        <span class="k">GITHUB</span> cnapp-agentic
+      </a>
+      <a class="btn" href="https://youtu.be/YaPADbf3t94" target="_blank" rel="noopener">
+        <span class="k">DEMO</span> 시연 영상 (1분 30초)
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ 더 알아보기 ══════════ -->
+<div class="divider">
+  <span class="rule" aria-hidden="true"></span>
+  <span class="label">
+    더 알아보기
+    <span class="note">이 기술이 무엇인가</span>
+  </span>
+  <span class="rule" aria-hidden="true"></span>
+</div>
+
+<!-- ===== 09 이 기술이 무엇인가 ===== -->
+<section class="section" id="what">
+  <div class="wrap">
+    <div class="sec-h"><span class="sec-n">09</span><h2>이 기술이 무엇인가</h2></div>
+    <p class="sec-sub">한 문장으로 — 클라우드에 뭐가 잘못 설정돼 있는지 찾아주고,
+       그게 왜 위험한지 AI가 스스로 조사해 설명하고, 승인하면 고쳐주는 보안 관제 플랫폼이다.</p>
+
+    <div class="grid-3">
+      <div class="mini">
+        <span class="tag">CNAPP</span>
+        <h4>CNAPP이란</h4>
+        <p><strong>Cloud-Native Application Protection Platform.</strong>
+           예전엔 설정 점검(CSPM), 권한 점검(CIEM), 취약점 스캔이 각각 다른 도구였는데
+           이걸 하나로 묶은 통합 보안 플랫폼이다. 흩어진 신호를 모아
+           <strong>단일 도구로는 못 잡는 위험 조합</strong>을 찾는 게 핵심이다.</p>
+      </div>
+      <div class="mini">
+        <span class="tag">AGENTIC</span>
+        <h4>"에이전틱"의 의미</h4>
+        <p>질문해야 답하는 챗봇이 아니다. AI가 <strong>read-only API를 스스로 골라 호출</strong>해
+           실제 클라우드 상태를 조사하고, 가설 → 증거 → 판정 루프로 위험을 추론한다.
+           챗봇 탈출의 기준은 "LLM이 스스로 API를 불러 증거를 모으는가"다.</p>
+      </div>
+      <div class="mini">
+        <span class="tag">MULTI-CLOUD</span>
+        <h4>왜 멀티클라우드</h4>
+        <p><strong>AWS</strong>는 워크로드의 주인, <strong>Azure</strong>는 신원(Entra ID)의 주인.
+           각 클라우드의 강점대로 나누고, AWS 워크로드 침해가 Azure 신원 장악으로 번지는
+           <strong>경계를 넘는 공격 경로</strong>를 추적한다.</p>
+      </div>
+      <div class="mini">
+        <span class="tag">TOXIC COMBO</span>
+        <h4>독성 조합</h4>
+        <p>개별로는 "중간 위험"인 결함 여러 개가 <strong>한 줄로 이어지면 치명적</strong>이 되는 것.
+           공개 S3 버킷 하나는 중간 위험이지만, 거기에 개인정보가 있고
+           그 버킷을 쓰는 파드가 과도한 권한까지 가졌다면 Critical이 된다.
+           CNAPP의 존재 이유다.</p>
+      </div>
+      <div class="mini">
+        <span class="tag">AGENTLESS</span>
+        <h4>읽기 전용 스캔</h4>
+        <p>점검 대상 앱에 에이전트를 심지 않는다. 스캐너가 클라우드 계정을
+           <strong>외부에서 read-only로 훑기만</strong> 하고, 타깃 앱과 관제 앱은
+           서로 직접 통신하지 않는다.</p>
+      </div>
+      <div class="mini">
+        <span class="tag">HITL</span>
+        <h4>사람의 승인</h4>
+        <p>AI는 기본적으로 <strong>읽기만</strong> 한다. 실제 변경(조치)은 반드시 사람이 승인해야
+           실행되고, 모든 조치는 수정 불가능한 감사 로그에 남는다.
+           AI에게 무한 권한을 주지 않는 안전장치다.</p>
+      </div>
+    </div>
+
+    <h3 class="sub-h">골든 시나리오 — 크로스클라우드 신원 탈취</h3>
+    <p class="sec-sub">개별로는 중간 위험인 결함들이 어떻게 한 줄의 치명적 경로가 되는지 보여주는 데모다.</p>
+
+    <div class="steps">
+      <div class="step"><span class="n">1</span><div>
+        <h4>취약 이미지 침투 <span style="color:var(--text-3);font-weight:400">— AWS</span></h4>
+        <p>product 파드의 KEV 등재 CVE 이미지로 최초 침투.</p></div></div>
+      <div class="step"><span class="n">2</span><div>
+        <h4>측면 이동 <span style="color:var(--text-3);font-weight:400">— AWS</span></h4>
+        <p>과도한 IRSA 권한으로 order 워크로드까지 이동.</p></div></div>
+      <div class="step"><span class="n">3</span><div>
+        <h4>자격증명 발견 <span style="color:var(--text-3);font-weight:400">— AWS</span></h4>
+        <p>평문 시크릿에서 Azure 자격증명 + 공개 S3의 개인정보를 탈취.</p></div></div>
+      <div class="step"><span class="n">4</span><div>
+        <h4>신원 장악 <span style="color:var(--text-3);font-weight:400">— Azure</span></h4>
+        <p>탈취한 자격증명으로 Entra ID 과도권한 앱을 장악해 디렉터리 통제권 확보.</p></div></div>
+    </div>
+
+    <div class="block is-key">
+      <h4>왜 중요한가</h4>
+      <p>S3 스캐너만 보면 "공개 버킷 하나", 권한 스캐너만 보면 "과도한 IRSA 하나"로 각각 중간 위험이다.
+         하지만 <strong>같은 그래프에 얹으면</strong> "AWS 워크로드 → Azure 신원 전체 탈취"라는
+         Critical 경로가 드러난다. 단일 도구가 못 잡고 CNAPP만 잡는 지점이다.
+         <span style="color:var(--text-3)">(분석·시각화 수준이고, 실제 횡단 익스플로잇은 범위 밖.)</span></p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 10 CNAPP 6기둥 ===== -->
+<section class="section" id="pillars">
+  <div class="wrap">
+    <div class="sec-h"><span class="sec-n">10</span><h2>CNAPP 6기둥</h2></div>
+    <p class="sec-sub">CNAPP은 이 6가지 관점의 점검을 하나의 그래프로 묶는다.
+       각 기둥이 무엇을 보고 어떤 도구를 쓰는지.</p>
+
+    <div class="grid-3">
+      <div class="mini">
+        <span class="tag">CSPM</span>
+        <h4>설정 점검</h4>
+        <p>S3 · 보안그룹 · IAM · 암호화 등 클라우드 설정이 안전 기준에 맞는지 점검.</p>
+        <div class="tools">Config · Security Hub · Prowler</div>
+      </div>
+      <div class="mini">
+        <span class="tag">CIEM</span>
+        <h4>권한 점검</h4>
+        <p>과도하거나 미사용인 권한, 권한 상승 경로를 찾는다. AWS IAM + Azure Entra ID 앱.</p>
+        <div class="tools">IAM Access Analyzer · Entra(Prowler)</div>
+      </div>
+      <div class="mini">
+        <span class="tag">VULN</span>
+        <h4>취약점 관리</h4>
+        <p>컨테이너 이미지·워크로드의 CVE를 스캔하고, 실제 악용되는(KEV) 취약점을 우선순위화.</p>
+        <div class="tools">Trivy · Inspector</div>
+      </div>
+      <div class="mini">
+        <span class="tag">KSPM</span>
+        <h4>쿠버네티스 자세</h4>
+        <p>K8s 설정 · Pod Security · RBAC를 CIS 벤치마크 기준으로 점검.</p>
+        <div class="tools">kube-bench</div>
+      </div>
+      <div class="mini">
+        <span class="tag">DSPM</span>
+        <h4>데이터 보안</h4>
+        <p>민감 데이터(개인정보)가 어디에 있고 노출됐는지 탐지. AWS S3 대상.</p>
+        <div class="tools">Macie</div>
+      </div>
+      <div class="mini">
+        <span class="tag">ATTACK-PATH</span>
+        <h4>공격 경로 상관</h4>
+        <p>위 5기둥의 finding을 엮어 독성 조합·공격 경로를 그래프로 도출.</p>
+        <div class="tools">커스텀 상관 엔진 (R1~R5)</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 11 기술 스택 · 용어집 ===== -->
+<section class="section" id="stack">
+  <div class="wrap">
+    <div class="sec-h"><span class="sec-n">11</span><h2>기술 스택 · 용어집</h2></div>
+    <p class="sec-sub">2인 팀 프로젝트의 <strong>전체 스택</strong>이다. 내 담당 영역을 함께 표기했다.</p>
+
+    <div class="legend">
+      <span><span class="own me">●</span> 내가 구현</span>
+      <span><span class="own team">○</span> 팀원 구현 / 공동</span>
+    </div>
+
+    <div class="table-scroll">
+      <table>
+        <thead><tr><th>영역</th><th>기술</th><th>담당</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>수집 · 정규화</strong></td>
+            <td>EventBridge · SQS(+DLQ) · Lambda · OCSF-lite 정규화</td>
+            <td class="own me">●</td>
+          </tr>
+          <tr>
+            <td><strong>워크로드 · K8s 스캐너</strong></td>
+            <td>Trivy · kube-bench</td>
+            <td class="own me">●</td>
+          </tr>
+          <tr>
+            <td><strong>Azure 보안</strong></td>
+            <td>Microsoft Entra ID(신원·CIEM) · Prowler <code>entra_*</code> · App Registration · Federated Credential</td>
+            <td class="own me">●</td>
+          </tr>
+          <tr>
+            <td><strong>상관 엔진</strong></td>
+            <td>R1~R5 상관 규칙 · attack-path 그래프 · 내러티브 생성</td>
+            <td class="own me">●</td>
+          </tr>
+          <tr>
+            <td><strong>에이전틱 AI</strong></td>
+            <td>Amazon Bedrock(Claude Haiku 4.5, Converse tool-use) — Hypothesis · Reasoning · Orchestrator</td>
+            <td class="own me">●</td>
+          </tr>
+          <tr>
+            <td><strong>RAG</strong></td>
+            <td>Titan Embed v2 · pgvector (RDS PostgreSQL 16)</td>
+            <td class="own me">●</td>
+          </tr>
+          <tr>
+            <td><strong>관측</strong></td>
+            <td>CloudWatch(24위젯 · 알람 7종) · X-Ray(5 Lambda 전 구간) · Grafana(4소스 · 대시보드 6종) · Teams 알림</td>
+            <td class="own me">●</td>
+          </tr>
+          <tr>
+            <td><strong>스캔 자동화</strong></td>
+            <td>GitHub Actions 정기 스캔 → S3 → 파이프라인 합류</td>
+            <td class="own me">●</td>
+          </tr>
+          <tr>
+            <td><strong>AWS 보안 스캐너</strong></td>
+            <td>CloudTrail · Config · Security Hub · Prowler(AWS) · IAM Access Analyzer · Macie · Inspector</td>
+            <td class="own team">○</td>
+          </tr>
+          <tr>
+            <td><strong>에이전틱 AI (앞단)</strong></td>
+            <td>Triage 게이트 · Evidence tool-use 실행부</td>
+            <td class="own team">○</td>
+          </tr>
+          <tr>
+            <td><strong>관제 앱 (프론트)</strong></td>
+            <td>Vite · React · TypeScript · TanStack Query · Tailwind · React Flow · Recharts · MSW</td>
+            <td class="own team">○</td>
+          </tr>
+          <tr>
+            <td><strong>관제 앱 (백엔드)</strong></td>
+            <td>TypeScript Lambda (ALB → Lambda, read-only API)</td>
+            <td class="own team">○</td>
+          </tr>
+          <tr>
+            <td><strong>인증 · 거버넌스</strong></td>
+            <td>Entra ID(SAML) → Cognito(OIDC/PKCE) → SPA · <code>aws-jwt-verify</code> · S3 Object Lock</td>
+            <td class="own team">○</td>
+          </tr>
+          <tr>
+            <td><strong>조치 (HITL)</strong></td>
+            <td>Step Functions 승인 흐름 · 불변 감사 로그</td>
+            <td class="own team">○</td>
+          </tr>
+          <tr>
+            <td><strong>타깃 워크로드 · 배포</strong></td>
+            <td>EKS · ECR · ArgoCD · Karpenter · IRSA · Terraform(레이어드)</td>
+            <td class="own team">○</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <figure>
+      <img src="../assets/img/cnapp-observability.png"
+           alt="CloudWatch, Prometheus, PostgreSQL, X-Ray 네 소스를 통합한 Grafana 대시보드 6종 화면">
+      <figcaption>Grafana 대시보드 6종 — 4개 데이터 소스 통합. 원본 포트폴리오 18페이지.</figcaption>
+    </figure>
+
+    <h3 class="sub-h">용어집</h3>
+    <p class="sec-sub">클릭하면 펼쳐진다.</p>
+
+    <div class="terms">
+      <details class="term"><summary><span class="q">CNAPP</span> Cloud-Native Application Protection Platform <span class="plus" aria-hidden="true">＋</span></summary>
+        <div class="body">CSPM · CIEM · 취약점 · KSPM · DSPM · attack-path 등 여러 클라우드 보안 기능을
+          <strong>하나로 통합</strong>한 플랫폼. 흩어진 도구를 묶어 "위험 조합"을 잡는 게 목적이다.</div></details>
+
+      <details class="term"><summary><span class="q">CSPM</span> Cloud Security Posture Management <span class="plus" aria-hidden="true">＋</span></summary>
+        <div class="body">클라우드 <strong>설정(자세)</strong>이 안전 기준에 맞는지 점검.
+          "S3 버킷이 공개돼 있다", "보안그룹이 0.0.0.0/0으로 열려 있다" 같은 미스컨피그를 찾는다.</div></details>
+
+      <details class="term"><summary><span class="q">CIEM</span> Cloud Infrastructure Entitlement Management <span class="plus" aria-hidden="true">＋</span></summary>
+        <div class="body">클라우드 <strong>권한</strong> 관리. 과도하거나 안 쓰는 권한, 권한 상승 경로를 탐지한다.
+          이 프로젝트는 AWS IAM + Azure Entra ID 앱 권한을 본다.</div></details>
+
+      <details class="term"><summary><span class="q">KSPM</span> Kubernetes Security Posture Management <span class="plus" aria-hidden="true">＋</span></summary>
+        <div class="body">쿠버네티스 버전의 CSPM. Pod Security · RBAC · CIS 벤치마크 등
+          <strong>K8s 클러스터 설정</strong>의 보안을 점검한다(kube-bench).</div></details>
+
+      <details class="term"><summary><span class="q">DSPM</span> Data Security Posture Management <span class="plus" aria-hidden="true">＋</span></summary>
+        <div class="body"><strong>민감 데이터</strong>(개인정보 등)가 어디에 있고 노출됐는지 탐지.
+          이 프로젝트는 AWS Macie로 S3를 스캔한다.</div></details>
+
+      <details class="term"><summary><span class="q">Attack-path</span> 공격 경로 상관 분석 <span class="plus" aria-hidden="true">＋</span></summary>
+        <div class="body">개별 finding들을 그래프로 엮어 <strong>공격자가 이동할 수 있는 경로</strong>를 도출.
+          이 프로젝트의 핵심 차별점으로, R1~R5 상관 규칙이 체인을 만든다.</div></details>
+
+      <details class="term"><summary><span class="q">OCSF</span> Open Cybersecurity Schema Framework <span class="plus" aria-hidden="true">＋</span></summary>
+        <div class="body">보안 이벤트의 <strong>표준 스키마</strong>. 도구마다 다른 출력 형식을 이 표준으로 통일하면
+          한 뷰에서 볼 수 있다. 이 프로젝트는 경량 버전인 "OCSF-lite"를 쓴다.</div></details>
+
+      <details class="term"><summary><span class="q">RAG</span> Retrieval-Augmented Generation <span class="plus" aria-hidden="true">＋</span></summary>
+        <div class="body">LLM이 답하기 전에 <strong>관련 문서를 먼저 검색</strong>해 그 근거로만 답하게 하는 기법.
+          지어내는 것을 막는다. Titan 임베딩 + pgvector 검색 + Bedrock 답변.</div></details>
+
+      <details class="term"><summary><span class="q">Bedrock</span> Amazon Bedrock <span class="plus" aria-hidden="true">＋</span></summary>
+        <div class="body">AWS의 관리형 <strong>생성형 AI 서비스</strong>.
+          이 프로젝트는 Claude Haiku 모델로 tool-use를 시켜 에이전트가 스스로 API를 부르게 한다.</div></details>
+
+      <details class="term"><summary><span class="q">HITL</span> Human-in-the-Loop <span class="plus" aria-hidden="true">＋</span></summary>
+        <div class="body">자동화 흐름 중간에 <strong>사람의 승인</strong>을 끼워 넣는 것.
+          AI가 위험한 변경을 마음대로 못 하게 하고, 승인자가 확인해야 조치가 실행된다.</div></details>
+
+      <details class="term"><summary><span class="q">IRSA</span> IAM Roles for Service Accounts <span class="plus" aria-hidden="true">＋</span></summary>
+        <div class="body">EKS 파드가 <strong>장기 키 없이</strong> AWS 권한을 얻는 방식.
+          파드마다 스코프된 임시 자격증명을 준다. 이 프로젝트에선 "과도한 IRSA"가 공격 경로의 한 단계다.</div></details>
+
+      <details class="term"><summary><span class="q">GitOps</span> Git 기반 배포 <span class="plus" aria-hidden="true">＋</span></summary>
+        <div class="body">Git에 선언된 상태를 <strong>ArgoCD가 자동으로 클러스터에 동기화</strong>하는 배포 방식.
+          Git이 단일 진실 공급원이고 수동 <code>kubectl</code>이 필요 없다.</div></details>
+
+      <details class="term"><summary><span class="q">KEV</span> Known Exploited Vulnerabilities <span class="plus" aria-hidden="true">＋</span></summary>
+        <div class="body">CISA가 관리하는 <strong>실제로 악용된 적 있는 취약점</strong> 목록.
+          수많은 CVE 중 "진짜 위험한 것"을 우선순위화하는 기준이 된다.</div></details>
+
+      <details class="term"><summary><span class="q">Terraform</span> IaC (Infrastructure as Code) <span class="plus" aria-hidden="true">＋</span></summary>
+        <div class="body">인프라를 <strong>코드로 정의</strong>해 apply/destroy로 생성·삭제한다.
+          이 프로젝트는 레이어드 구조로 적용 순서를 강제했다.</div></details>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="foot">
+  <div class="wrap" style="display:flex;flex-wrap:wrap;gap:10px 20px;width:100%">
+    <span>김진우 · 클라우드 엔지니어</span>
+    <span>kkjjww1503@naver.com</span>
+    <a href="https://github.com/jinuuuKim" target="_blank" rel="noopener">github.com/jinuuuKim</a>
+  </div>
+</footer>
+
+<div class="lightbox" role="dialog" aria-modal="true" aria-label="이미지 확대 보기">
+  <button type="button" class="lightbox-close">CLOSE (ESC)</button>
+  <img alt="">
+</div>
+
+<script src="../assets/main.js"></script>
+
+<!-- Cloudflare Web Analytics — 쿠키를 쓰지 않아 배너가 필요 없다(SITE-SPEC §8.4).
+     dash.cloudflare.com > Web Analytics 에서 사이트를 추가하고 발급된 토큰을 넣은 뒤
+     아래 두 줄의 주석을 풀 것. 토큰 없이 활성화하면 잘못된 비콘만 나간다.
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js"
+        data-cf-beacon='{"token":"<TOKEN>"}'></script>
+-->
+
+</body>
+</html>

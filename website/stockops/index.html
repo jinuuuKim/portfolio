@@ -1,0 +1,609 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>StockOps — 김진우 포트폴리오</title>
+<meta name="description" content="서울·오하이오 두 리전 EKS 환경을 Terraform으로 구축하고, GitHub Actions·ArgoCD로 배포까지 무인화한 ERP/WMS 인프라.">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="nav-brand" href="../index.html">jinwoo.kim</a>
+    <div class="nav-links">
+      <a href="../index.html#profile">프로필</a>
+      <a href="../index.html#resume">이력</a>
+      <a href="../index.html#skills">기술</a>
+      <a href="../index.html#projects">프로젝트</a>
+      <span class="nav-sep" aria-hidden="true"></span>
+      <a href="../cnapp/index.html">CNAPP</a>
+      <a href="index.html" class="is-active" aria-current="page">StockOps</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ===== 히어로 ===== -->
+<header class="hero">
+  <div class="wrap">
+    <span class="hero-cat">PROJECT 02 / INFRASTRUCTURE</span>
+    <h1>StockOps</h1>
+    <p class="hero-lead">
+      서울·오하이오 두 리전 EKS 환경을 Terraform으로 구축하고,
+      GitHub Actions·ArgoCD로 배포까지 무인화한 ERP/WMS 인프라
+    </p>
+
+    <dl class="hero-meta">
+      <div><dt>TEAM</dt><dd>4인</dd></div>
+      <div><dt>PERIOD</dt><dd>2026.03.26 – 06.26 (3개월)</dd></div>
+      <div><dt>ROLE</dt><dd>인프라 설계·구축 · CI/CD</dd></div>
+    </dl>
+
+    <div class="hero-links">
+      <a class="btn-ink" href="https://github.com/jinuuuKim/Stockops-Infra" target="_blank" rel="noopener">
+        <span class="k">GITHUB</span> Stockops-Infra
+      </a>
+      <a class="btn-ink" href="https://github.com/jinuuuKim/Stockops-GitOps" target="_blank" rel="noopener">
+        <span class="k">GITHUB</span> Stockops-GitOps
+      </a>
+      <a class="btn-ink" href="../pdf/StockOps.pdf">
+        <span class="k">PDF</span> 포트폴리오 22p
+      </a>
+      <span class="btn-ink is-static">
+        <span class="k">DEPLOY</span> siseon.live (운영 종료)
+      </span>
+    </div>
+  </div>
+</header>
+
+<!-- ══════════ 포트폴리오 ══════════ -->
+<div class="divider">
+  <span class="rule" aria-hidden="true"></span>
+  <span class="label">
+    포트폴리오
+    <span class="note">내가 무엇을 했는가</span>
+  </span>
+  <span class="rule" aria-hidden="true"></span>
+</div>
+
+<main>
+
+<!-- ===== 01 프로젝트 개요 ===== -->
+<section class="section" id="overview">
+  <div class="wrap">
+    <div class="sec-h"><span class="sec-n">01</span><h2>프로젝트 개요</h2></div>
+
+    <p>온프레미스 ERP를 운영하던 K-Food 수출 기업의 미국 진출을 가정한 시나리오다.
+       물류센터 센서 데이터를 실시간 수집하고, 한국 본사와 미국 영업팀이 웹에서
+       주문·재고를 관리하는 ERP/WMS.</p>
+
+    <p style="margin-top:12px">수기 보고로 이루어지던 구조를 클라우드로 옮기면서,
+       한 리전에 장애가 발생해도 서비스가 멈추지 않도록
+       서울(Primary)·오하이오(Failover) 두 리전에 고가용성 인프라를 설계했다.</p>
+
+    <h3 class="sub-h">요구사항 → 설계 대응</h3>
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr><th>요구사항</th><th>설계 대응</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>기업 규모 확대</strong></td><td>멀티 리전 EKS + Global Accelerator 지연 라우팅</td></tr>
+          <tr><td><strong>클라우드 마이그레이션</strong></td><td>Terraform IaC · State 4분리</td></tr>
+          <tr><td><strong>재해복구 방안</strong></td><td>Ohio Cross-Region Replica(리전 장애) + Multi-AZ(AZ 이중화)</td></tr>
+          <tr><td><strong>현장 데이터 중앙 수집</strong></td><td>IoT Core → SQS(실시간) / Firehose(이력)</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <figure>
+      <img src="../assets/img/stockops-overview.png"
+           alt="기존 온프레미스 구조(AS-IS)와 요구사항별 설계 대응을 정리한 도표">
+      <figcaption>기존 구조(AS-IS)와 요구사항 → 설계 대응. 원본 포트폴리오 3페이지.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ===== 02 내가 담당한 것 ===== -->
+<section class="section" id="role">
+  <div class="wrap">
+    <div class="sec-h"><span class="sec-n">02</span><h2>내가 담당한 것</h2></div>
+
+    <ul>
+      <li>AWS 인프라 설계 및 구축 (VPC · EKS · RDS · ALB · Global Accelerator · CloudFront 등)</li>
+      <li>Terraform 기반 IaC 자동화 — 재사용 모듈 8종, State 4분리</li>
+      <li>CI/CD 파이프라인 — GitHub Actions(OIDC) + ArgoCD GitOps</li>
+      <li>IoT 실시간 파이프라인 — IoT Core → SQS / Firehose 이중 경로</li>
+      <li>인프라 보안 — WAF 2계층 · IRSA · Secrets Manager + ESO · KMS State 암호화</li>
+    </ul>
+
+    <div class="block is-key" style="margin-top:20px">
+      <h4>담당 경계 — 재해복구</h4>
+      <p>재해복구 <strong>설계 자체는 팀원이 담당</strong>했고,
+         이를 구현한 <strong>Terraform 코드(RDS Multi-AZ · Cross-Region Replica)는 내가 작성</strong>했다.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 03 아키텍처 ===== -->
+<section class="section" id="architecture">
+  <div class="wrap">
+    <div class="sec-h"><span class="sec-n">03</span><h2>아키텍처</h2></div>
+
+    <p class="sec-sub">서울(Primary)·오하이오(Failover) 두 리전. 리전 간은 VPC Peering으로 잇고,
+       진입은 Global Accelerator가 지연 기준으로 라우팅한다.</p>
+
+    <figure>
+      <img src="../assets/img/stockops-arch.png"
+           alt="서울·오하이오 두 리전에 걸친 StockOps 전체 아키텍처 다이어그램. Global Accelerator, CloudFront, EKS, RDS, IoT 파이프라인이 표시돼 있다.">
+      <figcaption>전체 아키텍처. 원본 포트폴리오 4페이지 크롭본.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ===== 04 동작 방식 ===== -->
+<section class="section" id="how">
+  <div class="wrap">
+    <div class="sec-h"><span class="sec-n">04</span><h2>동작 방식</h2></div>
+
+    <!-- 4-1 IaC -->
+    <h3 class="sub-h">Terraform State 4분리</h3>
+    <div class="table-scroll">
+      <table>
+        <thead><tr><th>State</th><th>범위</th></tr></thead>
+        <tbody>
+          <tr><td><code>seoul</code></td><td>서울 리전 전체</td></tr>
+          <tr><td><code>ohio</code></td><td>오하이오 리전 전체</td></tr>
+          <tr><td><code>peering</code></td><td>두 리전을 잇는 VPC Peering</td></tr>
+          <tr><td><code>global</code></td><td>CloudFront · Route53 · Global Accelerator 등 리전 무관 리소스</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+<pre><code>apply     Seoul → Ohio → Peering → Global
+destroy   역순</code></pre>
+
+    <figure>
+      <img src="../assets/img/stockops-iac.png"
+           alt="Terraform 디렉토리 구조와 S3 backend에 State를 네 개로 분리한 구성도">
+      <figcaption>Terraform 디렉토리 구조 + State S3 4분리. 원본 포트폴리오 6페이지.</figcaption>
+    </figure>
+
+    <!-- 4-2 네트워크 -->
+    <h3 class="sub-h">네트워크 — 3-Tier</h3>
+    <p>퍼블릭(ALB) · 애플리케이션(EKS 노드) · 데이터(RDS) 세 층으로 서브넷을 나누고,
+       보안 그룹은 <code>alb → app → db</code> 단방향으로만 열었다.</p>
+
+    <figure>
+      <img src="../assets/img/stockops-network.png"
+           alt="퍼블릭·애플리케이션·데이터 3계층으로 나뉜 VPC 서브넷 구조도">
+      <figcaption>3-Tier 네트워크 구조. 원본 포트폴리오 7페이지.</figcaption>
+    </figure>
+
+    <!-- 4-3 트래픽 -->
+    <h3 class="sub-h">트래픽 — 정적/동적 분리</h3>
+    <p>빌드된 정적 파일은 S3 + CloudFront가, 동적 API 요청은 Global Accelerator → ALB → EKS가 받는다.
+       두 경로를 나눈 결과는 <a href="#result">07 성과</a>에 있다.</p>
+
+    <figure>
+      <img src="../assets/img/stockops-traffic.png"
+           alt="정적 콘텐츠는 CloudFront, 동적 요청은 Global Accelerator에서 ALB로 향하는 트래픽 경로도">
+      <figcaption>정적/동적 트래픽 분리. 원본 포트폴리오 9페이지.</figcaption>
+    </figure>
+
+    <!-- 4-4 오토스케일 -->
+    <h3 class="sub-h">HPA + Karpenter 2단 오토스케일링</h3>
+    <p>파드 수는 HPA가, 그 파드를 올릴 노드는 Karpenter가 각각 늘린다.</p>
+
+    <div class="table-scroll">
+      <table>
+        <thead><tr><th>대상</th><th>min</th><th>max</th><th>기준</th></tr></thead>
+        <tbody>
+          <tr><td><code>api</code></td><td class="num-cell">1</td><td class="num-cell">4</td><td>CPU 60%</td></tr>
+          <tr><td><code>ai</code></td><td class="num-cell">1</td><td class="num-cell">4</td><td>CPU 60% + Memory 70%</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>인스턴스 t3.medium / t3.large · Spot 우선 · <code>consolidateAfter = 1분</code></p>
+
+    <figure>
+      <img src="../assets/img/stockops-autoscale.png"
+           alt="HPA 설정표와 kubectl get hpa, nodeclaims 실행 결과 스크린샷">
+      <figcaption>HPA 설정 + <code>kubectl get hpa / nodeclaims</code> 실측 출력. 원본 포트폴리오 12페이지.</figcaption>
+    </figure>
+
+    <!-- 4-5 CI/CD -->
+    <h3 class="sub-h">CI/CD 두 경로</h3>
+    <div class="block">
+      <h4>Frontend</h4>
+      <p>GitHub Actions가 client/admin을 빌드해 S3 sync → CloudFront 캐시 무효화.
+         컨테이너 이미지가 필요 없고 EKS와 무관하다.</p>
+    </div>
+    <div class="block">
+      <h4>Backend</h4>
+      <p>서비스별 1회 빌드 후 동일 SHA 태그로 두 리전 ECR에 push →
+         GitOps 레포의 이미지 태그 갱신 → 각 클러스터의 ArgoCD가 Auto Sync.</p>
+    </div>
+
+    <figure>
+      <img src="../assets/img/stockops-cicd.png"
+           alt="GitHub Actions에서 ECR을 거쳐 ArgoCD로 이어지는 배포 파이프라인과 실행 화면">
+      <figcaption>CI/CD 파이프라인 + GitHub Actions·ArgoCD 실행 화면. 원본 포트폴리오 13페이지.</figcaption>
+    </figure>
+
+    <!-- 4-6 보안 -->
+    <h3 class="sub-h">보안</h3>
+    <div class="block">
+      <h4>키리스 인증</h4>
+      <p>GitHub Actions는 OIDC로 IAM Role을 맡고, 파드는 IRSA로 임시 자격증명을 받는다.
+         장기 액세스 키를 저장소·클러스터 어디에도 두지 않았다.</p>
+    </div>
+    <div class="block">
+      <h4>WAF 2계층</h4>
+      <p>CloudFront와 ALB 각각에 룰을 걸어, 정적 경로와 동적 API 경로를 서로 다른 지점에서 거른다.</p>
+    </div>
+    <div class="block">
+      <h4>보안 그룹 단방향 체인</h4>
+      <p><code>alb → app → db</code> 방향으로만 인바운드를 허용해, 계층을 건너뛴 접근 경로를 만들지 않았다.</p>
+    </div>
+    <div class="block">
+      <h4>시크릿 · State 암호화</h4>
+      <p>애플리케이션 시크릿은 Secrets Manager + External Secrets Operator로 클러스터에 주입하고,
+         Terraform State는 S3에 두되 KMS로 암호화했다.</p>
+    </div>
+
+    <figure>
+      <img src="../assets/img/stockops-security.png"
+           alt="GitHub OIDC와 IRSA 기반 키리스 인증 구조도">
+      <figcaption>키리스 인증 구조 — GitHub OIDC · IRSA. 원본 포트폴리오 16페이지.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ===== 05 설계에서 고민한 것 ===== -->
+<section class="section" id="design">
+  <div class="wrap">
+    <div class="sec-h"><span class="sec-n">05</span><h2>설계에서 고민한 것</h2></div>
+
+    <div class="block is-key">
+      <h4>State를 왜 네 개로 나눴나</h4>
+      <p>리전별로만 나누면 두 리전을 잇는 VPC Peering이 어느 한쪽에 종속된다.
+         그 리전을 다시 적용하면 피어링 경로가 같이 재생성되면서 반대쪽 라우팅이 깨진다.
+         <code>peering</code>을 독립 실행 단위로 뽑아내자 서울과 오하이오를 서로 독립적으로
+         건드릴 수 있게 됐고, 리전 무관 리소스를 <code>global</code>로 분리해
+         리전 작업이 전역 설정을 건드리지 않게 했다.</p>
+      <p>다만 <strong>상태를 나누는 것만으로는 의존성이 관리되지 않는다</strong>는 걸 이후에 알았다.
+         적용 순서를 규칙으로 문서화하고, 하드코딩한 참조를
+         <code>remote_state</code> 출력값으로 교체한 뒤에야 재현성이 확보됐다.</p>
+    </div>
+
+    <div class="block is-key">
+      <h4>Terraform과 ArgoCD가 서로 덮어쓰지 않게 하려면</h4>
+      <p>둘 다 쿠버네티스 리소스를 만들 수 있어 경계를 안 정하면 서로의 상태를 되돌린다.
+         <strong>수명주기가 인프라에 묶이는가</strong>를 기준으로 나눴다.</p>
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th>소유자</th><th>관리 대상</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Terraform</strong></td><td>Service · IRSA · HPA · Namespace · TargetGroupBinding</td></tr>
+            <tr><td><strong>ArgoCD</strong></td><td>Deployment (이미지 태그)</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p><code>replicas</code>는 HPA가 소유하는 값인데 매니페스트에도 있으면
+         ArgoCD가 계속 원래 값으로 되돌린다. 매니페스트에서 빼고 Application에
+         <code>ignoreDifferences: /spec/replicas</code>를 걸어 싸울 여지를 없앴다.</p>
+    </div>
+
+    <div class="block is-key">
+      <h4>자원이 부족할 때 노드를 늘리지 않은 이유</h4>
+      <p>파드가 몰려 노드 증설 의견이 먼저 나왔지만, 무엇이 자원을 쓰고 있는지부터 봤다.
+         빌드된 정적 파일을 내려주는 프론트엔드 파드가 트래픽과 무관하게 자리를 차지하고 있었고,
+         그건 애초에 클러스터에 있을 이유가 없었다. S3 + CloudFront로 옮기자
+         운영 파드가 5개에서 3개로 줄었고, 프론트 수정이 서버 재배포와 분리되는 부수 효과도 생겼다.</p>
+      <p>팀이 처음엔 반대해서, 줄어드는 파드 수와 비용을 정리해 다시 설명한 뒤에 진행했다.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 06 트러블슈팅 ===== -->
+<section class="section" id="trouble">
+  <div class="wrap">
+    <div class="sec-h"><span class="sec-n">06</span><h2>트러블슈팅</h2></div>
+
+    <div class="ts">
+      <h4>① 한쪽 리전을 다시 적용하면 다른 쪽 피어링 경로가 삭제됨</h4>
+      <dl>
+        <dt>증상</dt><dd>서울 또는 오하이오를 <code>apply</code>하면 반대쪽 리전의 VPC Peering 라우팅이 사라짐</dd>
+        <dt>원인</dt><dd>리전 VPC 모듈이 라우팅 테이블을 <strong>통째로 덮어씀</strong></dd>
+        <dt>해결</dt><dd>적용 순서 규칙 문서화 + 하드코딩 참조를 <code>remote_state</code> 출력값으로 교체</dd>
+        <dt>결과</dt><dd><strong>전체 삭제 후 재적용해도 동일 구성 재현</strong></dd>
+      </dl>
+    </div>
+
+    <div class="ts">
+      <h4>② 부하가 몰리자 파드가 Pending 상태로 멈춤</h4>
+      <dl>
+        <dt>증상</dt><dd>HPA는 파드를 늘리는데 스케줄될 노드가 없어 Pending에서 진행되지 않음</dd>
+        <dt>원인</dt><dd>Karpenter의 <code>SecurityGroupSelectorTerms</code>가 참조하는 태그가 클러스터 보안 그룹에 누락</dd>
+        <dt>해결</dt><dd><code>aws_ec2_tag</code> 리소스로 태그 보강</dd>
+        <dt>결과</dt><dd><strong>30초 내 스팟 노드 자동 프로비저닝</strong> (t3.large ×2)</dd>
+      </dl>
+    </div>
+
+    <div class="ts">
+      <h4>③ IoT 기기는 발행하는데 DB 테이블이 비어 있음</h4>
+      <dl>
+        <dt>증상</dt><dd>센서가 정상 발행하는데 최종 적재 테이블에 행이 쌓이지 않음</dd>
+        <dt>원인</dt><dd>IRSA 권한 · 환경변수 · JSON 매핑(<code>@JsonProperty</code>) 누락이 겹침</dd>
+        <dt>해결</dt><dd>권한 → 설정 → 코드 → 데이터 순으로 계층별 순차 교정</dd>
+        <dt>결과</dt><dd><strong>IoT Core → SQS → RDS 실시간 경로 복원</strong></dd>
+      </dl>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 07 성과 ===== -->
+<section class="band" id="result">
+  <div class="wrap">
+    <p class="band-label">RESULT</p>
+    <h2>성과</h2>
+
+    <dl class="band-grid">
+      <div>
+        <dt>운영 파드</dt>
+        <p class="num">5 → 3</p>
+        <dd>정적·동적 분리로 상시 점유 자원 제거 (40% 감축)</dd>
+      </div>
+      <div>
+        <dt>STATE 재현</dt>
+        <p class="num">4개 전부</p>
+        <dd>삭제 후 재적용해도 동일 구성 복원</dd>
+      </div>
+      <div>
+        <dt>정적 액세스 키</dt>
+        <p class="num">0개</p>
+        <dd>GitHub OIDC · IRSA · Secrets Manager + ESO</dd>
+      </div>
+      <div>
+        <dt>배포 무인화</dt>
+        <p class="num">수동 단계 0</p>
+        <dd>Merge 이후 배포까지. 리전별 독립 롤백 가능</dd>
+      </div>
+    </dl>
+  </div>
+</section>
+
+<!-- ===== 08 산출물 ===== -->
+<section class="section" id="output">
+  <div class="wrap">
+    <div class="sec-h"><span class="sec-n">08</span><h2>산출물</h2></div>
+
+    <div class="pdf-viewer">
+      <object data="../pdf/StockOps.pdf#view=FitH" type="application/pdf" width="100%" height="620">
+        <p>브라우저가 PDF 미리보기를 지원하지 않습니다.
+           <a href="../pdf/StockOps.pdf">PDF 다운로드</a></p>
+      </object>
+    </div>
+
+    <div class="pdf-fallback">
+      <p class="sec-sub">이 화면 크기에서는 미리보기 대신 다운로드로 확인해 주세요.</p>
+    </div>
+
+    <div class="btn-row">
+      <a class="btn" href="../pdf/StockOps.pdf" download>
+        <span class="k">PDF</span> 다운로드 (3.77 MB, 22p)
+      </a>
+      <a class="btn" href="https://github.com/jinuuuKim/Stockops-Infra" target="_blank" rel="noopener">
+        <span class="k">GITHUB</span> Stockops-Infra
+      </a>
+      <a class="btn" href="https://github.com/jinuuuKim/Stockops-GitOps" target="_blank" rel="noopener">
+        <span class="k">GITHUB</span> Stockops-GitOps
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ 더 알아보기 ══════════ -->
+<div class="divider">
+  <span class="rule" aria-hidden="true"></span>
+  <span class="label">
+    더 알아보기
+    <span class="note">이 기술이 무엇인가</span>
+  </span>
+  <span class="rule" aria-hidden="true"></span>
+</div>
+
+<!-- ===== 09 왜 멀티 리전인가 ===== -->
+<section class="section" id="why">
+  <div class="wrap">
+    <div class="sec-h"><span class="sec-n">09</span><h2>왜 멀티 리전인가</h2></div>
+
+    <div class="grid-2">
+      <div class="mini">
+        <span class="tag">AZ ≠ REGION</span>
+        <h4>가용영역 이중화로는 못 막는 것</h4>
+        <p>Multi-AZ는 한 리전 안의 데이터센터 한 곳이 죽는 상황을 막는다.
+           하지만 리전 단위 서비스 장애는 그 리전의 모든 AZ에 동시에 영향을 준다.
+           이 경우 <strong>다른 리전에 살아 있는 사본</strong>이 없으면 서비스가 멈춘다.</p>
+      </div>
+      <div class="mini">
+        <span class="tag">LATENCY</span>
+        <h4>지연 기반 라우팅의 의미</h4>
+        <p>한국 본사와 미국 영업팀이 같은 서비스를 쓴다.
+           Global Accelerator가 <strong>요청자에게 더 가까운 리전</strong>으로 보내면,
+           태평양을 왕복하지 않아 응답이 빨라진다. 장애 대비와 성능이 같은 구조에서 나온다.</p>
+      </div>
+      <div class="mini">
+        <span class="tag">FAILOVER</span>
+        <h4>데이터는 어떻게 따라가나</h4>
+        <p>애플리케이션은 두 리전에 똑같이 떠 있어도, 데이터가 한쪽에만 있으면 페일오버가 안 된다.
+           RDS Cross-Region Replica로 오하이오에 복제본을 두어
+           서울이 끊겨도 읽을 데이터가 남아 있게 했다.</p>
+      </div>
+      <div class="mini">
+        <span class="tag">COST</span>
+        <h4>공짜가 아니다</h4>
+        <p>리전을 하나 더 두면 인프라 비용과 관리 대상이 그만큼 늘어난다.
+           그래서 오하이오는 <strong>대칭 복제가 아니라 Failover 역할</strong>로만 두고,
+           상시 트래픽은 서울이 받도록 설계했다.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 10 기술 스택 ===== -->
+<section class="section" id="stack">
+  <div class="wrap">
+    <div class="sec-h"><span class="sec-n">10</span><h2>기술 스택</h2></div>
+    <p class="sec-sub">4인 팀 프로젝트의 <strong>전체 스택</strong>이다. 내 담당 영역을 함께 표기했다.</p>
+
+    <div class="legend">
+      <span><span class="own me">●</span> 내가 구현</span>
+      <span><span class="own team">○</span> 팀원 구현 / 공동</span>
+    </div>
+
+    <div class="table-scroll">
+      <table>
+        <thead><tr><th>영역</th><th>기술</th><th>담당</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>네트워크</strong></td>
+            <td>VPC · 3-Tier Subnet · ALB · Global Accelerator · CloudFront · Route53</td>
+            <td class="own me">●</td>
+          </tr>
+          <tr>
+            <td><strong>컨테이너</strong></td>
+            <td>EKS · Kubernetes · Karpenter · HPA · Helm</td>
+            <td class="own me">●</td>
+          </tr>
+          <tr>
+            <td><strong>IaC</strong></td>
+            <td>Terraform — 재사용 모듈 8종 · State 4분리 · S3 backend + KMS</td>
+            <td class="own me">●</td>
+          </tr>
+          <tr>
+            <td><strong>CI/CD</strong></td>
+            <td>GitHub Actions(OIDC) · ArgoCD · Kustomize</td>
+            <td class="own me">●</td>
+          </tr>
+          <tr>
+            <td><strong>데이터</strong></td>
+            <td>RDS(Multi-AZ · Cross-Region Replica) · S3</td>
+            <td class="own me">●</td>
+          </tr>
+          <tr>
+            <td><strong>IoT 파이프라인</strong></td>
+            <td>IoT Core · SQS(실시간) · Firehose(이력)</td>
+            <td class="own me">●</td>
+          </tr>
+          <tr>
+            <td><strong>보안</strong></td>
+            <td>WAF 2계층 · IRSA · Secrets Manager + ESO · KMS</td>
+            <td class="own me">●</td>
+          </tr>
+          <tr>
+            <td><strong>재해복구 설계</strong></td>
+            <td>리전 장애 시나리오 · 페일오버 정책 <span style="color:var(--text-3)">(구현 Terraform 코드는 내가 작성)</span></td>
+            <td class="own team">○</td>
+          </tr>
+          <tr>
+            <td><strong>애플리케이션</strong></td>
+            <td><code>api</code> · <code>ai</code> 서비스 · client / admin 웹</td>
+            <td class="own team">○</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 11 용어집 ===== -->
+<section class="section" id="glossary">
+  <div class="wrap">
+    <div class="sec-h"><span class="sec-n">11</span><h2>용어집</h2></div>
+    <p class="sec-sub">이 페이지를 읽는 데 필요한 약어를 한 문장으로 정리했다. 클릭하면 펼쳐진다.</p>
+
+    <div class="terms">
+      <details class="term"><summary><span class="q">IaC</span> Infrastructure as Code <span class="plus" aria-hidden="true">＋</span></summary>
+        <div class="body">인프라를 <strong>코드로 정의</strong>해 apply/destroy로 생성·삭제하는 방식.
+          콘솔에서 손으로 만든 구성과 달리 같은 코드로 언제든 동일하게 재현된다.</div></details>
+
+      <details class="term"><summary><span class="q">State</span> Terraform 상태 파일 <span class="plus" aria-hidden="true">＋</span></summary>
+        <div class="body">Terraform이 <strong>"내가 만든 실제 리소스"를 기록해 둔 파일</strong>.
+          코드와 현실을 대조하는 기준이라, 이걸 어떻게 나누느냐가 곧 작업 단위가 된다.</div></details>
+
+      <details class="term"><summary><span class="q">remote_state</span> 다른 State의 출력값 참조 <span class="plus" aria-hidden="true">＋</span></summary>
+        <div class="body">한 State가 만든 리소스의 ID를 다른 State가 <strong>하드코딩 대신 읽어오는</strong> 방법.
+          앞단이 재생성돼 ID가 바뀌어도 뒷단이 따라간다.</div></details>
+
+      <details class="term"><summary><span class="q">GitOps</span> Git 기반 배포 <span class="plus" aria-hidden="true">＋</span></summary>
+        <div class="body">Git에 선언된 상태를 <strong>ArgoCD가 클러스터에 자동 동기화</strong>하는 배포 방식.
+          Git이 단일 진실 공급원이고, 수동 <code>kubectl</code>이 필요 없다.</div></details>
+
+      <details class="term"><summary><span class="q">HPA</span> Horizontal Pod Autoscaler <span class="plus" aria-hidden="true">＋</span></summary>
+        <div class="body">CPU·메모리 사용률에 따라 <strong>파드 개수</strong>를 늘리고 줄이는 쿠버네티스 기능.
+          노드가 아니라 파드를 조절한다.</div></details>
+
+      <details class="term"><summary><span class="q">Karpenter</span> 노드 오토스케일러 <span class="plus" aria-hidden="true">＋</span></summary>
+        <div class="body">스케줄될 곳이 없는 파드를 보고 <strong>필요한 노드를 즉시 띄우는</strong> 도구.
+          이 프로젝트는 Spot 우선 + <code>consolidateAfter</code>로 유휴 노드를 되돌린다.</div></details>
+
+      <details class="term"><summary><span class="q">IRSA</span> IAM Roles for Service Accounts <span class="plus" aria-hidden="true">＋</span></summary>
+        <div class="body">EKS 파드가 <strong>장기 키 없이</strong> AWS 권한을 얻는 방식.
+          파드마다 스코프된 임시 자격증명을 준다.</div></details>
+
+      <details class="term"><summary><span class="q">OIDC</span> OpenID Connect <span class="plus" aria-hidden="true">＋</span></summary>
+        <div class="body">GitHub Actions가 <strong>액세스 키를 저장하지 않고</strong> AWS 역할을 맡게 해주는 표준.
+          워크플로가 발급받은 단기 토큰으로 인증한다.</div></details>
+
+      <details class="term"><summary><span class="q">ESO</span> External Secrets Operator <span class="plus" aria-hidden="true">＋</span></summary>
+        <div class="body">AWS Secrets Manager 같은 <strong>외부 저장소의 값을 쿠버네티스 Secret으로 동기화</strong>하는 오퍼레이터.
+          시크릿 원본을 클러스터 밖에 둘 수 있다.</div></details>
+
+      <details class="term"><summary><span class="q">Multi-AZ</span> 가용영역 이중화 <span class="plus" aria-hidden="true">＋</span></summary>
+        <div class="body">한 리전 안의 <strong>서로 다른 데이터센터</strong>에 사본을 두는 것.
+          AZ 한 곳의 장애는 견디지만 리전 전체 장애는 못 막는다.</div></details>
+
+      <details class="term"><summary><span class="q">Cross-Region Replica</span> 리전 간 복제본 <span class="plus" aria-hidden="true">＋</span></summary>
+        <div class="body">RDS 데이터를 <strong>다른 리전에 복제</strong>해 두는 것.
+          리전 단위 장애에 대비하는 마지막 방어선.</div></details>
+
+      <details class="term"><summary><span class="q">Global Accelerator</span> 지연 기반 진입점 <span class="plus" aria-hidden="true">＋</span></summary>
+        <div class="body">고정 IP 하나로 받아 <strong>요청자에게 더 가까운·건강한 리전</strong>으로 보내주는 AWS 서비스.
+          장애 시 다른 리전으로 넘기는 역할도 겸한다.</div></details>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="foot">
+  <div class="wrap" style="display:flex;flex-wrap:wrap;gap:10px 20px;width:100%">
+    <span>김진우 · 클라우드 엔지니어</span>
+    <span>kkjjww1503@naver.com</span>
+    <a href="https://github.com/jinuuuKim" target="_blank" rel="noopener">github.com/jinuuuKim</a>
+  </div>
+</footer>
+
+<div class="lightbox" role="dialog" aria-modal="true" aria-label="이미지 확대 보기">
+  <button type="button" class="lightbox-close">CLOSE (ESC)</button>
+  <img alt="">
+</div>
+
+<script src="../assets/main.js"></script>
+
+<!-- Cloudflare Web Analytics — 쿠키를 쓰지 않아 배너가 필요 없다(SITE-SPEC §8.4).
+     dash.cloudflare.com > Web Analytics 에서 사이트를 추가하고 발급된 토큰을 넣은 뒤
+     아래 두 줄의 주석을 풀 것. 토큰 없이 활성화하면 잘못된 비콘만 나간다.
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js"
+        data-cf-beacon='{"token":"<TOKEN>"}'></script>
+-->
+
+</body>
+</html>

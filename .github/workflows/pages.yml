@@ -1,0 +1,40 @@
+name: Deploy Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# 배포는 한 번에 하나만. 진행 중인 배포는 취소하지 않는다.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      # website/를 사이트 루트로 올리고, pdf/는 경로를 유지한 채 함께 스테이징한다.
+      # 이미 제출한 PDF에 .../portfolio/pdf/*.pdf 링크가 박혀 있어 경로가 바뀌면 죽는다.
+      - name: Stage site + pdf
+        run: |
+          mkdir -p _site
+          cp -r website/* _site/
+          cp -r pdf _site/pdf
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+      - id: deployment
+        uses: actions/deploy-pages@v4
