@@ -8,6 +8,19 @@
 (function () {
   'use strict';
 
+  /* --- 0. 이메일 조립 ------------------------------------------------------ */
+  // 소스에 평문 주소를 남기지 않는다(SITE-SPEC §4.1). 사용자/사용자 이름과 도메인을
+  // 따로 두고 여기서 합친다. JS가 없으면 <noscript>의 "[at]" 표기가 그대로 보인다.
+
+  Array.prototype.forEach.call(document.querySelectorAll('[data-mail]'), function (el) {
+    var addr = el.getAttribute('data-u') + String.fromCharCode(64) + el.getAttribute('data-d');
+    var a = document.createElement('a');
+    a.href = 'mailto:' + addr;
+    a.textContent = addr;
+    el.textContent = '';
+    el.appendChild(a);
+  });
+
   /* --- 1. scroll spy ------------------------------------------------------ */
   // 홈에서만 동작. 프로젝트 페이지는 nav의 is-active가 HTML에 고정돼 있다.
   var spyLinks = Array.prototype.slice.call(
