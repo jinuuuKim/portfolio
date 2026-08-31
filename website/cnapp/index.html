@@ -84,11 +84,6 @@
        두 클라우드에 흩어진 보안 신호를 하나의 파이프라인으로 통합했다.
        2인 협업으로 9개 영역을 반씩 나누어 병렬 개발했다.</p>
 
-    <figure>
-      <img src="../assets/img/cnapp-context.png"
-           alt="기획 배경과 문제 정의를 정리한 도표">
-      <figcaption>기획 배경 · 문제 정의. 원본 포트폴리오 3페이지.</figcaption>
-    </figure>
   </div>
 </section>
 
@@ -109,9 +104,9 @@
     </ul>
 
     <figure>
-      <img src="../assets/img/cnapp-roles.png"
-           alt="2인 팀의 역할 분담과 협업 구조를 나타낸 도표. 9개 영역이 두 사람에게 나뉘어 있다.">
-      <figcaption>역할 분담 &amp; 협업 구조 — 9개 영역을 어떻게 갈랐는지. 원본 포트폴리오 4페이지.</figcaption>
+      <img src="../assets/img/cnapp-argocd.png"
+           alt="ArgoCD Applications 목록 화면. 여러 애플리케이션이 Synced / Healthy 상태로 표시돼 있다.">
+      <figcaption>ArgoCD가 GitOps로 동기화 중인 애플리케이션 목록. 배포가 수동 개입 없이 유지되는 상태.</figcaption>
     </figure>
   </div>
 </section>
@@ -121,13 +116,12 @@
   <div class="wrap">
     <div class="sec-h"><span class="sec-n">03</span><h2>아키텍처</h2></div>
 
-    <p class="sec-sub">AWS = 워크로드(EKS · 컨테이너 · 데이터)의 주인,
-       Azure = 신원(Entra ID)의 주인. 스캐너는 두 계정을 read-only로만 훑는다.</p>
+    <p class="sec-sub">스캐너는 두 계정을 read-only로만 훑고, 결과는 하나의 파이프라인으로 모인다.</p>
 
     <figure>
       <img src="../assets/img/cnapp-arch.png"
            alt="CNAPP-Agentic 전체 아키텍처 다이어그램. 스캐너 6기둥, 수집·정규화 파이프라인, 에이전틱 AI 엔진, Azure Entra ID, 관측 구성이 표시돼 있다.">
-      <figcaption>전체 아키텍처. 원본 포트폴리오 5페이지에서 우측 설명 패널을 제거한 크롭본.</figcaption>
+      <figcaption>AWS는 워크로드(EKS · 컨테이너 · 데이터)의 주인, Azure는 신원(Entra ID)의 주인.</figcaption>
     </figure>
   </div>
 </section>
@@ -157,38 +151,63 @@
       <div class="step">
         <span class="n">2</span>
         <div>
-          <h4><code>control_id</code> 매핑</h4>
-          <p>스캐너마다 다른 체크 ID를 내부 control 카탈로그로 역인덱스해 맞춘다.</p>
+          <h4><code>dedup_key = resource_id|control_id</code></h4>
+          <p>같은 리소스에 같은 종류의 문제가 중복되면 finding을 하나로 병합하고,
+             원본 스캐너 체크 ID는 <code>sources[]</code>에 누적한다.
+             어떤 스캐너가 감지했는지는 증거로 남기면서 화면에는 1건으로 표시된다.</p>
         </div>
       </div>
       <div class="step">
         <span class="n">3</span>
         <div>
-          <h4><code>dedup_key</code> 병합</h4>
-          <p><code>resource_id|control_id</code> 기준으로 동일 위험을 1건으로 합치고,
-             어느 스캐너가 잡았는지는 <code>sources</code>에 누적한다.</p>
+          <h4><code>severity_id</code> 내부 컨벤션 (1=Critical ~ 5=Info)</h4>
+          <p>실제 OCSF는 값이 클수록 심각한데 이와 반대로 잡았다. SEV1/P1 관례에 맞춰
+             <strong>오름차순 정렬만으로 Critical이 자동으로 최상단</strong>에 오게 하려고
+             정규화 단계에서 매핑한다.</p>
         </div>
       </div>
     </div>
 
-    <figure>
-      <img src="../assets/img/cnapp-normalize.png"
-           alt="서로 다른 스캐너 출력 포맷을 OCSF-lite 공통 스키마로 정규화하는 과정을 나타낸 도표">
-      <figcaption>OCSF-lite — 포맷 이질성 해소. 원본 포트폴리오 8페이지.</figcaption>
+    <figure class="narrow">
+      <img src="../assets/img/cnapp-scanners.png"
+           alt="CSPM · 워크로드 · CIEM으로 분류된 스캐너 6종 구성도">
+      <figcaption>CSPM · Workload · CIEM으로 나눈 스캐너 구성. 괄호 안은 각 도구가 내보내는 출력 포맷이다.</figcaption>
     </figure>
 
-    <!-- 4-2 상관 -->
+    <figure>
+      <img src="../assets/img/cnapp-pipeline.png"
+           alt="EventBridge에서 SQS, ingest, normalize를 거쳐 correlation과 orchestrator로 이어지는 수집·정규화 파이프라인 도식">
+      <figcaption>제각각인 스캐너 출력이 OCSF-lite 한 벌로 모이는 경로.</figcaption>
+    </figure>
+
+    <!-- 4-2 2-pass -->
+    <h3 class="sub-h">2-pass 이벤트 구동</h3>
+    <p>1차로 정규화·상관분석을 돌려 각 finding에 <code>attack_path_id</code>를 부여하고,
+       그 완료 이벤트를 EventBridge로 발행해 2차로 Triage·AI 조사(orchestrator)를 깨운다.
+       <strong>폴링이 아니라 이벤트 체인</strong>이라 스캔이 들어오는 즉시 자동으로 흐른다.</p>
+
+    <!-- 4-3 agentless -->
+    <h3 class="sub-h">완전 agentless</h3>
+    <ul>
+      <li>스캐너가 계정을 read-only로 훑어 결과만 EventBridge로 흘려보낸다.
+          취약 앱과 관제 앱은 서로 직접 통신하지 않는다</li>
+      <li>감시 대상에 에이전트를 심지 않으므로 <strong>침해 표면이 늘지 않는다</strong></li>
+      <li>Lambda는 VPC 내부(private subnet)에 배치해 RDS에 접근하고,
+          실패 메시지는 DLQ로 격리한다</li>
+    </ul>
+
+    <!-- 4-4 상관 -->
     <h3 class="sub-h">상관 엔진 — attack-path</h3>
     <p>R1~R5 상관 규칙이 개별 finding을 엮어 공격 경로 그래프를 만든다.
        개별로는 중간 위험인 결함도 한 줄로 이어지면 등급이 올라간다.</p>
 
     <figure>
       <img src="../assets/img/cnapp-attack-path.png"
-           alt="개별 finding들이 R1~R5 규칙으로 엮여 크로스클라우드 공격 경로 그래프를 이루는 화면">
-      <figcaption>상관 엔진 + 공격 경로 그래프. 원본 포트폴리오 9페이지.</figcaption>
+           alt="관제 콘솔의 공격 경로 화면. 개별 finding이 노드로, 그 사이의 이동 가능성이 간선으로 이어진 그래프.">
+      <figcaption>관제 콘솔이 실제로 그린 공격 경로. 노드 하나하나가 개별 finding이고, 이어진 선이 상관 규칙이 찾아낸 이동 경로다.</figcaption>
     </figure>
 
-    <!-- 4-3 에이전틱 -->
+    <!-- 4-5 에이전틱 -->
     <h3 class="sub-h">에이전틱 엔진 — 4단계 조사 루프</h3>
     <div class="steps">
       <div class="step">
@@ -216,21 +235,21 @@
     </div>
 
     <figure>
-      <img src="../assets/img/cnapp-agentic-loop.png"
-           alt="Triage에서 Reasoning까지 이어지는 4단계 능동 조사 루프와 read-only API 허용목록 2중 강제 구조도">
-      <figcaption>4단계 능동 조사 루프 + 허용목록 2중 강제. 원본 포트폴리오 11페이지.</figcaption>
+      <img src="../assets/img/cnapp-evidence.png"
+           alt="관제 콘솔의 Evidence 탭. AI가 조사 과정에서 호출한 API와 그 결과가 시간순 타임라인으로 쌓여 있다.">
+      <figcaption>AI가 스스로 모은 증거 타임라인. 어떤 API를 왜 불렀고 무엇을 확인했는지가 그대로 남는다.</figcaption>
     </figure>
 
-    <!-- 4-4 RAG -->
+    <!-- 4-6 RAG -->
     <h3 class="sub-h">RAG 설명 생성</h3>
     <p>Titan 임베딩으로 색인한 문서를 pgvector로 유사도 검색한 뒤,
        Bedrock이 <strong>검색된 근거 청크 안에서만</strong> 답하게 했다.
        "왜 위험하고 어떻게 고치나"를 지어내지 않게 하는 장치다.</p>
 
     <figure>
-      <img src="../assets/img/cnapp-rag.png"
-           alt="pgvector 검색 결과를 근거로 인용해 답변을 생성하는 RAG 구조도">
-      <figcaption>근거 인용의 신뢰성 — RAG 구성. 원본 포트폴리오 10페이지.</figcaption>
+      <img src="../assets/img/cnapp-chat.png"
+           alt="관제 콘솔의 질의 화면. 답변 아래에 근거로 사용한 문서 청크가 인용으로 붙어 있다.">
+      <figcaption>답변마다 근거 청크가 함께 인용된다. 인용이 없으면 답하지 않는다.</figcaption>
     </figure>
   </div>
 </section>
@@ -273,9 +292,9 @@
     </div>
 
     <figure>
-      <img src="../assets/img/cnapp-contract-ci.png"
-           alt="CI가 매 PR마다 계약 검사를 수행해 병합 전에 차단하는 하드 게이트 구성도">
-      <figcaption>계약 위반을 병합 전에 막는 CI 하드 게이트. 원본 포트폴리오 17페이지.</figcaption>
+      <img src="../assets/img/cnapp-ci.png"
+           alt="GitHub Actions 워크플로 실행 목록. 계약 검사와 회귀 테스트가 매 실행마다 통과 표시로 남아 있다.">
+      <figcaption>매 PR마다 도는 계약 검사. 여기서 막히면 병합이 안 된다.</figcaption>
     </figure>
   </div>
 </section>
@@ -300,6 +319,13 @@
         <dt>결과</dt>
         <dd><strong>AI 조사 확증률 33% → 60%</strong>, 판정이 inconclusive → confirmed로 전환</dd>
       </dl>
+
+      <figure>
+        <img src="../assets/img/cnapp-xray.png"
+             alt="X-Ray 서비스 맵. ingest부터 orchestrator까지 노드가 하나의 트레이스로 이어져 있고, AI가 호출한 API 노드도 함께 표시돼 있다.">
+        <figcaption>X-Ray 서비스 맵. ingest부터 orchestrator까지 전 구간이 하나의 트레이스로 이어지고,
+          AI가 자율적으로 호출한 API도 같은 화면에 나타난다.</figcaption>
+      </figure>
     </div>
 
     <div class="ts">
@@ -638,10 +664,30 @@
       </table>
     </div>
 
+    <h3 class="sub-h">관측 구성</h3>
+    <p>지표는 CloudTrail·CloudWatch가 모으고, 알림은 SNS와 Lambda가 보낸다.</p>
+    <ul>
+      <li><strong>Grafana 대시보드 6종</strong> — CloudWatch Application · Infra · AI / X-Ray / Prometheus / PostgreSQL</li>
+      <li><strong>Teams 알림 채널 3종</strong> — Cost · Login · Alerts</li>
+    </ul>
+
     <figure>
-      <img src="../assets/img/cnapp-observability.png"
-           alt="CloudWatch, Prometheus, PostgreSQL, X-Ray 네 소스를 통합한 Grafana 대시보드 6종 화면">
-      <figcaption>Grafana 대시보드 6종 — 4개 데이터 소스 통합. 원본 포트폴리오 18페이지.</figcaption>
+      <img src="../assets/img/cnapp-observ-flow.png"
+           alt="지표 수집부터 알림 전송까지의 관측 구성도. CloudTrail과 CloudWatch가 수집하고 SNS와 Lambda가 전송한다.">
+      <figcaption>수집에서 알림까지의 경로.</figcaption>
+    </figure>
+
+    <figure>
+      <img src="../assets/img/cnapp-grafana.png"
+           alt="Grafana 차트 두 개. 왼쪽은 Bedrock 토큰 사용량 추이, 오른쪽은 read-only API별 호출 횟수.">
+      <figcaption>좌 — 능동 조사에 쓰인 Bedrock 토큰 합산 추이. AI 판단 1건당 비용을 시간순으로 관측한다.<br>
+        우 — AI가 실제 호출한 read-only API별 호출 횟수. 조사 과정의 행동 패턴이 드러난다.</figcaption>
+    </figure>
+
+    <figure>
+      <img src="../assets/img/cnapp-system.png"
+           alt="관제 콘솔의 시스템 상태 화면.">
+      <figcaption>콘솔에서 바로 확인하는 시스템 상태.</figcaption>
     </figure>
 
     <h3 class="sub-h">용어집</h3>

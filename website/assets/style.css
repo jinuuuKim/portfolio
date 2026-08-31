@@ -374,6 +374,16 @@ strong{ font-weight:600; }
   font-size:13.3px;
   color:var(--band-body);
 }
+/* 파란 밴드 위의 이미지 — 테두리·캡션 색을 밴드에 맞춘다 */
+.band figure img{ border-color:rgba(255,255,255,.3); background:transparent; }
+.band figcaption{ color:var(--band-body); }
+.band figure.is-missing .ph{
+  border-color:rgba(255,255,255,.3);
+  background:rgba(255,255,255,.06);
+}
+.band .ph .ph-label,
+.band .ph .ph-alt{ color:var(--band-label); }
+.band .ph .ph-path{ color:#fff; }
 
 /* --- 10. 표 (§3.5) --------------------------------------------------------- */
 
@@ -800,3 +810,7 @@ pre code{ background:none; border:0; padding:0; font-size:inherit; }
   .divider{ padding:20px 0; }
   .nav-inner{ gap:12px; }
 }
+
+/* 세로로 긴 도식은 폭을 줄여 세로 점유를 낮춘다 (예: 스캐너 구성도 1296×1640) */
+figure.narrow img{ max-width:400px; margin:0 auto; }
+figure.narrow figcaption{ text-align:center; }
