@@ -10,6 +10,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap">
 <link rel="stylesheet" href="../assets/style.css">
+<script>document.documentElement.classList.add('js');</script>
 </head>
 <body>
 
@@ -317,6 +318,12 @@
         <code>s3:GetBucketPublicAccessBlock</code>이 <a href="#trouble">트러블슈팅 ①</a>에서 고친 바로 그 액션명이다.</figcaption>
     </figure>
 
+    <figure>
+      <img src="../assets/img/cnapp-grafana-eks.png"
+           alt="Grafana EKS 개요 대시보드. 노드·파드 상태와 자원 사용량 패널이 배치돼 있다.">
+      <figcaption>같은 Grafana의 EKS 개요. 엔진 지표와 인프라 지표를 한 곳에서 본다.</figcaption>
+    </figure>
+
     <figure class="narrow">
       <img src="../assets/img/cnapp-teams-alert.png"
            alt="Teams 채널에 도착한 알림 3건. AWS 콘솔 로그인 감지, 관제 콘솔 로그인 감지, 어제 AWS 사용 비용.">
@@ -572,7 +579,6 @@
       <div class="tablist" role="tablist" aria-label="배포와 CI 화면">
         <button role="tab" id="tb-argo" aria-controls="tp-argo" aria-selected="true">ArgoCD</button>
         <button role="tab" id="tb-ci"   aria-controls="tp-ci"   aria-selected="false">CI 실행 이력</button>
-        <button role="tab" id="tb-eks"  aria-controls="tp-eks"  aria-selected="false">Grafana — EKS</button>
       </div>
       <div role="tabpanel" id="tp-argo" aria-labelledby="tb-argo">
         <figure><img src="../assets/img/cnapp-argocd.png"
@@ -581,10 +587,6 @@
       <div role="tabpanel" id="tp-ci" aria-labelledby="tb-ci">
         <figure><img src="../assets/img/gallery-ci-runs.png" loading="lazy"
           alt="GitHub Actions 워크플로 실행 이력 목록."><figcaption>CI — 실행 이력</figcaption></figure>
-      </div>
-      <div role="tabpanel" id="tp-eks" aria-labelledby="tb-eks">
-        <figure><img src="../assets/img/gallery-grafana-eks.png" loading="lazy"
-          alt="Grafana EKS 개요 대시보드."><figcaption>Grafana — EKS 개요</figcaption></figure>
       </div>
     </div>
   </div>

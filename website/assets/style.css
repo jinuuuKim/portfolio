@@ -875,3 +875,8 @@ figure.narrow figcaption{ text-align:center; }
 /* 파란 밴드 위의 번호칩 — 밴드와 같은 파랑이면 안 보이므로 반전 */
 .band .sec-n{ background:#fff; color:var(--band); }
 .band .sec-h h2{ color:#fff; }
+
+/* 탭 초기화 전 깜빡임 차단 — JS가 있을 때만 첫 패널 외 숨김.
+   is-ready가 붙는 순간부터는 JS가 hidden으로 직접 관리한다.
+   JS가 없으면 이 규칙이 적용되지 않아 전부 세로로 나열된다. */
+html.js .tabs:not(.is-ready) > [role="tabpanel"] ~ [role="tabpanel"]{ display:none; }
