@@ -5,6 +5,7 @@
    2) 이미지 라이트박스
    3) 이미지 미배치 시 자리 표시 (파일을 넣으면 자동으로 사라짐)
    4) 탭 갤러리 (JS 미동작 시 세로 나열)
+   5) 데모 영상 파사드 (클릭 전까지 유튜브 미요청)
    ========================================================================== */
 
 (function () {
@@ -175,5 +176,24 @@
 
     box.classList.add('is-ready');
     select(0);
+  });
+
+  /* --- 5. 데모 영상 파사드 ------------------------------------------------- */
+  // 재생을 누르기 전까지는 유튜브에 아무 요청도 보내지 않는다(쿠키 없음).
+  // 눌렀을 때만 youtube-nocookie 아이프레임으로 교체한다.
+
+  Array.prototype.forEach.call(document.querySelectorAll('[data-video]'), function (box) {
+    var btn = box.querySelector('.video-play');
+    if (!btn) return;
+    btn.addEventListener('click', function () {
+      var id = box.getAttribute('data-video');
+      var f = document.createElement('iframe');
+      f.src = 'https://www.youtube-nocookie.com/embed/' + id + '?autoplay=1&rel=0';
+      f.title = box.getAttribute('data-title') || '데모 영상';
+      f.allow = 'accelerometer; autoplay; encrypted-media; picture-in-picture';
+      f.setAttribute('allowfullscreen', '');
+      box.innerHTML = '';
+      box.appendChild(f);
+    });
   });
 })();

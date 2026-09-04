@@ -880,3 +880,57 @@ figure.narrow figcaption{ text-align:center; }
    is-ready가 붙는 순간부터는 JS가 hidden으로 직접 관리한다.
    JS가 없으면 이 규칙이 적용되지 않아 전부 세로로 나열된다. */
 html.js .tabs:not(.is-ready) > [role="tabpanel"] ~ [role="tabpanel"]{ display:none; }
+
+/* --- 21. 데모 영상 (파사드) ---------------------------------------------- */
+/* 페이지 로드 시엔 유튜브를 부르지 않는다. 썸네일은 로컬 파일이고,
+   재생을 눌러야 youtube-nocookie 아이프레임으로 교체된다.
+   JS가 없으면 <noscript>의 링크가 그대로 보인다. */
+
+.video{
+  position:relative;
+  aspect-ratio:16/9;
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  overflow:hidden;
+  background:var(--ink);
+  margin:16px 0;
+}
+.video img,
+.video iframe{
+  position:absolute; inset:0;
+  width:100%; height:100%;
+  border:0;
+  display:block;
+}
+.video-play{
+  position:absolute; inset:0;
+  width:100%; height:100%;
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  gap:12px;
+  border:0;
+  background:rgba(10,37,64,.42);
+  color:var(--ink-text);
+  cursor:pointer;
+  font-family:var(--sans);
+}
+.video-play:hover{ background:rgba(10,37,64,.24); }
+.video-play .mark{
+  width:62px; height:62px;
+  border:2px solid rgba(255,255,255,.9);
+  border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+}
+.video-play .mark svg{ width:20px; height:20px; margin-left:3px; fill:#fff; }
+.video-play .label{
+  font-family:var(--mono);
+  font-size:11px;
+  letter-spacing:.1em;
+}
+.video-note{
+  font-size:12px;
+  color:var(--text-3);
+  margin-top:7px;
+  line-height:1.6;
+}
+.video-fallback{ padding:14px 0; }
