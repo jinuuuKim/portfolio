@@ -196,4 +196,18 @@
       box.appendChild(f);
     });
   });
+
+  /* --- 6. 우측 목차 노출 제어 --------------------------------------------- */
+  // 히어로(네이비)를 지나야 나타난다. 어두운 배경 위에 겹치면 글씨가 묻힌다.
+
+  var toc = document.querySelector('.toc');
+  var heroEl = document.querySelector('.hero');
+  if (toc && heroEl && 'IntersectionObserver' in window) {
+    new IntersectionObserver(function (es) {
+      toc.classList.toggle('is-visible', !es[0].isIntersecting);
+    }, { threshold: 0 }).observe(heroEl);
+  } else if (toc) {
+    toc.classList.add('is-visible');
+  }
+
 })();

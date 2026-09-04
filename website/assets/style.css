@@ -294,8 +294,8 @@ strong{ font-weight:600; }
 }
 
 /* --- 7-1. 우측 고정 섹션 목차 (§2.1) --------------------------------------- */
-/* 본문 폭(960) 바깥 여백에 놓는다. 자리가 안 나오는 좁은 화면에서는 감춘다.
-   상단 탭이 이미 있으므로 목차가 없어도 이동에는 지장이 없다. */
+/* 평소엔 눈금만 보이고, 커서를 올리면 라벨이 펼쳐진다.
+   히어로(네이비) 구간에서는 감춘다 — 어두운 배경 위에서 글씨가 묻힌다. */
 
 .toc{ display:none; }
 
@@ -304,49 +304,81 @@ strong{ font-weight:600; }
     display:block;
     position:fixed;
     top:50%;
-    right:28px;
+    right:0;
     transform:translateY(-50%);
-    width:142px;
     z-index:40;
+    opacity:0;
+    pointer-events:none;
+    transition:opacity .28s ease;
   }
+  .toc.is-visible{ opacity:1; pointer-events:auto; }
+
   .toc ol{
     list-style:none;
     margin:0;
-    padding:0 0 0 11px;
-    border-left:1px solid var(--line);
+    padding:14px 20px;
+    width:62px;
+    overflow:hidden;
+    background:transparent;
+    border:1px solid transparent;
+    border-right:0;
+    transition:width .24s ease, background .24s ease, border-color .24s ease;
   }
+  .toc:hover ol,
+  .toc:focus-within ol{
+    width:206px;
+    background:var(--bg);
+    border-color:var(--line);
+  }
+
   .toc li{ margin:0; }
+
   .toc a{
     display:flex;
-    align-items:baseline;
-    gap:7px;
-    padding:4px 0;
+    align-items:center;
+    justify-content:flex-end;
+    gap:10px;
+    height:30px;
     color:var(--text-3);
     text-decoration:none;
-    line-height:1.35;
     transition:color .12s;
   }
+  .toc a::after{
+    content:"";
+    flex:none;
+    width:16px;
+    height:1px;
+    background:var(--line-soft);
+    transition:width .2s ease, background .2s ease;
+  }
+
+  .toc .n,
+  .toc .t{
+    opacity:0;
+    white-space:nowrap;
+    transition:opacity .18s ease;
+  }
+  .toc:hover .n,
+  .toc:hover .t,
+  .toc:focus-within .n,
+  .toc:focus-within .t{ opacity:1; }
+
   .toc .n{
     font-family:var(--mono);
-    font-size:10px;
+    font-size:10.5px;
     letter-spacing:.04em;
     flex:none;
+    margin-right:auto;
   }
-  .toc .t{
-    font-size:11.5px;
-    white-space:nowrap;
-    overflow:hidden;
-    text-overflow:ellipsis;
-  }
+  .toc .t{ font-size:12px; }
+
   .toc a:hover{ color:var(--text-2); }
+  .toc a:hover::after{ background:var(--text-3); }
+
   .toc a.is-active{ color:var(--text); }
   .toc a.is-active .n{ color:var(--band); font-weight:500; }
   .toc a.is-active .t{ font-weight:500; }
-  .toc li:has(a.is-active){
-    box-shadow:inset 2px 0 0 var(--band);
-    margin-left:-11px;
-    padding-left:11px;
-  }
+  .toc a.is-active::after{ width:30px; background:var(--band); }
 }
 
 /* --- 8. 설계 블록 (§3.5) --------------------------------------------------- */
