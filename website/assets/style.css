@@ -34,7 +34,6 @@
 
   /* 레이아웃 */
   --wrap:       960px;
-  --wide:      1280px;
   --pad:        24px;
   --nav-h:      52px;
 
@@ -593,14 +592,6 @@ a.card:hover{
 
 figure{ margin:20px 0; }
 
-/* 이미지는 본문 폭 밖으로 — 읽기 폭(960)은 지키고 그림만 1280까지 (§3.6) */
-figure:not(.narrow){
-  width:min(var(--wide), calc(100vw - 2 * var(--pad)));
-  margin-left:50%;
-  transform:translateX(-50%);
-}
-.band figure:not(.narrow),
-.tabs figure:not(.narrow){ width:auto; margin-left:0; transform:none; }
 
 figure img{
   width:100%;
