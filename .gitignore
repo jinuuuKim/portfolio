@@ -8,6 +8,7 @@ SITE-SPEC.md
 # 내부 메모(원본 페이지 번호·수치 충돌 경고 등)라 배포 대상에서 제외한다.
 website/assets/img/README.md
 
-# 폐기 이미지 보관함 — 마스킹 전 원본이 들어 있다.
-# website/ 안에 있으면 Pages로 그대로 배포되므로 반드시 제외한다.
+# 미사용 이미지 임시 보관함.
+# 작업 중 안 쓰게 된 파일을 여기로 옮겨두면 김진우가 확인 후 삭제한다.
+# website/ 하위는 Pages로 그대로 배포되므로 반드시 커밋에서 제외한다.
 website/assets/img/_unused/
