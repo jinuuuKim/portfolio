@@ -270,9 +270,11 @@ strong{ font-weight:600; }
 
 .chapter{
   border-top:1px solid var(--line);
-  padding-top:30px;
-  margin:52px 0 0;
+  padding-top:32px;
+  margin:56px 0 0;
 }
+/* 구분선 바로 뒤 섹션은 자체 경계선을 지운다 — 라벨이 선 두 개 사이에 끼는 것 방지 */
+.chapter + .section{ border-top:0; padding-top:30px; }
 .chapter .wrap{
   display:flex;
   align-items:baseline;
