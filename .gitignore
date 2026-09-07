@@ -12,3 +12,8 @@ website/assets/img/README.md
 # 작업 중 안 쓰게 된 파일을 여기로 옮겨두면 김진우가 확인 후 삭제한다.
 # website/ 하위는 Pages로 그대로 배포되므로 반드시 커밋에서 제외한다.
 website/assets/img/_unused/
+
+# 배포되는 이미지는 website/assets/img/*.webp 하나뿐이다.
+# 원본 PNG/JPG는 img-originals/에 두고 git으로 백업한다 —
+# website/ 밖이라 Pages로 배포되지 않는다(pages.yml이 website/*만 복사).
+# 지우지 말 것. PDF 크롭을 다시 뜨는 것보다 20MB를 보관하는 편이 싸다.

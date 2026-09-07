@@ -99,8 +99,8 @@
        2인 협업으로 9개 영역을 반씩 나누어 병렬 개발했다.</p>
 
     <figure>
-      <img src="../assets/img/cnapp-dashboard.png"
-           alt="관제 콘솔 보안 대시보드. 전체 finding·OPEN·Critical·공격 경로 집계와 AWS·Azure Secure Score, 크로스클라우드 공격 경로 3건이 한 화면에 있다.">
+      <img src="../assets/img/cnapp-dashboard.webp"
+           alt="관제 콘솔 보안 대시보드. 전체 finding·OPEN·Critical·공격 경로 집계와 AWS·Azure Secure Score, 크로스클라우드 공격 경로 3건이 한 화면에 있다." width="1846" height="1311">
       <figcaption>관제 콘솔 대시보드. 개발 단계 스냅샷이라 건수는 최종 라이브 검증(432건)과 다르다.</figcaption>
     </figure>
   </div>
@@ -123,8 +123,8 @@
     </ul>
 
     <figure>
-      <img src="../assets/img/cnapp-roles.png"
-           alt="2인 팀의 역할 분담 도식. 9개 영역이 두 사람에게 나뉘어 표시돼 있다." loading="lazy" decoding="async">
+      <img src="../assets/img/cnapp-roles.webp"
+           alt="2인 팀의 역할 분담 도식. 9개 영역이 두 사람에게 나뉘어 표시돼 있다." loading="lazy" decoding="async" width="1641" height="678">
       <figcaption>2인 팀의 9개 영역 분담. 왼쪽 절반이 내 담당이다.</figcaption>
     </figure>
   </div>
@@ -138,8 +138,8 @@
     <p class="sec-sub">스캐너는 두 계정을 read-only로만 훑고, 결과는 하나의 파이프라인으로 모인다.</p>
 
     <figure>
-      <img src="../assets/img/cnapp-arch.png"
-           alt="CNAPP-Agentic 전체 아키텍처 다이어그램. 스캐너 6기둥, 수집·정규화 파이프라인, 에이전틱 AI 엔진, Azure Entra ID, 관측 구성이 표시돼 있다." loading="lazy" decoding="async">
+      <img src="../assets/img/cnapp-arch.webp"
+           alt="CNAPP-Agentic 전체 아키텍처 다이어그램. 스캐너 6기둥, 수집·정규화 파이프라인, 에이전틱 AI 엔진, Azure Entra ID, 관측 구성이 표시돼 있다." loading="lazy" decoding="async" width="4096" height="3406">
       <figcaption>AWS는 워크로드(EKS · 컨테이너 · 데이터)의 주인, Azure는 신원(Entra ID)의 주인.</figcaption>
     </figure>
   </div>
@@ -188,14 +188,14 @@
     </div>
 
     <figure class="narrow">
-      <img src="../assets/img/cnapp-scanners.png"
-           alt="CSPM · 워크로드 · CIEM으로 분류된 스캐너 6종 구성도" loading="lazy" decoding="async">
+      <img src="../assets/img/cnapp-scanners.webp"
+           alt="CSPM · 워크로드 · CIEM으로 분류된 스캐너 6종 구성도" loading="lazy" decoding="async" width="1688" height="2168">
       <figcaption>CSPM · Workload · CIEM으로 나눈 스캐너 구성. 괄호 안은 각 도구가 내보내는 출력 포맷이다.</figcaption>
     </figure>
 
     <figure>
-      <img src="../assets/img/cnapp-pipeline.png"
-           alt="EventBridge에서 SQS, ingest, normalize를 거쳐 correlation과 orchestrator로 이어지는 수집·정규화 파이프라인 도식" loading="lazy" decoding="async">
+      <img src="../assets/img/cnapp-pipeline.webp"
+           alt="EventBridge에서 SQS, ingest, normalize를 거쳐 correlation과 orchestrator로 이어지는 수집·정규화 파이프라인 도식" loading="lazy" decoding="async" width="3312" height="644">
       <figcaption>제각각인 스캐너 출력이 OCSF-lite 한 벌로 모이는 경로.</figcaption>
     </figure>
 
@@ -221,8 +221,8 @@
        개별로는 중간 위험인 결함도 한 줄로 이어지면 등급이 올라간다.</p>
 
     <figure>
-      <img src="../assets/img/cnapp-attack-path.png"
-           alt="관제 콘솔의 공격 경로 화면. 왼쪽에 경로 3건 목록, 오른쪽에 AWS 워크로드에서 Azure 신원으로 넘어가는 노드 그래프. 클라우드 경계를 넘는 간선은 빨간 점선이다." loading="lazy" decoding="async">
+      <img src="../assets/img/cnapp-attack-path.webp"
+           alt="관제 콘솔의 공격 경로 화면. 왼쪽에 경로 3건 목록, 오른쪽에 AWS 워크로드에서 Azure 신원으로 넘어가는 노드 그래프. 클라우드 경계를 넘는 간선은 빨간 점선이다." loading="lazy" decoding="async" width="2550" height="1330">
       <figcaption>붉은 점선이 클라우드 경계를 넘는 간선이다. 왼쪽 목록의 #1이 오른쪽 그래프로 펼쳐진 상태.</figcaption>
     </figure>
 
@@ -265,8 +265,8 @@
     </div>
 
     <figure>
-      <img src="../assets/img/cnapp-evidence.png"
-           alt="Evidence 탭의 능동 수집 증거 목록. s3:GetBucketPublicAccessBlock, s3:GetBucketAcl, s3:GetBucketPolicy, iam:GetRolePolicy, iam:ListAttachedRolePolicies 5회 호출과 각각의 확인 결과가 번호 순으로 쌓여 있다." loading="lazy" decoding="async">
+      <img src="../assets/img/cnapp-evidence.webp"
+           alt="Evidence 탭의 능동 수집 증거 목록. s3:GetBucketPublicAccessBlock, s3:GetBucketAcl, s3:GetBucketPolicy, iam:GetRolePolicy, iam:ListAttachedRolePolicies 5회 호출과 각각의 확인 결과가 번호 순으로 쌓여 있다." loading="lazy" decoding="async" width="2515" height="982">
       <figcaption>AI가 스스로 고른 read-only API 5회 호출과 그 결과. 어떤 근거로 판정했는지가 그대로 남는다.</figcaption>
     </figure>
 
@@ -277,8 +277,8 @@
        "왜 위험하고 어떻게 고치나"를 지어내지 않게 하는 장치다.</p>
 
     <figure>
-      <img src="../assets/img/cnapp-chat.png"
-           alt="관제 콘솔의 질의 화면. 답변 아래에 근거로 사용한 문서 청크가 인용으로 붙어 있다." loading="lazy" decoding="async">
+      <img src="../assets/img/cnapp-chat.webp"
+           alt="관제 콘솔의 질의 화면. 답변 아래에 근거로 사용한 문서 청크가 인용으로 붙어 있다." loading="lazy" decoding="async" width="3000" height="2100">
       <figcaption>답변마다 근거 청크가 함께 인용된다. 인용이 없으면 답하지 않는다.</figcaption>
     </figure>
 
@@ -298,8 +298,8 @@
     </div>
 
     <figure class="narrow">
-      <img src="../assets/img/cnapp-login.png"
-           alt="관제 콘솔 로그인 화면. Microsoft Entra ID로 로그인 버튼과 SSO 인증 흐름 3단계가 표시돼 있다." loading="lazy" decoding="async">
+      <img src="../assets/img/cnapp-login.webp"
+           alt="관제 콘솔 로그인 화면. Microsoft Entra ID로 로그인 버튼과 SSO 인증 흐름 3단계가 표시돼 있다." loading="lazy" decoding="async" width="660" height="748">
       <figcaption>Entra ID SSO 로그인. 하단에 read-only first · 조치는 승인(HITL) 경로로만이라는 원칙이 명시돼 있다.</figcaption>
     </figure>
 
@@ -319,35 +319,42 @@
     </ul>
 
     <figure>
-      <img src="../assets/img/cnapp-grafana-list.png"
-           alt="Grafana Dashboards 목록. CNAPP 이름이 붙은 대시보드 6종이 나열돼 있다." loading="lazy" decoding="async">
+      <img src="../assets/img/cnapp-grafana-list.webp"
+           alt="Grafana Dashboards 목록. CNAPP 이름이 붙은 대시보드 6종이 나열돼 있다." loading="lazy" decoding="async" width="1834" height="1207">
       <figcaption>Grafana 대시보드 6종. CloudWatch · Prometheus · PostgreSQL · X-Ray 4개 소스를 한 곳에 묶었다.</figcaption>
     </figure>
 
-    <figure>
-      <img src="../assets/img/cnapp-grafana-ai.png"
-           alt="Grafana의 CNAPP AI 대시보드. Bedrock 토큰 추이, 케이스별 비용, read-only tool별 호출 횟수 등 엔진 전용 커스텀 패널 9개." loading="lazy" decoding="async">
-      <figcaption>9개 패널 전부 엔진 전용 커스텀 지표다. <code>read-only tool별 호출 횟수</code> 패널의
-        <code>s3:GetBucketPublicAccessBlock</code>이 <a href="#trouble">트러블슈팅 ①</a>에서 고친 바로 그 액션명이다.</figcaption>
-    </figure>
+    <div class="fig-row" style="--cols:1.2105fr 1.2024fr">
+      <figure>
+        <img src="../assets/img/cnapp-grafana-ai.webp"
+          alt="Grafana의 CNAPP AI 대시보드. Bedrock 토큰 추이, 케이스별 비용, read-only tool별 호출 횟수 등 엔진 전용 커스텀 패널 9개." loading="lazy" decoding="async" width="1846" height="1525">
+        <figcaption><strong>엔진 지표</strong> — 9개 패널 전부 커스텀이다.
+          <code>read-only tool별 호출 횟수</code> 패널의 <code>s3:GetBucketPublicAccessBlock</code>이
+          <a href="#trouble">트러블슈팅 ①</a>에서 고친 바로 그 액션명이다.</figcaption>
+      </figure>
 
-    <figure>
-      <img src="../assets/img/cnapp-grafana-eks.png"
-           alt="Grafana EKS 개요 대시보드. 노드·파드 상태와 자원 사용량 패널이 배치돼 있다." loading="lazy" decoding="async">
-      <figcaption>같은 Grafana의 EKS 개요. 엔진 지표와 인프라 지표를 한 곳에서 본다.</figcaption>
-    </figure>
+      <figure>
+        <img src="../assets/img/cnapp-grafana-eks.webp"
+          alt="Grafana EKS 개요 대시보드. 노드·파드 상태와 자원 사용량 패널이 배치돼 있다." loading="lazy" decoding="async" width="1836" height="1527">
+        <figcaption><strong>인프라 지표</strong> — 같은 Grafana의 EKS 개요.
+          엔진과 인프라를 한 곳에서 본다.</figcaption>
+      </figure>
+    </div>
 
-    <figure class="narrow">
-      <img src="../assets/img/cnapp-teams-alert.png"
-           alt="Teams 채널에 도착한 알림 3건. AWS 콘솔 로그인 감지, 관제 콘솔 로그인 감지, 어제 AWS 사용 비용." loading="lazy" decoding="async">
-      <figcaption>로그인·비용 알림이 실제로 도착한 상태. IP는 마스킹했다.</figcaption>
-    </figure>
+    <div class="fig-row" style="--cols:1.0966fr 0.7646fr">
+      <figure>
+        <img src="../assets/img/cnapp-observ-flow.webp"
+          alt="지표 수집부터 알림 전송까지의 관측 구성도. CloudTrail과 CloudWatch가 수집하고 SNS와 Lambda가 전송한다." loading="lazy" decoding="async" width="2088" height="1904">
+        <figcaption><strong>설계</strong> — 수집(CloudTrail · CloudWatch)에서 전송(SNS · Lambda)까지의 경로.</figcaption>
+      </figure>
 
-    <figure class="narrow">
-      <img src="../assets/img/cnapp-observ-flow.png"
-           alt="지표 수집부터 알림 전송까지의 관측 구성도. CloudTrail과 CloudWatch가 수집하고 SNS와 Lambda가 전송한다." loading="lazy" decoding="async">
-      <figcaption>수집에서 알림까지의 경로.</figcaption>
-    </figure>
+      <figure>
+        <img src="../assets/img/cnapp-teams-alert.webp"
+          alt="Teams 채널에 도착한 알림 3건. AWS 콘솔 로그인 감지, 관제 콘솔 로그인 감지, 어제 AWS 사용 비용." loading="lazy" decoding="async" width="1504" height="1967">
+        <figcaption><strong>실측</strong> — 그 경로 끝에 실제로 도착한 알림.
+          로그인 감지 2건과 비용 1건이다. IP는 마스킹했다.</figcaption>
+      </figure>
+    </div>
   </div>
 </section>
 
@@ -389,8 +396,8 @@
     </div>
 
     <figure>
-      <img src="../assets/img/cnapp-ci-contracts.png"
-           alt="GitHub Actions 잡의 스텝 목록. contracts 정합(계약 4-assert)과 전 영역 run_demo + end-to-end 회귀 스텝이 모두 통과 표시다." loading="lazy" decoding="async">
+      <img src="../assets/img/cnapp-ci-contracts.webp"
+           alt="GitHub Actions 잡의 스텝 목록. contracts 정합(계약 4-assert)과 전 영역 run_demo + end-to-end 회귀 스텝이 모두 통과 표시다." loading="lazy" decoding="async" width="2630" height="820">
       <figcaption>매 PR마다 도는 스텝. <code>contracts 정합 (계약 4-assert)</code>와 <code>전 영역 run_demo + end-to-end 회귀</code>가 여기서 막히면 병합이 안 된다.</figcaption>
     </figure>
   </div>
@@ -417,18 +424,20 @@
         <dd><strong>AI 조사 확증률 33% → 60%</strong>, 판정이 inconclusive → confirmed로 전환</dd>
       </dl>
 
-      <figure>
-        <img src="../assets/img/cnapp-xray-before.png"
-             alt="수정 전 X-Ray 서비스 맵. member-pii-prod, IAM, macie2, S3, access-analyzer, EC2 노드가 노란 Error 표시다." loading="lazy" decoding="async">
-        <figcaption><strong>Before</strong> — member-pii-prod · IAM · macie2 · S3 · access-analyzer · EC2가 Error.
-          콘솔에는 아무 문제도 보이지 않던 상태다.</figcaption>
-      </figure>
+      <div class="fig-row" style="--cols:1.4876fr 2.1556fr">
+        <figure>
+          <img src="../assets/img/cnapp-xray-before.webp"
+            alt="수정 전 X-Ray 서비스 맵. member-pii-prod, IAM, macie2, S3, access-analyzer, EC2 노드가 노란 Error 표시다." loading="lazy" decoding="async" width="1138" height="765">
+          <figcaption><strong>Before</strong> — member-pii-prod · IAM · macie2 · S3 · access-analyzer · EC2가 Error.
+            콘솔에는 아무 문제도 보이지 않던 상태다.</figcaption>
+        </figure>
 
-      <figure>
-        <img src="../assets/img/cnapp-xray-after.png"
-             alt="수정 후 X-Ray 서비스 맵. 모든 노드가 초록 Success 표시다." loading="lazy" decoding="async">
-        <figcaption><strong>After</strong> — 액션명 6곳을 정정한 뒤 전 노드 Success.</figcaption>
-      </figure>
+        <figure>
+          <img src="../assets/img/cnapp-xray-after.webp"
+            alt="수정 후 X-Ray 서비스 맵. 모든 노드가 초록 Success 표시다." loading="lazy" decoding="async" width="1662" height="771">
+          <figcaption><strong>After</strong> — 액션명 6곳을 정정한 뒤 전 노드 Success.</figcaption>
+        </figure>
+      </div>
     </div>
 
     <div class="ts">
@@ -512,8 +521,8 @@
     <p class="sec-sub">스캔 → 상관 → AI 자율 조사 → 조치 승인까지, 실제로 도는 화면을 1분 30초로.</p>
 
     <div class="video" data-video="YaPADbf3t94" data-title="CNAPP-Agentic 데모 영상">
-      <img src="../assets/img/cnapp-demo-thumb.jpg"
-           alt="데모 영상 첫 화면. 관제 콘솔 대시보드 위에 통합 관제 → 상관 → 조사 → 조치 흐름이 표시돼 있다." loading="lazy" decoding="async">
+      <img src="../assets/img/cnapp-demo-thumb.webp"
+           alt="데모 영상 첫 화면. 관제 콘솔 대시보드 위에 통합 관제 → 상관 → 조사 → 조치 흐름이 표시돼 있다." loading="lazy" decoding="async" width="1280" height="720">
       <button type="button" class="video-play" aria-label="데모 영상 재생 (1분 30초)">
         <span class="mark" aria-hidden="true">
           <svg viewBox="0 0 16 16"><path d="M3 1.5v13l11-6.5z"/></svg>
@@ -586,48 +595,48 @@
       </div>
 
       <div role="tabpanel" id="tp-dash" aria-labelledby="tb-dash">
-        <figure><img src="../assets/img/cnapp-dashboard.png"
-          alt="관제 콘솔 대시보드. 전체 finding·OPEN·Critical·공격 경로 집계와 AWS·Azure Secure Score, 크로스클라우드 공격 경로 목록이 있다." loading="lazy" decoding="async"><figcaption>대시보드 — 점수 · 집계 · 공격 경로 요약</figcaption></figure>
+        <figure><img src="../assets/img/cnapp-dashboard.webp"
+          alt="관제 콘솔 대시보드. 전체 finding·OPEN·Critical·공격 경로 집계와 AWS·Azure Secure Score, 크로스클라우드 공격 경로 목록이 있다." loading="lazy" decoding="async" width="1846" height="1311"><figcaption>대시보드 — 점수 · 집계 · 공격 경로 요약</figcaption></figure>
       </div>
 
       <div role="tabpanel" id="tp-find" aria-labelledby="tb-find">
-        <figure><img src="../assets/img/gallery-findings.png" loading="lazy"
-          alt="Findings 목록. 클라우드·기둥·상태 필터와 심각도별 집계가 있고, finding마다 경로·AI 완료·상태 배지가 붙어 있다."><figcaption>Findings — 정규화된 발견사항을 우선순위 순으로. 각 행의 <code>경로</code> 배지가 공격 경로 소속을 뜻한다</figcaption></figure>
+        <figure><img src="../assets/img/gallery-findings.webp" loading="lazy"
+          alt="Findings 목록. 클라우드·기둥·상태 필터와 심각도별 집계가 있고, finding마다 경로·AI 완료·상태 배지가 붙어 있다." width="1945" height="1080"><figcaption>Findings — 정규화된 발견사항을 우선순위 순으로. 각 행의 <code>경로</code> 배지가 공격 경로 소속을 뜻한다</figcaption></figure>
       </div>
 
       <div role="tabpanel" id="tp-path" aria-labelledby="tb-path">
-        <figure><img src="../assets/img/gallery-attack-path.png" loading="lazy"
-          alt="Attack-path 화면. 왼쪽에 공격 경로 목록, 오른쪽에 AWS에서 Azure로 넘어가는 노드 그래프, 아래에 공격 서사가 있다."><figcaption>Attack-path — 목록 · 그래프 · 공격 서사까지 전체</figcaption></figure>
+        <figure><img src="../assets/img/gallery-attack-path.webp" loading="lazy"
+          alt="Attack-path 화면. 왼쪽에 공격 경로 목록, 오른쪽에 AWS에서 Azure로 넘어가는 노드 그래프, 아래에 공격 서사가 있다." width="1950" height="1393"><figcaption>Attack-path — 목록 · 그래프 · 공격 서사까지 전체</figcaption></figure>
       </div>
 
       <div role="tabpanel" id="tp-evid" aria-labelledby="tb-evid">
-        <figure><img src="../assets/img/gallery-evidence.png" loading="lazy"
-          alt="Evidence 탭 전체. 판정 배너, 트리아지 게이트, 가설, 능동 수집 증거 5건, 판정 근거, 모델별 토큰 사용량이 이어진다."><figcaption>Evidence — 트리아지 게이트부터 가설 · 증거 수집 · 판정 · 토큰 비용까지 한 화면</figcaption></figure>
+        <figure><img src="../assets/img/gallery-evidence.webp" loading="lazy"
+          alt="Evidence 탭 전체. 판정 배너, 트리아지 게이트, 가설, 능동 수집 증거 5건, 판정 근거, 모델별 토큰 사용량이 이어진다." width="1906" height="2576"><figcaption>Evidence — 트리아지 게이트부터 가설 · 증거 수집 · 판정 · 토큰 비용까지 한 화면</figcaption></figure>
       </div>
 
       <div role="tabpanel" id="tp-chat" aria-labelledby="tb-chat">
-        <figure><img src="../assets/img/gallery-ai-chat.png" loading="lazy"
-          alt="AI 보안 어시스턴트 화면. 공개 S3 버킷의 위험성과 조치 방법을 규정 위반·데이터 유출·감시 증거 부재로 나눠 답변하고 있다."><figcaption>AI 챗 — Titan 임베딩 → pgvector 코사인 검색 → Bedrock 답변</figcaption></figure>
+        <figure><img src="../assets/img/gallery-ai-chat.webp" loading="lazy"
+          alt="AI 보안 어시스턴트 화면. 공개 S3 버킷의 위험성과 조치 방법을 규정 위반·데이터 유출·감시 증거 부재로 나눠 답변하고 있다." width="1951" height="1390"><figcaption>AI 챗 — Titan 임베딩 → pgvector 코사인 검색 → Bedrock 답변</figcaption></figure>
       </div>
 
       <div role="tabpanel" id="tp-sys" aria-labelledby="tb-sys">
-        <figure><img src="../assets/img/gallery-ai-system.png" loading="lazy"
-          alt="AI 시스템 화면. 데이터 파이프라인 단계, Bedrock 24시간 사용량, 모델 구성, RAG 지식베이스와 findings 저장소 현황이 있다."><figcaption>AI·시스템 — 엔진·RAG·Bedrock 사용량을 한 화면에서 관측</figcaption></figure>
+        <figure><img src="../assets/img/gallery-ai-system.webp" loading="lazy"
+          alt="AI 시스템 화면. 데이터 파이프라인 단계, Bedrock 24시간 사용량, 모델 구성, RAG 지식베이스와 findings 저장소 현황이 있다." width="1947" height="1385"><figcaption>AI·시스템 — 엔진·RAG·Bedrock 사용량을 한 화면에서 관측</figcaption></figure>
       </div>
 
       <div role="tabpanel" id="tp-rem" aria-labelledby="tb-rem">
-        <figure><img src="../assets/img/gallery-remediation.png" loading="lazy"
-          alt="조치 승인 화면. 대기 중인 조치 12건이 심각도와 대상 리소스, 자동 실행 여부, 승인·거부 버튼과 함께 나열돼 있다."><figcaption>조치 (HITL) — 승인해야 Step Functions가 실행되고 감사로그에 불변 기록된다</figcaption></figure>
+        <figure><img src="../assets/img/gallery-remediation.webp" loading="lazy"
+          alt="조치 승인 화면. 대기 중인 조치 12건이 심각도와 대상 리소스, 자동 실행 여부, 승인·거부 버튼과 함께 나열돼 있다." width="1949" height="1390"><figcaption>조치 (HITL) — 승인해야 Step Functions가 실행되고 감사로그에 불변 기록된다</figcaption></figure>
       </div>
 
       <div role="tabpanel" id="tp-comp" aria-labelledby="tb-comp">
-        <figure><img src="../assets/img/gallery-compliance.png" loading="lazy"
-          alt="컴플라이언스 화면. ISMS-P 충족률과 항목별 미충족 수, ISMS-P 기준을 내부 control에 매핑한 상세 표가 있다."><figcaption>컴플라이언스 — ISMS-P 항목을 내부 control에 매핑해 실 finding 집계로 충족 여부를 자동 판정</figcaption></figure>
+        <figure><img src="../assets/img/gallery-compliance.webp" loading="lazy"
+          alt="컴플라이언스 화면. ISMS-P 충족률과 항목별 미충족 수, ISMS-P 기준을 내부 control에 매핑한 상세 표가 있다." width="1948" height="1392"><figcaption>컴플라이언스 — ISMS-P 항목을 내부 control에 매핑해 실 finding 집계로 충족 여부를 자동 판정</figcaption></figure>
       </div>
 
       <div role="tabpanel" id="tp-audit" aria-labelledby="tb-audit">
-        <figure><img src="../assets/img/gallery-audit.png" loading="lazy"
-          alt="감사로그 화면. 로그인·판정·스캔 기록이 시각·행위자·액션·대상 순으로 나열돼 있다."><figcaption>감사로그 — 모든 판정·조치·스캔·인증을 S3 Object Lock에 불변 기록</figcaption></figure>
+        <figure><img src="../assets/img/gallery-audit.webp" loading="lazy"
+          alt="감사로그 화면. 로그인·판정·스캔 기록이 시각·행위자·액션·대상 순으로 나열돼 있다." width="1950" height="1391"><figcaption>감사로그 — 모든 판정·조치·스캔·인증을 S3 Object Lock에 불변 기록</figcaption></figure>
       </div>
     </div>
 
@@ -638,12 +647,12 @@
         <button role="tab" id="tb-ci"   aria-controls="tp-ci"   aria-selected="false">CI 실행 이력</button>
       </div>
       <div role="tabpanel" id="tp-argo" aria-labelledby="tb-argo">
-        <figure><img src="../assets/img/cnapp-argocd.png"
-          alt="ArgoCD Applications 목록. 애플리케이션이 Synced / Healthy 상태다." loading="lazy" decoding="async"><figcaption>ArgoCD — GitOps 동기화 상태</figcaption></figure>
+        <figure><img src="../assets/img/cnapp-argocd.webp"
+          alt="ArgoCD Applications 목록. 애플리케이션이 Synced / Healthy 상태다." loading="lazy" decoding="async" width="2880" height="1240"><figcaption>ArgoCD — GitOps 동기화 상태</figcaption></figure>
       </div>
       <div role="tabpanel" id="tp-ci" aria-labelledby="tb-ci">
-        <figure><img src="../assets/img/gallery-ci-runs.png" loading="lazy"
-          alt="GitHub Actions 워크플로 실행 이력 목록."><figcaption>CI — 실행 이력</figcaption></figure>
+        <figure><img src="../assets/img/gallery-ci-runs.webp" loading="lazy"
+          alt="GitHub Actions 워크플로 실행 이력 목록." width="3360" height="2100"><figcaption>CI — 실행 이력</figcaption></figure>
       </div>
     </div>
   </div>
@@ -952,13 +961,6 @@
 </div>
 
 <script src="../assets/main.js"></script>
-
-<!-- Cloudflare Web Analytics — 쿠키를 쓰지 않아 배너가 필요 없다(SITE-SPEC §8.4).
-     dash.cloudflare.com > Web Analytics 에서 사이트를 추가하고 발급된 토큰을 넣은 뒤
-     아래 두 줄의 주석을 풀 것. 토큰 없이 활성화하면 잘못된 비콘만 나간다.
-<script defer src="https://static.cloudflareinsights.com/beacon.min.js"
-        data-cf-beacon='{"token":"<TOKEN>"}'></script>
--->
 
 </body>
 </html>

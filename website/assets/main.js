@@ -91,6 +91,80 @@
       window.addEventListener('resize', onScroll);
       window.addEventListener('load', updateSpy);
       updateSpy();
+
+      /* 1-1. 앵커 착지 보정
+         첫 방문에서 목차를 누르면 한두 섹션 위에 멈추는 일이 있었다.
+         브라우저는 "누른 순간의" 문서 높이로 목표 위치를 계산하는데,
+         아직 안 불러온 이미지가 자리를 덜 차지하고 있으면 목표가 위쪽으로
+         잡히고, 그 뒤 이미지가 들어오면서 섹션이 아래로 밀린다.
+
+         근본 대책은 모든 <img>에 width/height를 박아 로드 전에도 자리를
+         잡게 하는 것이고(그렇게 해 두었다), 여기서는 그래도 남는 오차를
+         턴다. 누른 뒤 잠깐 목표 위치를 다시 재서 어긋나 있으면 맞춘다. */
+      var guardTimer = null;
+
+      var anchorGuard = function (id) {
+        var target = document.getElementById(id);
+        if (!target) return;
+
+        var offset =
+          (parseFloat(
+            getComputedStyle(document.documentElement).getPropertyValue('--nav-h')
+          ) || 0) + 16;
+
+        var last = -1;
+        var still = 0;
+        var good = 0;
+        var tries = 0;
+        var cancelled = false;
+
+        // 사용자가 직접 스크롤을 잡으면 보정을 그만둔다. 안 그러면 서로 잡아당긴다.
+        var cancel = function () { cancelled = true; };
+        var events = ['wheel', 'touchstart', 'keydown', 'mousedown'];
+        events.forEach(function (t) {
+          window.addEventListener(t, cancel, { passive: true, once: true });
+        });
+        var cleanup = function () {
+          clearInterval(guardTimer);
+          guardTimer = null;
+          events.forEach(function (t) { window.removeEventListener(t, cancel); });
+        };
+
+        clearInterval(guardTimer);
+        guardTimer = setInterval(function () {
+          if (cancelled || ++tries > 20) return cleanup();
+
+          var y = window.pageYOffset;
+          // scroll-behavior:smooth 로 아직 움직이는 중이면 기다린다.
+          if (y !== last) { last = y; still = 0; return; }
+          if (++still < 2) return;
+
+          var gap = target.getBoundingClientRect().top - offset;
+          if (Math.abs(gap) > 4) {
+            window.scrollTo({ top: y + gap, behavior: 'auto' });
+            last = -1; still = 0; good = 0;   // 다시 멈출 때까지 한 번 더 본다
+            return;
+          }
+          updateSpy();
+          // 한 번 맞았다고 바로 끝내지 않는다. 늦게 들어온 이미지나
+          // 웹폰트 교체로 목표가 또 밀릴 수 있어 몇 번 더 확인한다.
+          if (++good < 3) return;
+          cleanup();
+        }, 70);
+      };
+
+      document.addEventListener('click', function (e) {
+        var a = e.target.closest('[data-spy] a[href^="#"]');
+        if (!a) return;
+        anchorGuard(a.getAttribute('href').slice(1));
+      });
+
+      // 주소창에 #section 을 달고 들어온 경우도 같은 보정을 건다.
+      if (location.hash.length > 1) {
+        window.addEventListener('load', function () {
+          anchorGuard(location.hash.slice(1));
+        });
+      }
     }
   }
 
