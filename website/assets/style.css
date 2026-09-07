@@ -967,7 +967,9 @@ figure.mid figcaption{ text-align:center; }
    split-NN = 왼쪽 칸이 차지하는 비율. 두 그림의 가로세로비를 보고 고른다. */
 .fig-row{
   display:grid;
-  grid-template-columns:1fr 1fr;
+  /* 칸 비율은 HTML에서 --cols로 준다. 두 그림의 세로가 같아지는 값이라
+     이미지가 바뀌면 다시 계산해야 한다 (§6.9.3 공식). */
+  grid-template-columns:var(--cols, 1fr 1fr);
   gap:14px 18px;
   align-items:start;
   margin:20px 0;
@@ -978,23 +980,28 @@ figure.mid figcaption{ text-align:center; }
 /* 표나 다른 블록을 한쪽 칸에 넣을 때 바깥 여백을 지운다 */
 .fig-row > .table-scroll{ margin:0; }
 
-.fig-row.split-30{ grid-template-columns:30fr 70fr; }
-.fig-row.split-35{ grid-template-columns:35fr 65fr; }
-.fig-row.split-40{ grid-template-columns:40fr 60fr; }
-.fig-row.split-45{ grid-template-columns:45fr 55fr; }
-.fig-row.split-51{ grid-template-columns:51.4fr 48.6fr; }
-
 /* 도식이 커 보일 때 행 전체를 좁혀 가운데 정렬 */
 .fig-row.is-narrow{ max-width:760px; margin-left:auto; margin-right:auto; }
 
-/* 오른쪽 칸의 표를 왼쪽 그림 높이에 맞춰 늘린다 */
-.fig-row.is-stretch{ align-items:stretch; }
-.fig-row.is-stretch > .table-scroll{ height:100%; }
-.fig-row.is-stretch > .table-scroll > table{ height:100%; }
+/* 오른쪽 칸이 표일 때 — 표 상자를 왼쪽 "이미지" 높이에 맞춘다.
+   캡션까지 합친 figure 높이가 아니라 이미지 높이다.
+   --tar = 표 칸 너비 / 이미지 높이. 둘 다 뷰포트에 비례해 줄어드므로
+   비율로 고정하면 어떤 폭에서도 이미지 아래끝과 표 아래끝이 맞는다.
+   내용이 넘치면 min-height가 상자를 늘려 잘리지 않게 한다. */
+.fig-row.is-table > .table-scroll{
+  aspect-ratio:var(--tar);
+  min-height:min-content;
+  overflow:visible;
+}
+.fig-row.is-table > .table-scroll > table{ height:100%; }
 
 /* 라벨 열은 줄바꿈하지 않는다 */
 table.t-fit th:first-child,
 table.t-fit td:first-child{ white-space:nowrap; }
+
+/* 행 높이를 고르게 나누고 글자를 세로 가운데로 */
+table.t-even tbody tr{ height:var(--rowh); }
+table.t-even tbody td{ vertical-align:middle; }
 
 /* 한 칸 안에 그림 여러 장을 세로로 쌓는다 (예: IoT 실시간 경로 2장) */
 .fig-stack{ display:flex; flex-direction:column; gap:14px; }
@@ -1130,14 +1137,11 @@ html.js .tabs:not(.is-ready) > [role="tabpanel"] ~ [role="tabpanel"]{ display:no
 
 @media (max-width:820px){
   /* 2단 도식은 세로로 편다 */
-  .fig-row,
-  .fig-row.split-30,
-  .fig-row.split-35,
-  .fig-row.split-40,
-  .fig-row.split-45,
-  .fig-row.split-51{ grid-template-columns:1fr; gap:18px; }
+  .fig-row{ grid-template-columns:1fr; gap:18px; }
   .fig-row.is-narrow{ max-width:none; }
-  .fig-row.is-stretch{ align-items:start; }
+  .fig-row.is-table > .table-scroll{ aspect-ratio:auto; overflow-x:auto; }
+  .fig-row.is-table > .table-scroll > table{ height:auto; }
+  table.t-even tbody tr{ height:auto; }
   .fig-pair{ grid-template-columns:1fr; gap:18px; }
 
   /* 폭 제한을 풀어 좁은 화면에서는 꽉 채운다 */

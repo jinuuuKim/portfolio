@@ -259,7 +259,7 @@ destroy   역순</code></pre>
        <code>api-server</code>는 <code>/actuator/health:8080</code>,
        <code>ai-module</code>은 <code>/health:8000</code>으로 각각 확인한다.</p>
 
-    <div class="fig-row">
+    <div class="fig-row" style="--cols:46.51% 51.61%">
       <figure>
         <img src="../assets/img/stockops-healthcheck.png"
           alt="Global Accelerator 아래 두 리전 ALB가 있고, 각 ALB의 spring-tg·fastapi-tg 대상 그룹 헬스 상태에 따라 리전 단위로 Healthy/Unhealthy가 결정되는 페일오버 구조도" loading="lazy" decoding="async">
@@ -295,38 +295,21 @@ destroy   역순</code></pre>
        <strong>S3 PUT 요청 수를 줄이고 객체 하나를 크게 만들었다.</strong>
        한쪽 경로가 막혀도 다른 쪽은 계속 도는 구조이기도 하다.</p>
 
-    <div class="fig-row split-30">
+    <div class="fig-row" style="--cols:20.92% 77.21%">
       <figure>
         <img src="../assets/img/stockops-iot.png"
           alt="센서에서 Mosquitto Bridge를 거쳐 IoT Core로 들어온 데이터가 IoT Rule에서 SQS(실시간)와 Firehose(이력) 두 갈래로 나뉘는 파이프라인 구성도" loading="lazy" decoding="async">
-        <figcaption><strong>설계</strong> — IoT Rule의 Fanout으로 실시간·이력 경로를 동시에 채운다.</figcaption>
+        <figcaption><strong>설계</strong> — IoT Rule의 Fanout.</figcaption>
       </figure>
 
-      <div class="fig-stack">
-        <div class="fig-pair">
-          <figure>
-            <img src="../assets/img/stockops-iot-sqs-proof.png"
-              alt="SQS 지표 화면. 전송된 메시지 크기가 14시 40분부터 15시 30분까지 288 Bytes 안팎으로 끊김 없이 이어지고 있다." loading="lazy" decoding="async">
-            <figcaption><strong>실측 · 실시간 ①</strong> — SQS <code>전송된 메시지 크기</code>.
-              50분 동안 끊긴 구간이 없다.</figcaption>
-          </figure>
-
-          <figure>
-            <img src="../assets/img/stockops-iot-web-proof.png"
-              alt="서비스의 환경 모니터링 화면. 등록 센서 19대·정상 알림 18·주의 0·위험 1이 집계돼 있고, 최근 최고 우선순위 알림으로 서울 강서 냉동실 온도 센서 값이 표시돼 있다." loading="lazy" decoding="async">
-            <figcaption><strong>실측 · 실시간 ②</strong> — 그 메시지가 도달한 서비스 화면.
-              SQS → <code>api-server</code> → 화면까지 이어진다.</figcaption>
-          </figure>
-        </div>
-
-        <figure>
-          <img src="../assets/img/stockops-iot-s3-proof.png"
-            alt="S3 stockops-sensor-data 버킷의 sensors/year=2026/month=06/day=18 경로에 gz 객체들이 9시52분·10시07분·10시22분으로 15분 간격으로 저장돼 있는 콘솔 화면" loading="lazy" decoding="async">
-          <figcaption><strong>실측 · 이력</strong> — 같은 스트림의 다른 갈래.
-            객체의 마지막 수정 시각이 <code>9:52 → 10:07 → 10:22</code>로 정확히 15분 간격이고 크기도 90KB 안팎으로 고르다.
-            <code>buffering_interval = 900</code>이 실제로 동작한 결과다.</figcaption>
-        </figure>
-      </div>
+      <figure>
+        <img src="../assets/img/stockops-iot-proof.png"
+          alt="위쪽은 SQS 지표에서 메시지가 끊김 없이 들어오고 그 데이터가 서비스의 환경 모니터링 화면에 반영된 모습, 아래쪽은 Firehose가 S3에 gz 객체를 15분 간격으로 저장하고 DataFreshness가 15분으로 유지되는 모습" loading="lazy" decoding="async">
+        <figcaption><strong>실측</strong> — 두 갈래가 모두 살아 있다.
+          위 <strong>실시간</strong>은 SQS 유입이 끊기지 않고 서비스 화면(센서 19대 · 위험 알림 1)까지 도달했고,
+          아래 <strong>이력</strong>은 S3 객체가 <code>9:52 → 10:07 → 10:22</code>로 정확히 15분 간격이며
+          <code>DataFreshness</code>도 15분에 붙어 있다. <code>buffering_interval = 900</code>이 그대로 나타난 값이다.</figcaption>
+      </figure>
     </div>
 
     <!-- 4-6 오토스케일 -->
@@ -377,7 +360,7 @@ destroy   역순</code></pre>
       <figcaption><strong>설계</strong> — Frontend는 클러스터를 거치지 않고, Backend는 GitOps 레포를 거친다.</figcaption>
     </figure>
 
-    <div class="fig-row split-35">
+    <div class="fig-row" style="--cols:32.75% 65.37%">
       <figure>
         <img src="../assets/img/stockops-cicd-github-proof.png"
           alt="GitHub Actions의 Build &amp; Deploy 잡 상세 화면. Set up job부터 Invalidate CloudFront cache까지 모든 스텝에 성공 표시가 붙어 있고 3분 58초에 완료됐다." loading="lazy" decoding="async">
@@ -401,7 +384,7 @@ destroy   역순</code></pre>
        핵심은 <strong>source를 IP 대역이 아니라 SG ID로 지정</strong>했다는 점이다.
        CIDR로 열면 같은 VPC 안의 다른 리소스도 같이 통과하지만, SG 참조는 그 보안 그룹에 속한 것만 통과한다.</p>
 
-    <div class="fig-row split-35 is-stretch">
+    <div class="fig-row is-table" style="--cols:31.25% 66.88%; --tar:1.627">
       <figure>
         <img src="../assets/img/stockops-security-sg.png"
           alt="서울·오하이오 두 리전의 alb-sg → app-sg → db-sg 단방향 보안 그룹 체인 구성도. db-sg는 app-sg와 상대 리전 Peering CIDR만 5432로 허용한다." loading="lazy" decoding="async">
@@ -410,7 +393,7 @@ destroy   역순</code></pre>
       </figure>
 
       <div class="table-scroll">
-        <table class="t-fit">
+        <table class="t-fit t-even" style="--rowh:24%">
           <thead><tr><th>원칙</th><th>적용</th></tr></thead>
           <tbody>
             <tr><td><strong>최소 권한</strong></td><td>ALB SG ID를 source로 직접 지정 — 동일 VPC 내 불필요한 접근 차단</td></tr>
@@ -427,21 +410,29 @@ destroy   역순</code></pre>
     <p>정적 경로(CloudFront)와 동적 API 경로(ALB)는 진입 지점이 다르므로, 각각에 별도 WebACL을 걸었다.
        엣지에서 한 번, 리전에서 한 번 거른다.</p>
 
-    <div class="table-scroll">
-      <table>
-        <thead><tr><th>계층</th><th>룰</th><th>역할</th></tr></thead>
-        <tbody>
-          <tr><td rowspan="2"><strong>CloudFront</strong><br><span class="t-3">엣지</span></td>
-              <td><code>AWSManagedRulesCommonRuleSet</code></td><td>XSS · 악성 파일 업로드 · HTTP 프로토콜 위반 탐지</td></tr>
-          <tr><td><code>AWSManagedRulesAmazonIpReputationList</code></td><td>AWS가 수집한 악성 IP(봇 · 스캐너 · 해킹 시도 이력)와 대조해 차단</td></tr>
-          <tr><td rowspan="5"><strong>ALB</strong><br><span class="t-3">리전</span></td>
-              <td><code>AWSManagedRulesCommonRuleSet</code></td><td>CloudFront와 동일</td></tr>
-          <tr><td><code>AWSManagedRulesKnownBadInputsRuleSet</code></td><td>Log4Shell · Spring4Shell 등 알려진 익스플로잇 패턴 차단</td></tr>
-          <tr><td><code>AWSManagedRulesSQLiRuleSet</code></td><td>SQL Injection 전용 룰셋</td></tr>
-          <tr><td><code>LoginRateLimit</code> <span class="t-3">custom</span></td><td><code>/api/v1/auth/login</code>에 IP당 5분 100회 초과 시 차단</td></tr>
-          <tr><td><code>RateLimit</code> <span class="t-3">custom</span></td><td>전체 경로 대상 IP당 5분 2000회 초과 시 차단</td></tr>
-        </tbody>
-      </table>
+    <div class="fig-row is-table" style="--cols:31.25% 66.88%; --tar:1.305">
+      <figure>
+        <img src="../assets/img/stockops-security-waf.png"
+          alt="사용자 요청이 CloudFront+WAF를 거쳐 S3로, Global Accelerator와 ALB+WAF를 거쳐 EKS로 향하는 2계층 WAF 배치도" loading="lazy" decoding="async">
+        <figcaption><strong>설계</strong> — 정적 경로와 동적 경로에 각각 WebACL.</figcaption>
+      </figure>
+
+      <div class="table-scroll">
+        <table class="t-fit t-even" style="--rowh:13%">
+          <thead><tr><th>계층</th><th>룰</th><th>역할</th></tr></thead>
+          <tbody>
+            <tr><td rowspan="2"><strong>CloudFront</strong><br><span class="t-3">엣지</span></td>
+                <td><code>CommonRuleSet</code> <span class="t-3">Count</span></td><td>XSS · 악성 파일 업로드 · HTTP 프로토콜 위반 탐지</td></tr>
+            <tr><td><code>AmazonIpReputationList</code></td><td>AWS가 수집한 악성 IP(봇 · 스캐너 · 해킹 시도 이력)와 대조해 차단</td></tr>
+            <tr><td rowspan="5"><strong>ALB</strong><br><span class="t-3">리전</span></td>
+                <td><code>CommonRuleSet</code> <span class="t-3">Count</span></td><td>CloudFront와 동일</td></tr>
+            <tr><td><code>KnownBadInputsRuleSet</code></td><td>Log4Shell · Spring4Shell 등 알려진 익스플로잇 패턴 차단</td></tr>
+            <tr><td><code>SQLiRuleSet</code> <span class="t-3">Count</span></td><td>SQL Injection 전용 룰셋</td></tr>
+            <tr><td><code>LoginRateLimit</code> <span class="t-3">custom · Block</span></td><td><code>/api/v1/auth/login</code>에 IP당 5분 100회 초과 시 차단</td></tr>
+            <tr><td><code>RateLimit</code> <span class="t-3">custom · Block</span></td><td>전체 경로 대상 IP당 5분 2000회 초과 시 차단</td></tr>
+          </tbody>
+        </table>
+      </div>
     </div>
 
     <div class="block is-key">
@@ -450,20 +441,6 @@ destroy   역순</code></pre>
          무엇이 오탐인지는 켜 보기 전엔 모른다. 그래서 <strong>관리형 룰셋은 Count 모드로 두고 매칭 로그만 쌓았고,
          동작을 내가 정확히 아는 커스텀 RateLimit만 Block</strong>으로 걸었다.
          차단 범위를 검증한 만큼만 넓히는 쪽을 택했다.</p>
-    </div>
-
-    <div class="fig-row split-40">
-      <figure>
-        <img src="../assets/img/stockops-security-waf.png"
-          alt="사용자 요청이 CloudFront+WAF를 거쳐 S3로, Global Accelerator와 ALB+WAF를 거쳐 EKS로 향하는 2계층 WAF 배치도" loading="lazy" decoding="async">
-        <figcaption><strong>설계</strong> — 정적 경로와 동적 경로에 각각 WebACL.</figcaption>
-      </figure>
-
-      <figure>
-        <img src="../assets/img/stockops-security-waf-rules.png"
-          alt="AWS 콘솔의 stockops-cloudfront-waf와 seoul-alb-waf 규칙 관리 화면. 관리형 룰셋은 Count 모드 표시가 붙어 있고 LoginRateLimit·RateLimit이 커스텀 룰로 표시돼 있다." loading="lazy" decoding="async">
-        <figcaption><strong>실측</strong> — 콘솔의 실제 규칙 목록. 관리형 룰셋에 <code>Count 모드에서 실행 중</code>이 붙어 있다.</figcaption>
-      </figure>
     </div>
 
     <!-- 4-10 보안 ③ 키리스 인증 -->
@@ -485,7 +462,7 @@ destroy   역순</code></pre>
     <p>둘의 공통 원리는 같다 — <strong>발급되는 것이 임시 토큰이고, 만료되면 자동으로 소멸한다.</strong>
        저장소나 클러스터에서 유출될 장기 키가 애초에 존재하지 않는다.</p>
 
-    <div class="fig-row split-51 is-narrow">
+    <div class="fig-row is-narrow" style="--cols:50.21% 47.42%">
       <figure>
         <img src="../assets/img/stockops-security-oidc.png"
           alt="GitHub Actions가 OIDC Token을 AWS STS에 제시해 ECR Push·S3 Sync·CF Invalidation 권한을 가진 IAM Role을 맡는 흐름도" loading="lazy" decoding="async">
@@ -512,7 +489,7 @@ destroy   역순</code></pre>
        GitOps 레포가 공개돼 있어도 평문 자격증명이 남지 않고, 값을 바꿀 때 재배포도 필요 없다.
        Terraform State 역시 S3에 두되 KMS로 암호화했다.</p>
 
-    <div class="fig-row split-30">
+    <div class="fig-row" style="--cols:31.69% 66.44%">
       <figure>
         <img src="../assets/img/stockops-security-secrets.png"
           alt="Secrets Manager에서 ESO Controller와 ExternalSecret을 거쳐 K8s Secret으로 1시간 주기 동기화되고, stockops-api·stockops-ai 파드에 env로 주입되는 구성도" loading="lazy" decoding="async">
@@ -521,8 +498,9 @@ destroy   역순</code></pre>
 
       <figure>
         <img src="../assets/img/stockops-security-secrets-proof.png"
-          alt="Secrets Manager의 stockops/app 키 목록 16종(값은 가려짐)과 kubectl get externalsecret 출력에서 STATUS가 SecretSynced, READY가 True로 표시된 화면" loading="lazy" decoding="async">
-        <figcaption><strong>실측</strong> — <code>kubectl get externalsecret</code>의 <code>SecretSynced / True</code>가 동기화가 실제로 돌고 있다는 증거다. 값 열은 가렸다.</figcaption>
+          alt="Secrets Manager stockops/app의 키 목록. AI_MODULE_API_KEY, DB_PASSWORD, JWT_SECRET 등 16개 키가 있고 값 열은 가려져 있다." loading="lazy" decoding="async">
+        <figcaption><strong>실측</strong> — <code>stockops/app</code> 한 곳에 모인 키 16종.
+          애플리케이션이 쓰는 자격증명이 전부 여기 있고, 매니페스트에는 값이 들어가지 않는다. 값 열은 가렸다.</figcaption>
       </figure>
     </div>
   </div>
@@ -774,6 +752,56 @@ destroy   역순</code></pre>
             <td class="own team">○</td>
           </tr>
           <tr>
+            <td><strong>백엔드</strong></td>
+            <td>Java 21 · Spring Boot 3.2 · Spring Security · Redis</td>
+            <td class="own team">○</td>
+          </tr>
+          <tr>
+            <td><strong>AI / 수요예측</strong></td>
+            <td>Python · FastAPI · Prophet · Amazon Bedrock(Guardrails) · Vertex AI(Gemini)</td>
+            <td class="own team">○</td>
+          </tr>
+          <tr>
+            <td><strong>프론트엔드</strong></td>
+            <td>React 19 · TypeScript</td>
+            <td class="own team">○</td>
+          </tr>
+          <tr>
+            <td><strong>IoT 디바이스</strong></td>
+            <td>Go · MQTT(Mosquitto Bridge) · 기상청(KMA) API</td>
+            <td class="own team">○</td>
+          </tr>
+          <tr>
+            <td><strong>관측 · 모니터링</strong></td>
+            <td>Prometheus · Grafana · Alertmanager · Fluent Bit · OpenTelemetry(ADOT) · X-Ray · CloudWatch</td>
+            <td class="own team">○</td>
+          </tr>
+          <tr>
+            <td><strong>로그 분석</strong></td>
+            <td>Firehose → Glue → Athena</td>
+            <td class="own team">○</td>
+          </tr>
+          <tr>
+            <td><strong>감사 · 비용</strong></td>
+            <td>CloudTrail(멀티리전) · Cost Explorer · Lambda + EventBridge · Power Automate → Teams 알림</td>
+            <td class="own team">○</td>
+          </tr>
+          <tr>
+            <td><strong>멀티클라우드</strong></td>
+            <td>Azure — Blob Storage · Functions · Log Analytics · Entra ID SSO(IAM SAML)</td>
+            <td class="own team">○</td>
+          </tr>
+          <tr>
+            <td><strong>DB 마이그레이션</strong></td>
+            <td>Database Migration Service(DMS) — 온프레미스 → RDS</td>
+            <td class="own team">○</td>
+          </tr>
+          <tr>
+            <td><strong>백업 자동화</strong></td>
+            <td>Lambda · EventBridge · ECS Fargate · ECR · Python · Docker → S3 / Azure Blob</td>
+            <td class="own team">○</td>
+          </tr>
+          <tr>
             <td><strong>애플리케이션</strong></td>
             <td><code>api</code> · <code>ai</code> 서비스 · client / admin 웹</td>
             <td class="own team">○</td>
@@ -781,6 +809,10 @@ destroy   역순</code></pre>
         </tbody>
       </table>
     </div>
+
+    <p class="note-line">위 ○ 항목은 팀원들이 담당한 영역이다.
+       나는 이들이 올라갈 <strong>EKS · 네트워크 · IaC · CI/CD 기반</strong>을 만들고
+       IoT 수집 경로와 인프라 보안을 맡았다.</p>
   </div>
 </section>
 
