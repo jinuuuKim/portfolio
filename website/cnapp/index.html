@@ -124,8 +124,8 @@
 
     <figure>
       <img src="../assets/img/cnapp-roles.png"
-           alt="2인 팀의 역할 분담 도식. 9개 영역이 두 사람에게 나뉘어 표시돼 있다.">
-      <figcaption>9개 영역을 어떻게 갈랐는지. 위 목록이 이 그림의 왼쪽 절반이다.</figcaption>
+           alt="2인 팀의 역할 분담 도식. 9개 영역이 두 사람에게 나뉘어 표시돼 있다." loading="lazy" decoding="async">
+      <figcaption>2인 팀의 9개 영역 분담. 왼쪽 절반이 내 담당이다.</figcaption>
     </figure>
   </div>
 </section>
@@ -139,7 +139,7 @@
 
     <figure>
       <img src="../assets/img/cnapp-arch.png"
-           alt="CNAPP-Agentic 전체 아키텍처 다이어그램. 스캐너 6기둥, 수집·정규화 파이프라인, 에이전틱 AI 엔진, Azure Entra ID, 관측 구성이 표시돼 있다.">
+           alt="CNAPP-Agentic 전체 아키텍처 다이어그램. 스캐너 6기둥, 수집·정규화 파이프라인, 에이전틱 AI 엔진, Azure Entra ID, 관측 구성이 표시돼 있다." loading="lazy" decoding="async">
       <figcaption>AWS는 워크로드(EKS · 컨테이너 · 데이터)의 주인, Azure는 신원(Entra ID)의 주인.</figcaption>
     </figure>
   </div>
@@ -189,13 +189,13 @@
 
     <figure class="narrow">
       <img src="../assets/img/cnapp-scanners.png"
-           alt="CSPM · 워크로드 · CIEM으로 분류된 스캐너 6종 구성도">
+           alt="CSPM · 워크로드 · CIEM으로 분류된 스캐너 6종 구성도" loading="lazy" decoding="async">
       <figcaption>CSPM · Workload · CIEM으로 나눈 스캐너 구성. 괄호 안은 각 도구가 내보내는 출력 포맷이다.</figcaption>
     </figure>
 
     <figure>
       <img src="../assets/img/cnapp-pipeline.png"
-           alt="EventBridge에서 SQS, ingest, normalize를 거쳐 correlation과 orchestrator로 이어지는 수집·정규화 파이프라인 도식">
+           alt="EventBridge에서 SQS, ingest, normalize를 거쳐 correlation과 orchestrator로 이어지는 수집·정규화 파이프라인 도식" loading="lazy" decoding="async">
       <figcaption>제각각인 스캐너 출력이 OCSF-lite 한 벌로 모이는 경로.</figcaption>
     </figure>
 
@@ -222,7 +222,7 @@
 
     <figure>
       <img src="../assets/img/cnapp-attack-path.png"
-           alt="관제 콘솔의 공격 경로 화면. 왼쪽에 경로 3건 목록, 오른쪽에 AWS 워크로드에서 Azure 신원으로 넘어가는 노드 그래프. 클라우드 경계를 넘는 간선은 빨간 점선이다.">
+           alt="관제 콘솔의 공격 경로 화면. 왼쪽에 경로 3건 목록, 오른쪽에 AWS 워크로드에서 Azure 신원으로 넘어가는 노드 그래프. 클라우드 경계를 넘는 간선은 빨간 점선이다." loading="lazy" decoding="async">
       <figcaption>붉은 점선이 클라우드 경계를 넘는 간선이다. 왼쪽 목록의 #1이 오른쪽 그래프로 펼쳐진 상태.</figcaption>
     </figure>
 
@@ -266,7 +266,7 @@
 
     <figure>
       <img src="../assets/img/cnapp-evidence.png"
-           alt="Evidence 탭의 능동 수집 증거 목록. s3:GetBucketPublicAccessBlock, s3:GetBucketAcl, s3:GetBucketPolicy, iam:GetRolePolicy, iam:ListAttachedRolePolicies 5회 호출과 각각의 확인 결과가 번호 순으로 쌓여 있다.">
+           alt="Evidence 탭의 능동 수집 증거 목록. s3:GetBucketPublicAccessBlock, s3:GetBucketAcl, s3:GetBucketPolicy, iam:GetRolePolicy, iam:ListAttachedRolePolicies 5회 호출과 각각의 확인 결과가 번호 순으로 쌓여 있다." loading="lazy" decoding="async">
       <figcaption>AI가 스스로 고른 read-only API 5회 호출과 그 결과. 어떤 근거로 판정했는지가 그대로 남는다.</figcaption>
     </figure>
 
@@ -278,7 +278,7 @@
 
     <figure>
       <img src="../assets/img/cnapp-chat.png"
-           alt="관제 콘솔의 질의 화면. 답변 아래에 근거로 사용한 문서 청크가 인용으로 붙어 있다.">
+           alt="관제 콘솔의 질의 화면. 답변 아래에 근거로 사용한 문서 청크가 인용으로 붙어 있다." loading="lazy" decoding="async">
       <figcaption>답변마다 근거 청크가 함께 인용된다. 인용이 없으면 답하지 않는다.</figcaption>
     </figure>
 
@@ -299,8 +299,8 @@
 
     <figure class="narrow">
       <img src="../assets/img/cnapp-login.png"
-           alt="관제 콘솔 로그인 화면. Microsoft Entra ID로 로그인 버튼과 SSO 인증 흐름 3단계가 표시돼 있다.">
-      <figcaption>로그인 화면이 곧 인증 설계도다. 하단 문구는 read-only first · 조치는 승인(HITL) 경로로만.</figcaption>
+           alt="관제 콘솔 로그인 화면. Microsoft Entra ID로 로그인 버튼과 SSO 인증 흐름 3단계가 표시돼 있다." loading="lazy" decoding="async">
+      <figcaption>Entra ID SSO 로그인. 하단에 read-only first · 조치는 승인(HITL) 경로로만이라는 원칙이 명시돼 있다.</figcaption>
     </figure>
 
     <!-- 4-8 운영 관측 -->
@@ -320,32 +320,32 @@
 
     <figure>
       <img src="../assets/img/cnapp-grafana-list.png"
-           alt="Grafana Dashboards 목록. CNAPP 이름이 붙은 대시보드 6종이 나열돼 있다.">
-      <figcaption>"6종"은 주장이 아니라 목록이다.</figcaption>
+           alt="Grafana Dashboards 목록. CNAPP 이름이 붙은 대시보드 6종이 나열돼 있다." loading="lazy" decoding="async">
+      <figcaption>Grafana 대시보드 6종. CloudWatch · Prometheus · PostgreSQL · X-Ray 4개 소스를 한 곳에 묶었다.</figcaption>
     </figure>
 
     <figure>
       <img src="../assets/img/cnapp-grafana-ai.png"
-           alt="Grafana의 CNAPP AI 대시보드. Bedrock 토큰 추이, 케이스별 비용, read-only tool별 호출 횟수 등 엔진 전용 커스텀 패널 9개.">
+           alt="Grafana의 CNAPP AI 대시보드. Bedrock 토큰 추이, 케이스별 비용, read-only tool별 호출 횟수 등 엔진 전용 커스텀 패널 9개." loading="lazy" decoding="async">
       <figcaption>9개 패널 전부 엔진 전용 커스텀 지표다. <code>read-only tool별 호출 횟수</code> 패널의
         <code>s3:GetBucketPublicAccessBlock</code>이 <a href="#trouble">트러블슈팅 ①</a>에서 고친 바로 그 액션명이다.</figcaption>
     </figure>
 
     <figure>
       <img src="../assets/img/cnapp-grafana-eks.png"
-           alt="Grafana EKS 개요 대시보드. 노드·파드 상태와 자원 사용량 패널이 배치돼 있다.">
+           alt="Grafana EKS 개요 대시보드. 노드·파드 상태와 자원 사용량 패널이 배치돼 있다." loading="lazy" decoding="async">
       <figcaption>같은 Grafana의 EKS 개요. 엔진 지표와 인프라 지표를 한 곳에서 본다.</figcaption>
     </figure>
 
     <figure class="narrow">
       <img src="../assets/img/cnapp-teams-alert.png"
-           alt="Teams 채널에 도착한 알림 3건. AWS 콘솔 로그인 감지, 관제 콘솔 로그인 감지, 어제 AWS 사용 비용.">
+           alt="Teams 채널에 도착한 알림 3건. AWS 콘솔 로그인 감지, 관제 콘솔 로그인 감지, 어제 AWS 사용 비용." loading="lazy" decoding="async">
       <figcaption>로그인·비용 알림이 실제로 도착한 상태. IP는 마스킹했다.</figcaption>
     </figure>
 
     <figure class="narrow">
       <img src="../assets/img/cnapp-observ-flow.png"
-           alt="지표 수집부터 알림 전송까지의 관측 구성도. CloudTrail과 CloudWatch가 수집하고 SNS와 Lambda가 전송한다.">
+           alt="지표 수집부터 알림 전송까지의 관측 구성도. CloudTrail과 CloudWatch가 수집하고 SNS와 Lambda가 전송한다." loading="lazy" decoding="async">
       <figcaption>수집에서 알림까지의 경로.</figcaption>
     </figure>
   </div>
@@ -390,7 +390,7 @@
 
     <figure>
       <img src="../assets/img/cnapp-ci-contracts.png"
-           alt="GitHub Actions 잡의 스텝 목록. contracts 정합(계약 4-assert)과 전 영역 run_demo + end-to-end 회귀 스텝이 모두 통과 표시다.">
+           alt="GitHub Actions 잡의 스텝 목록. contracts 정합(계약 4-assert)과 전 영역 run_demo + end-to-end 회귀 스텝이 모두 통과 표시다." loading="lazy" decoding="async">
       <figcaption>매 PR마다 도는 스텝. <code>contracts 정합 (계약 4-assert)</code>와 <code>전 영역 run_demo + end-to-end 회귀</code>가 여기서 막히면 병합이 안 된다.</figcaption>
     </figure>
   </div>
@@ -419,14 +419,14 @@
 
       <figure>
         <img src="../assets/img/cnapp-xray-before.png"
-             alt="수정 전 X-Ray 서비스 맵. member-pii-prod, IAM, macie2, S3, access-analyzer, EC2 노드가 노란 Error 표시다.">
+             alt="수정 전 X-Ray 서비스 맵. member-pii-prod, IAM, macie2, S3, access-analyzer, EC2 노드가 노란 Error 표시다." loading="lazy" decoding="async">
         <figcaption><strong>Before</strong> — member-pii-prod · IAM · macie2 · S3 · access-analyzer · EC2가 Error.
           콘솔에는 아무 문제도 보이지 않던 상태다.</figcaption>
       </figure>
 
       <figure>
         <img src="../assets/img/cnapp-xray-after.png"
-             alt="수정 후 X-Ray 서비스 맵. 모든 노드가 초록 Success 표시다.">
+             alt="수정 후 X-Ray 서비스 맵. 모든 노드가 초록 Success 표시다." loading="lazy" decoding="async">
         <figcaption><strong>After</strong> — 액션명 6곳을 정정한 뒤 전 노드 Success.</figcaption>
       </figure>
     </div>
@@ -513,7 +513,7 @@
 
     <div class="video" data-video="YaPADbf3t94" data-title="CNAPP-Agentic 데모 영상">
       <img src="../assets/img/cnapp-demo-thumb.jpg"
-           alt="데모 영상 첫 화면. 관제 콘솔 대시보드 위에 통합 관제 → 상관 → 조사 → 조치 흐름이 표시돼 있다.">
+           alt="데모 영상 첫 화면. 관제 콘솔 대시보드 위에 통합 관제 → 상관 → 조사 → 조치 흐름이 표시돼 있다." loading="lazy" decoding="async">
       <button type="button" class="video-play" aria-label="데모 영상 재생 (1분 30초)">
         <span class="mark" aria-hidden="true">
           <svg viewBox="0 0 16 16"><path d="M3 1.5v13l11-6.5z"/></svg>
@@ -569,7 +569,7 @@
 <section class="section" id="gallery">
   <div class="wrap">
     <div class="sec-h"><span class="sec-n">09</span><h2>관제 콘솔 둘러보기</h2></div>
-    <p class="sec-sub">위에서 잘라 쓴 화면들의 전체 모습이다. 탭을 누르면 해당 화면으로 바뀐다.</p>
+    <p class="sec-sub">관제 콘솔의 주요 화면.</p>
 
     <h3 class="sub-h">관제 콘솔</h3>
     <div class="tabs" data-tabs>
@@ -587,7 +587,7 @@
 
       <div role="tabpanel" id="tp-dash" aria-labelledby="tb-dash">
         <figure><img src="../assets/img/cnapp-dashboard.png"
-          alt="관제 콘솔 대시보드. 전체 finding·OPEN·Critical·공격 경로 집계와 AWS·Azure Secure Score, 크로스클라우드 공격 경로 목록이 있다."><figcaption>대시보드 — 점수 · 집계 · 공격 경로 요약</figcaption></figure>
+          alt="관제 콘솔 대시보드. 전체 finding·OPEN·Critical·공격 경로 집계와 AWS·Azure Secure Score, 크로스클라우드 공격 경로 목록이 있다." loading="lazy" decoding="async"><figcaption>대시보드 — 점수 · 집계 · 공격 경로 요약</figcaption></figure>
       </div>
 
       <div role="tabpanel" id="tp-find" aria-labelledby="tb-find">
@@ -639,7 +639,7 @@
       </div>
       <div role="tabpanel" id="tp-argo" aria-labelledby="tb-argo">
         <figure><img src="../assets/img/cnapp-argocd.png"
-          alt="ArgoCD Applications 목록. 애플리케이션이 Synced / Healthy 상태다."><figcaption>ArgoCD — GitOps 동기화 상태</figcaption></figure>
+          alt="ArgoCD Applications 목록. 애플리케이션이 Synced / Healthy 상태다." loading="lazy" decoding="async"><figcaption>ArgoCD — GitOps 동기화 상태</figcaption></figure>
       </div>
       <div role="tabpanel" id="tp-ci" aria-labelledby="tb-ci">
         <figure><img src="../assets/img/gallery-ci-runs.png" loading="lazy"
@@ -874,7 +874,7 @@
     </div>
 
     <h3 class="sub-h">용어집</h3>
-    <p class="sec-sub">클릭하면 펼쳐진다.</p>
+    <p class="sec-sub">약어 정리.</p>
 
     <div class="terms">
       <details class="term"><summary><span class="q">CNAPP</span> Cloud-Native Application Protection Platform <span class="plus" aria-hidden="true">＋</span></summary>
@@ -948,7 +948,7 @@
 
 <div class="lightbox" role="dialog" aria-modal="true" aria-label="이미지 확대 보기">
   <button type="button" class="lightbox-close">CLOSE (ESC)</button>
-  <img alt="">
+  <img alt="" loading="lazy" decoding="async">
 </div>
 
 <script src="../assets/main.js"></script>

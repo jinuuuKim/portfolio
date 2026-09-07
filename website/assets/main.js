@@ -26,37 +26,72 @@
 
 
   /* --- 1. scroll spy ------------------------------------------------------ */
-  // 홈에서만 동작. 프로젝트 페이지는 nav의 is-active가 HTML에 고정돼 있다.
+  // 홈 상단 탭과 프로젝트 우측 목차가 함께 쓴다([data-spy]).
+  //
+  // IntersectionObserver 로 "보이는 것 중 가장 위"를 고르면 한 칸 밀린다.
+  // 다음 섹션이 화면 아래로 들어와도 이전 섹션이 여전히 더 위에 걸쳐 있어
+  // 계속 이전 것이 뽑히기 때문이다.
+  // 그래서 화면 높이 32% 지점에 기준선을 두고, 그 선을 지나간 마지막 섹션을
+  // 현재 위치로 본다. 판정이 한 곳에서만 이뤄져 밀릴 여지가 없다.
+
   var spyLinks = Array.prototype.slice.call(
     document.querySelectorAll('[data-spy] a[href^="#"]')
   );
 
-  if (spyLinks.length && 'IntersectionObserver' in window) {
-    var targets = spyLinks
-      .map(function (a) { return document.querySelector(a.getAttribute('href')); })
+  if (spyLinks.length) {
+    var pairs = spyLinks
+      .map(function (a) {
+        var el = document.querySelector(a.getAttribute('href'));
+        return el ? { link: a, el: el } : null;
+      })
       .filter(Boolean);
 
-    var visible = new Map();
+    if (pairs.length) {
+      var TRIGGER = 0.32;
+      var lastId = null;
 
-    var setActive = function (id) {
-      spyLinks.forEach(function (a) {
-        a.classList.toggle('is-active', a.getAttribute('href') === '#' + id);
-      });
-    };
+      var setActive = function (id) {
+        if (id === lastId) return;
+        lastId = id;
+        spyLinks.forEach(function (a) {
+          a.classList.toggle('is-active', a.getAttribute('href') === '#' + id);
+        });
+      };
 
-    var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (e) {
-        if (e.isIntersecting) visible.set(e.target.id, e.boundingClientRect.top);
-        else visible.delete(e.target.id);
-      });
-      if (!visible.size) return;
-      // 화면에 걸린 것 중 가장 위에 있는 섹션을 현재 위치로 본다.
-      var top = null, min = Infinity;
-      visible.forEach(function (v, id) { if (v < min) { min = v; top = id; } });
-      if (top) setActive(top);
-    }, { rootMargin: '-60px 0px -55% 0px', threshold: 0 });
+      var updateSpy = function () {
+        var line = window.innerHeight * TRIGGER;
+        var current = pairs[0];
 
-    targets.forEach(function (t) { io.observe(t); });
+        for (var i = 0; i < pairs.length; i++) {
+          if (pairs[i].el.getBoundingClientRect().top <= line) current = pairs[i];
+          else break;
+        }
+
+        // 페이지 바닥에 닿으면 마지막 섹션. 짧은 마지막 섹션이 기준선까지
+        // 못 올라와 영영 활성화되지 않는 경우를 막는다.
+        var atBottom =
+          window.innerHeight + window.pageYOffset >=
+          document.documentElement.scrollHeight - 2;
+        if (atBottom) current = pairs[pairs.length - 1];
+
+        setActive(current.el.id);
+      };
+
+      var ticking = false;
+      var onScroll = function () {
+        if (ticking) return;
+        ticking = true;
+        window.requestAnimationFrame(function () {
+          ticking = false;
+          updateSpy();
+        });
+      };
+
+      window.addEventListener('scroll', onScroll, { passive: true });
+      window.addEventListener('resize', onScroll);
+      window.addEventListener('load', updateSpy);
+      updateSpy();
+    }
   }
 
   /* --- 2. 라이트박스 ------------------------------------------------------- */
