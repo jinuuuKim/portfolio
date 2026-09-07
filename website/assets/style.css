@@ -975,10 +975,18 @@ figure.mid figcaption{ text-align:center; }
 .fig-row > figure{ margin:0; }
 .fig-row > figure img{ max-width:none; margin:0; }
 .fig-row > figure figcaption{ text-align:left; }
+/* 표나 다른 블록을 한쪽 칸에 넣을 때 바깥 여백을 지운다 */
+.fig-row > .table-scroll{ margin:0; }
 
 .fig-row.split-30{ grid-template-columns:30fr 70fr; }
+.fig-row.split-35{ grid-template-columns:35fr 65fr; }
 .fig-row.split-40{ grid-template-columns:40fr 60fr; }
 .fig-row.split-45{ grid-template-columns:45fr 55fr; }
+
+/* 한 칸 안에 그림 여러 장을 세로로 쌓는다 (예: IoT 실시간 경로 2장) */
+.fig-stack{ display:flex; flex-direction:column; gap:14px; }
+.fig-stack > figure{ margin:0; }
+.fig-stack > figure img{ max-width:none; margin:0; }
 
 /* --- 19. 인용문 (엔진이 생성한 서사) ------------------------------------- */
 
@@ -1106,6 +1114,7 @@ html.js .tabs:not(.is-ready) > [role="tabpanel"] ~ [role="tabpanel"]{ display:no
   /* 2단 도식은 세로로 편다 */
   .fig-row,
   .fig-row.split-30,
+  .fig-row.split-35,
   .fig-row.split-40,
   .fig-row.split-45{ grid-template-columns:1fr; gap:18px; }
 
