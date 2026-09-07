@@ -982,11 +982,29 @@ figure.mid figcaption{ text-align:center; }
 .fig-row.split-35{ grid-template-columns:35fr 65fr; }
 .fig-row.split-40{ grid-template-columns:40fr 60fr; }
 .fig-row.split-45{ grid-template-columns:45fr 55fr; }
+.fig-row.split-51{ grid-template-columns:51.4fr 48.6fr; }
+
+/* 도식이 커 보일 때 행 전체를 좁혀 가운데 정렬 */
+.fig-row.is-narrow{ max-width:760px; margin-left:auto; margin-right:auto; }
+
+/* 오른쪽 칸의 표를 왼쪽 그림 높이에 맞춰 늘린다 */
+.fig-row.is-stretch{ align-items:stretch; }
+.fig-row.is-stretch > .table-scroll{ height:100%; }
+.fig-row.is-stretch > .table-scroll > table{ height:100%; }
+
+/* 라벨 열은 줄바꿈하지 않는다 */
+table.t-fit th:first-child,
+table.t-fit td:first-child{ white-space:nowrap; }
 
 /* 한 칸 안에 그림 여러 장을 세로로 쌓는다 (예: IoT 실시간 경로 2장) */
 .fig-stack{ display:flex; flex-direction:column; gap:14px; }
 .fig-stack > figure{ margin:0; }
 .fig-stack > figure img{ max-width:none; margin:0; }
+
+/* 쌓은 칸 안에서 다시 가로로 두 장 (예: SQS 지표 + 서비스 화면) */
+.fig-pair{ display:grid; grid-template-columns:65fr 35fr; gap:12px; align-items:start; }
+.fig-pair > figure{ margin:0; }
+.fig-pair > figure img{ max-width:none; margin:0; }
 
 /* --- 19. 인용문 (엔진이 생성한 서사) ------------------------------------- */
 
@@ -1116,7 +1134,11 @@ html.js .tabs:not(.is-ready) > [role="tabpanel"] ~ [role="tabpanel"]{ display:no
   .fig-row.split-30,
   .fig-row.split-35,
   .fig-row.split-40,
-  .fig-row.split-45{ grid-template-columns:1fr; gap:18px; }
+  .fig-row.split-45,
+  .fig-row.split-51{ grid-template-columns:1fr; gap:18px; }
+  .fig-row.is-narrow{ max-width:none; }
+  .fig-row.is-stretch{ align-items:start; }
+  .fig-pair{ grid-template-columns:1fr; gap:18px; }
 
   /* 폭 제한을 풀어 좁은 화면에서는 꽉 채운다 */
   figure.narrow img,

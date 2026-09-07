@@ -295,7 +295,7 @@ destroy   역순</code></pre>
        <strong>S3 PUT 요청 수를 줄이고 객체 하나를 크게 만들었다.</strong>
        한쪽 경로가 막혀도 다른 쪽은 계속 도는 구조이기도 하다.</p>
 
-    <div class="fig-row split-35">
+    <div class="fig-row split-30">
       <figure>
         <img src="../assets/img/stockops-iot.png"
           alt="센서에서 Mosquitto Bridge를 거쳐 IoT Core로 들어온 데이터가 IoT Rule에서 SQS(실시간)와 Firehose(이력) 두 갈래로 나뉘는 파이프라인 구성도" loading="lazy" decoding="async">
@@ -303,30 +303,31 @@ destroy   역순</code></pre>
       </figure>
 
       <div class="fig-stack">
-        <figure>
-          <img src="../assets/img/stockops-iot-sqs-proof.png"
-            alt="SQS 지표 화면. 전송된 메시지 크기가 14시 40분부터 15시 30분까지 288 Bytes 안팎으로 끊김 없이 이어지고 있다." loading="lazy" decoding="async">
-          <figcaption><strong>실측 · 실시간 ①</strong> — SQS <code>전송된 메시지 크기</code> 지표.
-            50분 동안 끊긴 구간 없이 들어오고 있다.</figcaption>
-        </figure>
+        <div class="fig-pair">
+          <figure>
+            <img src="../assets/img/stockops-iot-sqs-proof.png"
+              alt="SQS 지표 화면. 전송된 메시지 크기가 14시 40분부터 15시 30분까지 288 Bytes 안팎으로 끊김 없이 이어지고 있다." loading="lazy" decoding="async">
+            <figcaption><strong>실측 · 실시간 ①</strong> — SQS <code>전송된 메시지 크기</code>.
+              50분 동안 끊긴 구간이 없다.</figcaption>
+          </figure>
+
+          <figure>
+            <img src="../assets/img/stockops-iot-web-proof.png"
+              alt="서비스의 환경 모니터링 화면. 등록 센서 19대·정상 알림 18·주의 0·위험 1이 집계돼 있고, 최근 최고 우선순위 알림으로 서울 강서 냉동실 온도 센서 값이 표시돼 있다." loading="lazy" decoding="async">
+            <figcaption><strong>실측 · 실시간 ②</strong> — 그 메시지가 도달한 서비스 화면.
+              SQS → <code>api-server</code> → 화면까지 이어진다.</figcaption>
+          </figure>
+        </div>
 
         <figure>
-          <img src="../assets/img/stockops-iot-web-proof.png"
-            alt="서비스의 환경 모니터링 화면. 등록 센서 19대·정상 알림 18·주의 0·위험 1이 집계돼 있고, 최근 최고 우선순위 알림으로 서울 강서 냉동실 온도 센서 값이 표시돼 있다." loading="lazy" decoding="async">
-          <figcaption><strong>실측 · 실시간 ②</strong> — 그 메시지가 도달한 서비스 화면.
-            센서 19대의 상태와 <code>위험 알림 1</code>이 집계돼 있다.
-            SQS → <code>api-server</code> → 화면까지 실제로 이어진다.</figcaption>
+          <img src="../assets/img/stockops-iot-s3-proof.png"
+            alt="S3 stockops-sensor-data 버킷의 sensors/year=2026/month=06/day=18 경로에 gz 객체들이 9시52분·10시07분·10시22분으로 15분 간격으로 저장돼 있는 콘솔 화면" loading="lazy" decoding="async">
+          <figcaption><strong>실측 · 이력</strong> — 같은 스트림의 다른 갈래.
+            객체의 마지막 수정 시각이 <code>9:52 → 10:07 → 10:22</code>로 정확히 15분 간격이고 크기도 90KB 안팎으로 고르다.
+            <code>buffering_interval = 900</code>이 실제로 동작한 결과다.</figcaption>
         </figure>
       </div>
     </div>
-
-    <figure>
-      <img src="../assets/img/stockops-iot-s3-proof.png"
-           alt="S3 stockops-sensor-data 버킷의 sensors/year=2026/month=06/day=18 경로에 gz 객체들이 9시52분·10시07분·10시22분으로 15분 간격으로 저장돼 있는 콘솔 화면" loading="lazy" decoding="async">
-      <figcaption><strong>실측 · 이력</strong> — 같은 스트림의 다른 갈래.
-        S3 객체의 마지막 수정 시각이 <code>9:52 → 10:07 → 10:22</code>로 정확히 15분 간격이고
-        크기도 90KB 안팎으로 고르다. <code>buffering_interval = 900</code>이 실제로 동작한 결과다.</figcaption>
-    </figure>
 
     <!-- 4-6 오토스케일 -->
     <h3 class="sub-h">HPA + Karpenter 2단 오토스케일링</h3>
@@ -378,7 +379,7 @@ destroy   역순</code></pre>
 
     <div class="fig-row split-35">
       <figure>
-        <img src="../assets/img/stockops-cicd-github-prof.png"
+        <img src="../assets/img/stockops-cicd-github-proof.png"
           alt="GitHub Actions의 Build &amp; Deploy 잡 상세 화면. Set up job부터 Invalidate CloudFront cache까지 모든 스텝에 성공 표시가 붙어 있고 3분 58초에 완료됐다." loading="lazy" decoding="async">
         <figcaption><strong>실측 · CI</strong> — 한 잡이 <code>3분 58초</code>에 전 스텝 성공.
           <code>Update GitOps manifest (Seoul)</code>과 <code>(Ohio)</code>가 나란히 있어
@@ -400,7 +401,7 @@ destroy   역순</code></pre>
        핵심은 <strong>source를 IP 대역이 아니라 SG ID로 지정</strong>했다는 점이다.
        CIDR로 열면 같은 VPC 안의 다른 리소스도 같이 통과하지만, SG 참조는 그 보안 그룹에 속한 것만 통과한다.</p>
 
-    <div class="fig-row split-35">
+    <div class="fig-row split-35 is-stretch">
       <figure>
         <img src="../assets/img/stockops-security-sg.png"
           alt="서울·오하이오 두 리전의 alb-sg → app-sg → db-sg 단방향 보안 그룹 체인 구성도. db-sg는 app-sg와 상대 리전 Peering CIDR만 5432로 허용한다." loading="lazy" decoding="async">
@@ -409,7 +410,7 @@ destroy   역순</code></pre>
       </figure>
 
       <div class="table-scroll">
-        <table>
+        <table class="t-fit">
           <thead><tr><th>원칙</th><th>적용</th></tr></thead>
           <tbody>
             <tr><td><strong>최소 권한</strong></td><td>ALB SG ID를 source로 직접 지정 — 동일 VPC 내 불필요한 접근 차단</td></tr>
@@ -484,7 +485,7 @@ destroy   역순</code></pre>
     <p>둘의 공통 원리는 같다 — <strong>발급되는 것이 임시 토큰이고, 만료되면 자동으로 소멸한다.</strong>
        저장소나 클러스터에서 유출될 장기 키가 애초에 존재하지 않는다.</p>
 
-    <div class="fig-row">
+    <div class="fig-row split-51 is-narrow">
       <figure>
         <img src="../assets/img/stockops-security-oidc.png"
           alt="GitHub Actions가 OIDC Token을 AWS STS에 제시해 ECR Push·S3 Sync·CF Invalidation 권한을 가진 IAM Role을 맡는 흐름도" loading="lazy" decoding="async">
