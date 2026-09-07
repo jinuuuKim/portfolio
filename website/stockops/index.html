@@ -194,7 +194,54 @@ destroy   역순</code></pre>
       <figcaption>3-Tier 네트워크 구조.</figcaption>
     </figure>
 
-    <!-- 4-3 트래픽 -->
+    <!-- 4-3 데이터베이스 -->
+    <h3 class="sub-h">데이터베이스 — Multi-AZ + Cross-Region Replica</h3>
+    <p>RDS PostgreSQL은 두 리전 모두 <strong>데이터 계층 프라이빗 서브넷</strong>에만 둔다
+       (서울 <code>10.0.21.0/24</code> · <code>10.0.22.0/24</code>,
+       오하이오 <code>10.1.21.0/24</code> · <code>10.1.22.0/24</code>).
+       인터넷에서 DB로 오는 경로 자체가 없고, 접근은 <code>app-sg</code>를 거친 <code>5432</code>만 열려 있다.</p>
+
+    <p>이중화는 두 겹인데, <strong>각각 다른 장애를 막는다.</strong></p>
+
+    <div class="table-scroll">
+      <table>
+        <thead><tr><th>장치</th><th>구성</th><th>복제</th><th>막는 것</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>Multi-AZ</strong></td>
+            <td>서울 Primary ↔ 다른 AZ의 Standby</td>
+            <td>동기</td>
+            <td><strong>AZ 장애</strong> — 데이터센터 한 곳이 죽으면 Standby로 자동 승격</td>
+          </tr>
+          <tr>
+            <td><strong>Cross-Region Replica</strong></td>
+            <td>서울 Primary → 오하이오 Read Only 2대</td>
+            <td>비동기</td>
+            <td><strong>리전 장애 + 읽기 지연</strong> — 리전이 통째로 끊겨도 사본이 남고, 미국 쪽 읽기는 로컬에서 끝난다</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="block is-key">
+      <h4>쓰기는 서울 한 곳으로만</h4>
+      <p>오하이오 인스턴스는 <strong>Read Only</strong>다. 읽기는 각 리전이 로컬에서 받아 태평양 왕복을 없애지만,
+         쓰기는 전부 서울 Primary로 보낸다. 양쪽에서 쓰면 복제 충돌을 애플리케이션이 떠안게 되는데,
+         <strong>이 규모에서 그 복잡도를 감수할 이유가 없다</strong>고 봤다.
+         Standby는 대기 상태라 읽기도 받지 않는다 — 이중화 장치이지 성능 장치가 아니다.</p>
+    </div>
+
+    <p class="note-line">재해복구 <strong>설계는 팀원이 담당</strong>했고,
+       이를 Terraform으로 구현한 코드는 내가 작성했다(<a href="#role">02 담당</a>).</p>
+
+    <figure>
+      <img src="../assets/img/stockops-database.png"
+           alt="서울 리전의 RDS Primary가 Read/Write를 받고 다른 AZ의 Standby로 Multi-AZ 동기 복제되며, 오하이오 리전의 Read Only 인스턴스 2대로 Cross-Region Replication이 이어지는 구성도" loading="lazy" decoding="async">
+      <figcaption><strong>설계</strong> — 서울은 Read/Write + Standby, 오하이오는 Read Only 2대.
+        아래 <code>Replication</code> 선이 리전을 넘는 비동기 복제다.</figcaption>
+    </figure>
+
+    <!-- 4-4 트래픽 -->
     <h3 class="sub-h">트래픽 — 정적/동적 분리</h3>
     <p>빌드된 정적 파일은 S3 + CloudFront가, 동적 API 요청은 Global Accelerator → ALB → EKS가 받는다.
        두 경로를 나눈 결과는 <a href="#result">07 성과</a>에 있다.</p>
@@ -212,19 +259,21 @@ destroy   역순</code></pre>
        <code>api-server</code>는 <code>/actuator/health:8080</code>,
        <code>ai-module</code>은 <code>/health:8000</code>으로 각각 확인한다.</p>
 
-    <figure class="mid">
-      <img src="../assets/img/stockops-healthcheck.png"
-           alt="Global Accelerator 아래 두 리전 ALB가 있고, 각 ALB의 spring-tg·fastapi-tg 대상 그룹 헬스 상태에 따라 리전 단위로 Healthy/Unhealthy가 결정되는 페일오버 구조도" loading="lazy" decoding="async">
-      <figcaption><strong>설계</strong> — 대상 그룹 하나라도 Unhealthy면 그 리전을 라우팅에서 뺀다.</figcaption>
-    </figure>
+    <div class="fig-row ">
+      <figure>
+        <img src="../assets/img/stockops-healthcheck.png"
+          alt="Global Accelerator 아래 두 리전 ALB가 있고, 각 ALB의 spring-tg·fastapi-tg 대상 그룹 헬스 상태에 따라 리전 단위로 Healthy/Unhealthy가 결정되는 페일오버 구조도" loading="lazy" decoding="async">
+        <figcaption><strong>설계</strong> — 대상 그룹 하나라도 Unhealthy면 그 리전을 라우팅에서 뺀다.</figcaption>
+      </figure>
 
-    <figure>
-      <img src="../assets/img/stockops-healthcheck-proof.png"
-           alt="AWS 콘솔의 spring_tg·fastapi_tg 대상 그룹 화면. 서울(ap-northeast-2)과 오하이오(us-east-2)의 대상이 모두 Healthy로 표시돼 있다." loading="lazy" decoding="async">
-      <figcaption><strong>실측</strong> — 두 리전 네 개 대상이 전부 Healthy. 왼쪽 IP가 각 리전 사설 대역(<code>10.0.x</code> 서울 / <code>10.1.x</code> 오하이오)이다.</figcaption>
-    </figure>
+      <figure>
+        <img src="../assets/img/stockops-healthcheck-proof.png"
+          alt="AWS 콘솔의 spring_tg·fastapi_tg 대상 그룹 화면. 서울(ap-northeast-2)과 오하이오(us-east-2)의 대상이 모두 Healthy로 표시돼 있다." loading="lazy" decoding="async">
+        <figcaption><strong>실측</strong> — 두 리전 네 개 대상이 전부 Healthy. 왼쪽 IP가 각 리전 사설 대역(<code>10.0.x</code> 서울 / <code>10.1.x</code> 오하이오)이다.</figcaption>
+      </figure>
+    </div>
 
-    <!-- 4-4 IoT -->
+    <!-- 4-5 IoT -->
     <h3 class="sub-h">IoT 데이터 수집 — 실시간/이력 이중 경로</h3>
     <p>현장 센서 데이터는 Mosquitto Bridge가 인증서로 IoT Core에 연결해
        <code>sensimul/sites/+/sensors/+</code> 토픽으로 올린다.
@@ -246,20 +295,22 @@ destroy   역순</code></pre>
        <strong>S3 PUT 요청 수를 줄이고 객체 하나를 크게 만들었다.</strong>
        한쪽 경로가 막혀도 다른 쪽은 계속 도는 구조이기도 하다.</p>
 
-    <figure class="narrow">
-      <img src="../assets/img/stockops-iot.png"
-           alt="센서에서 Mosquitto Bridge를 거쳐 IoT Core로 들어온 데이터가 IoT Rule에서 SQS(실시간)와 Firehose(이력) 두 갈래로 나뉘는 파이프라인 구성도" loading="lazy" decoding="async">
-      <figcaption><strong>설계</strong> — IoT Rule의 Fanout으로 실시간·이력 경로를 동시에 채운다.</figcaption>
-    </figure>
+    <div class="fig-row split-30">
+      <figure>
+        <img src="../assets/img/stockops-iot.png"
+          alt="센서에서 Mosquitto Bridge를 거쳐 IoT Core로 들어온 데이터가 IoT Rule에서 SQS(실시간)와 Firehose(이력) 두 갈래로 나뉘는 파이프라인 구성도" loading="lazy" decoding="async">
+        <figcaption><strong>설계</strong> — IoT Rule의 Fanout으로 실시간·이력 경로를 동시에 채운다.</figcaption>
+      </figure>
 
-    <figure>
-      <img src="../assets/img/stockops-iot-proof.png"
-           alt="S3 stockops-sensor-data 버킷의 sensors/year=2026/month=06/day=18 경로에 gz 객체들이 9시52분·10시07분·10시22분으로 15분 간격으로 저장돼 있는 콘솔 화면" loading="lazy" decoding="async">
-      <figcaption><strong>실측</strong> — S3에 쌓인 객체의 마지막 수정 시각이 <code>9:52 → 10:07 → 10:22</code>.
-        <code>buffering_interval = 900</code>이 실제로 15분 배치로 동작한 결과다.</figcaption>
-    </figure>
+      <figure>
+        <img src="../assets/img/stockops-iot-proof.png"
+          alt="S3 stockops-sensor-data 버킷의 sensors/year=2026/month=06/day=18 경로에 gz 객체들이 9시52분·10시07분·10시22분으로 15분 간격으로 저장돼 있는 콘솔 화면" loading="lazy" decoding="async">
+        <figcaption><strong>실측</strong> — S3에 쌓인 객체의 마지막 수정 시각이 <code>9:52 → 10:07 → 10:22</code>.
+          <code>buffering_interval = 900</code>이 실제로 15분 배치로 동작한 결과다.</figcaption>
+      </figure>
+    </div>
 
-    <!-- 4-5 오토스케일 -->
+    <!-- 4-6 오토스케일 -->
     <h3 class="sub-h">HPA + Karpenter 2단 오토스케일링</h3>
     <p>파드 수는 HPA가, 그 파드를 올릴 노드는 Karpenter가 각각 늘린다.</p>
 
@@ -288,7 +339,7 @@ destroy   역순</code></pre>
         HPA가 먼저 늘고 Karpenter가 뒤따랐다는 증거다.</figcaption>
     </figure>
 
-    <!-- 4-6 CI/CD -->
+    <!-- 4-7 CI/CD -->
     <h3 class="sub-h">CI/CD 두 경로</h3>
     <div class="block">
       <h4>Frontend</h4>
@@ -315,7 +366,7 @@ destroy   역순</code></pre>
         <code>Update GitOps manifest (Seoul/Ohio)</code> 스텝이 두 리전을 함께 갱신한다.</figcaption>
     </figure>
 
-    <!-- 4-7 보안 ① 네트워크 계층 -->
+    <!-- 4-8 보안 ① 네트워크 계층 -->
     <h3 class="sub-h">보안 ① 네트워크 계층 — 보안 그룹 단방향 체인</h3>
     <p>인바운드를 <code>alb-sg → app-sg → db-sg</code> 방향으로만 열어, 계층을 건너뛴 접근 경로를 만들지 않았다.
        핵심은 <strong>source를 IP 대역이 아니라 SG ID로 지정</strong>했다는 점이다.
@@ -339,7 +390,7 @@ destroy   역순</code></pre>
       <figcaption><strong>설계</strong> — 두 리전 모두 동일한 3단 체인. <code>db-sg</code>의 source에 상대 리전 Peering CIDR이 함께 들어간다.</figcaption>
     </figure>
 
-    <!-- 4-8 보안 ② 애플리케이션 계층 -->
+    <!-- 4-9 보안 ② 애플리케이션 계층 -->
     <h3 class="sub-h">보안 ② 애플리케이션 계층 — WAF 2계층</h3>
     <p>정적 경로(CloudFront)와 동적 API 경로(ALB)는 진입 지점이 다르므로, 각각에 별도 WebACL을 걸었다.
        엣지에서 한 번, 리전에서 한 번 거른다.</p>
@@ -369,19 +420,21 @@ destroy   역순</code></pre>
          차단 범위를 검증한 만큼만 넓히는 쪽을 택했다.</p>
     </div>
 
-    <figure class="narrow">
-      <img src="../assets/img/stockops-security-waf.png"
-           alt="사용자 요청이 CloudFront+WAF를 거쳐 S3로, Global Accelerator와 ALB+WAF를 거쳐 EKS로 향하는 2계층 WAF 배치도" loading="lazy" decoding="async">
-      <figcaption><strong>설계</strong> — 정적 경로와 동적 경로에 각각 WebACL.</figcaption>
-    </figure>
+    <div class="fig-row split-40">
+      <figure>
+        <img src="../assets/img/stockops-security-waf.png"
+          alt="사용자 요청이 CloudFront+WAF를 거쳐 S3로, Global Accelerator와 ALB+WAF를 거쳐 EKS로 향하는 2계층 WAF 배치도" loading="lazy" decoding="async">
+        <figcaption><strong>설계</strong> — 정적 경로와 동적 경로에 각각 WebACL.</figcaption>
+      </figure>
 
-    <figure class="mid">
-      <img src="../assets/img/stockops-security-waf-rules.png"
-           alt="AWS 콘솔의 stockops-cloudfront-waf와 seoul-alb-waf 규칙 관리 화면. 관리형 룰셋은 Count 모드 표시가 붙어 있고 LoginRateLimit·RateLimit이 커스텀 룰로 표시돼 있다." loading="lazy" decoding="async">
-      <figcaption><strong>실측</strong> — 콘솔의 실제 규칙 목록. 관리형 룰셋에 <code>Count 모드에서 실행 중</code>이 붙어 있다.</figcaption>
-    </figure>
+      <figure>
+        <img src="../assets/img/stockops-security-waf-rules.png"
+          alt="AWS 콘솔의 stockops-cloudfront-waf와 seoul-alb-waf 규칙 관리 화면. 관리형 룰셋은 Count 모드 표시가 붙어 있고 LoginRateLimit·RateLimit이 커스텀 룰로 표시돼 있다." loading="lazy" decoding="async">
+        <figcaption><strong>실측</strong> — 콘솔의 실제 규칙 목록. 관리형 룰셋에 <code>Count 모드에서 실행 중</code>이 붙어 있다.</figcaption>
+      </figure>
+    </div>
 
-    <!-- 4-9 보안 ③ 키리스 인증 -->
+    <!-- 4-10 보안 ③ 키리스 인증 -->
     <h3 class="sub-h">보안 ③ 키리스 인증 — GitHub OIDC · IRSA</h3>
     <p>파이프라인과 파드 <strong>어느 쪽에도 장기 액세스 키를 두지 않았다.</strong>
        둘 다 OIDC로 신원을 증명하고 그때그때 임시 자격증명을 받는다.</p>
@@ -406,7 +459,7 @@ destroy   역순</code></pre>
       <figcaption><strong>설계</strong> — 왼쪽 GitHub OIDC, 오른쪽 IRSA. 두 경로 모두 STS 임시 자격증명으로 끝난다.</figcaption>
     </figure>
 
-    <!-- 4-10 보안 ④ 시크릿 -->
+    <!-- 4-11 보안 ④ 시크릿 -->
     <h3 class="sub-h">보안 ④ 시크릿 관리 · State 암호화</h3>
     <p>애플리케이션 시크릿 16종은 Secrets Manager의 <code>stockops/app</code> 한 곳에 두고,
        External Secrets Operator가 <strong>1시간 주기로 클러스터에 동기화</strong>한다.
@@ -417,17 +470,19 @@ destroy   역순</code></pre>
        GitOps 레포가 공개돼 있어도 평문 자격증명이 남지 않고, 값을 바꿀 때 재배포도 필요 없다.
        Terraform State 역시 S3에 두되 KMS로 암호화했다.</p>
 
-    <figure class="mid">
-      <img src="../assets/img/stockops-security-secrets.png"
-           alt="Secrets Manager에서 ESO Controller와 ExternalSecret을 거쳐 K8s Secret으로 1시간 주기 동기화되고, stockops-api·stockops-ai 파드에 env로 주입되는 구성도" loading="lazy" decoding="async">
-      <figcaption><strong>설계</strong> — Secrets Manager → ESO → K8s Secret → 파드 env.</figcaption>
-    </figure>
+    <div class="fig-row split-45">
+      <figure>
+        <img src="../assets/img/stockops-security-secrets.png"
+          alt="Secrets Manager에서 ESO Controller와 ExternalSecret을 거쳐 K8s Secret으로 1시간 주기 동기화되고, stockops-api·stockops-ai 파드에 env로 주입되는 구성도" loading="lazy" decoding="async">
+        <figcaption><strong>설계</strong> — Secrets Manager → ESO → K8s Secret → 파드 env.</figcaption>
+      </figure>
 
-    <figure>
-      <img src="../assets/img/stockops-security-secrets-proof.png"
-           alt="Secrets Manager의 stockops/app 키 목록 16종(값은 가려짐)과 kubectl get externalsecret 출력에서 STATUS가 SecretSynced, READY가 True로 표시된 화면" loading="lazy" decoding="async">
-      <figcaption><strong>실측</strong> — <code>kubectl get externalsecret</code>의 <code>SecretSynced / True</code>가 동기화가 실제로 돌고 있다는 증거다. 값 열은 가렸다.</figcaption>
-    </figure>
+      <figure>
+        <img src="../assets/img/stockops-security-secrets-proof.png"
+          alt="Secrets Manager의 stockops/app 키 목록 16종(값은 가려짐)과 kubectl get externalsecret 출력에서 STATUS가 SecretSynced, READY가 True로 표시된 화면" loading="lazy" decoding="async">
+        <figcaption><strong>실측</strong> — <code>kubectl get externalsecret</code>의 <code>SecretSynced / True</code>가 동기화가 실제로 돌고 있다는 증거다. 값 열은 가렸다.</figcaption>
+      </figure>
+    </div>
   </div>
 </section>
 

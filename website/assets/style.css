@@ -263,6 +263,16 @@ strong{ font-weight:600; }
   margin:26px 0 10px;
 }
 
+/* 본문 옆에 덧붙이는 짧은 단서 (담당 경계 표시 등) */
+.note-line{
+  font-size:12.5px;
+  color:var(--text-3);
+  border-left:2px solid var(--line-soft);
+  padding-left:10px;
+  margin:14px 0;
+}
+.note-line strong{ color:var(--text-2); }
+
 /* sub-h 아래 한 단계 더 (예: 트래픽 → Health Check) */
 .sub-h2{
   font-size:13.5px;
@@ -767,8 +777,15 @@ figure.is-missing .ph{
   overflow:auto;
 }
 .lightbox.is-open{ display:flex; align-items:center; justify-content:center; }
+/* 가로·세로 둘 다 화면 안에 들어오게 잡는다. max-height가 없으면
+   세로로 긴 도식이 화면 밖으로 넘쳐 과하게 확대된 것처럼 보인다. */
 .lightbox img{
+  width:auto;
+  height:auto;
   max-width:100%;
+  max-height:calc(100vh - 56px);
+  object-fit:contain;
+  background:var(--bg);
   border:1px solid var(--ink-line);
   border-radius:var(--radius);
   cursor:zoom-out;
@@ -944,6 +961,25 @@ figure.narrow figcaption{ text-align:center; }
 figure.mid img{ max-width:640px; margin:0 auto; }
 figure.mid figcaption{ text-align:center; }
 
+/* --- 18-1. 설계 / 실측 2단 배치 -------------------------------------------
+   세로로 긴 도식을 혼자 두면 폭이 남고 스크롤만 길어진다. 짝이 되는
+   실측 화면을 오른쪽에 붙여 본문 폭(960px)을 끝까지 쓴다.
+   split-NN = 왼쪽 칸이 차지하는 비율. 두 그림의 가로세로비를 보고 고른다. */
+.fig-row{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:14px 18px;
+  align-items:start;
+  margin:20px 0;
+}
+.fig-row > figure{ margin:0; }
+.fig-row > figure img{ max-width:none; margin:0; }
+.fig-row > figure figcaption{ text-align:left; }
+
+.fig-row.split-30{ grid-template-columns:30fr 70fr; }
+.fig-row.split-40{ grid-template-columns:40fr 60fr; }
+.fig-row.split-45{ grid-template-columns:45fr 55fr; }
+
 /* --- 19. 인용문 (엔진이 생성한 서사) ------------------------------------- */
 
 .quote{
@@ -1063,3 +1099,21 @@ html.js .tabs:not(.is-ready) > [role="tabpanel"] ~ [role="tabpanel"]{ display:no
   line-height:1.6;
 }
 .video-fallback{ padding:14px 0; }
+
+/* --- 25. 좁은 화면 보정 (뒤쪽 규칙을 덮어야 해서 파일 끝에 둔다) ----------- */
+
+@media (max-width:820px){
+  /* 2단 도식은 세로로 편다 */
+  .fig-row,
+  .fig-row.split-30,
+  .fig-row.split-40,
+  .fig-row.split-45{ grid-template-columns:1fr; gap:18px; }
+
+  /* 폭 제한을 풀어 좁은 화면에서는 꽉 채운다 */
+  figure.narrow img,
+  figure.mid img{ max-width:100%; }
+
+  /* 라이트박스 여백 축소 */
+  .lightbox{ padding:14px; }
+  .lightbox img{ max-height:calc(100vh - 28px); }
+}
