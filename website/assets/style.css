@@ -1184,3 +1184,48 @@ html.js .tabs:not(.is-ready) > [role="tabpanel"] ~ [role="tabpanel"]{ display:no
   .is-lead .card{ padding:18px; }
   .is-lead .card-thumb{ margin:-18px -18px 15px; }
 }
+
+/* --- 27. 홈 하위 섹션 (이력·기술) ------------------------------------------ */
+/* 기존 sec-h h2(16.5px)는 sub-h(14.5px)와 2px 차이라 "이력"과 "학력"이 같은
+   층위로 보였다. 홈에서는 세 단계를 눈에 띄게 벌린다.
+   PROJECT 23 > 이력·기술 20 > 학력·자격증 15. 본문도 한 단계 키운다. */
+
+.section.is-home{ padding:48px 0; }
+
+.section.is-home .sec-h{ margin-bottom:18px; }
+.section.is-home .sec-h h2{
+  font-size:20px;
+  letter-spacing:.02em;
+}
+.section.is-home .sec-sub{ font-size:13.8px; margin-bottom:20px; }
+
+/* 하위 제목은 크기만이 아니라 색으로도 한 단계 낮춘다 */
+.section.is-home .sub-h{
+  font-size:15px;
+  color:var(--text-2);
+  margin:30px 0 10px;
+}
+.section.is-home .sub-h:first-of-type{ margin-top:0; }
+
+.section.is-home table{ font-size:14px; }
+.section.is-home th{ font-size:13px; }
+.section.is-home th,
+.section.is-home td{ padding:10px 13px; }
+
+.section.is-home .skill{ font-size:13.3px; padding:5px 10px; }
+.section.is-home .skill-row{ gap:8px; }
+
+/* 4/5 이상은 테두리·글자를 진하게 해서 먼저 눈에 들어오게 한다.
+   로고 아이콘은 쓰지 않는다 — 색 있는 브랜드 마크가 20개 붙으면
+   흑백 기조가 깨지고 §3.4 금지 목록(이모지·장식)의 취지에도 어긋난다. */
+.section.is-home .skill.is-core{
+  border-color:var(--ink-line);
+  color:var(--text);
+  font-weight:600;
+}
+
+@media (max-width:820px){
+  .section.is-home{ padding:38px 0; }
+  .section.is-home .sec-h h2{ font-size:18px; }
+  .section.is-home table{ font-size:13.3px; }
+}
