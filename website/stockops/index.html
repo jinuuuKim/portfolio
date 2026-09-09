@@ -201,7 +201,7 @@ destroy   역순</code></pre>
        오하이오 <code>10.1.21.0/24</code> · <code>10.1.22.0/24</code>).
        인터넷에서 DB로 오는 경로 자체가 없고, 접근은 <code>app-sg</code>를 거친 <code>5432</code>만 열려 있다.</p>
 
-    <p>이중화는 두 겹인데, <strong>각각 다른 장애를 막는다.</strong></p>
+    <p>이중화는 두 겹으로 설계했고, <strong>각각 다른 장애를 막는다.</strong></p>
 
     <div class="table-scroll">
       <table>
@@ -215,12 +215,22 @@ destroy   역순</code></pre>
           </tr>
           <tr>
             <td><strong>Cross-Region Replica</strong></td>
-            <td>서울 Primary → 오하이오 Read Only 2대</td>
+            <td>서울 Primary → 오하이오 Read Only</td>
             <td>비동기</td>
             <td><strong>리전 장애 + 읽기 지연</strong> — 리전이 통째로 끊겨도 사본이 남고, 미국 쪽 읽기는 로컬에서 끝난다</td>
           </tr>
         </tbody>
       </table>
+    </div>
+
+    <div class="block is-key">
+      <h4>개발 중엔 꺼두고, 배포할 때 켰다</h4>
+      <p>Multi-AZ는 Standby가 대기만 해도 인스턴스 요금을 그대로 받는다.
+         그래서 <code>multi_az</code>를 코드에 넣어두되
+         <strong>개발·검증 단계에서는 주석으로 꺼두고 실제 배포 때 켜는</strong> 방식으로 다뤘다.
+         크레딧으로 도는 계정에서 하루에도 몇 번씩 올렸다 내렸다 하는 동안
+         상시로 두 배 요금을 낼 이유는 없었다.
+         레포에 주석 상태로 남아 있는 것은 마지막이 철거였기 때문이다.</p>
     </div>
 
     <div class="block is-key">
@@ -237,7 +247,8 @@ destroy   역순</code></pre>
     <figure>
       <img src="../assets/img/stockops-database.webp"
            alt="서울 리전의 RDS Primary가 Read/Write를 받고 다른 AZ의 Standby로 Multi-AZ 동기 복제되며, 오하이오 리전의 Read Only 인스턴스 2대로 Cross-Region Replication이 이어지는 구성도" loading="lazy" decoding="async" width="4096" height="1465">
-      <figcaption><strong>설계</strong> — 서울은 Read/Write + Standby, 오하이오는 Read Only 2대.
+      <figcaption><strong>설계</strong> — 서울은 Read/Write + Standby, 오하이오는 Read Only.
+        오하이오 칸이 둘로 그려진 것은 DB 서브넷을 두 AZ에 걸쳐 둔 것이고, 인스턴스는 한 대다.
         아래 <code>Replication</code> 선이 리전을 넘는 비동기 복제다.</figcaption>
     </figure>
 
@@ -480,7 +491,7 @@ destroy   역순</code></pre>
 
     <!-- 4-11 보안 ④ 시크릿 -->
     <h3 class="sub-h">보안 ④ 시크릿 관리 · State 암호화</h3>
-    <p>애플리케이션 시크릿 16종은 Secrets Manager의 <code>stockops/app</code> 한 곳에 두고,
+    <p>애플리케이션 시크릿 15종은 Secrets Manager의 <code>stockops/app</code> 한 곳에 두고,
        External Secrets Operator가 <strong>1시간 주기로 클러스터에 동기화</strong>한다.
        ESO Controller는 <code>stockops-eso-role</code>(IRSA)로 조회하고,
        ClusterSecretStore → ExternalSecret → K8s Secret을 거쳐
@@ -499,7 +510,7 @@ destroy   역순</code></pre>
       <figure>
         <img src="../assets/img/stockops-security-secrets-proof.webp"
           alt="Secrets Manager stockops/app의 키 목록. AI_MODULE_API_KEY, DB_PASSWORD, JWT_SECRET 등 16개 키가 있고 값 열은 가려져 있다." loading="lazy" decoding="async" width="1306" height="792">
-        <figcaption><strong>실측</strong> — <code>stockops/app</code> 한 곳에 모인 키 16종.
+        <figcaption><strong>실측</strong> — <code>stockops/app</code> 한 곳에 모인 키 15종.
           애플리케이션이 쓰는 자격증명이 전부 여기 있고, 매니페스트에는 값이 들어가지 않는다. 값 열은 가렸다.</figcaption>
       </figure>
     </div>
