@@ -1152,3 +1152,35 @@ html.js .tabs:not(.is-ready) > [role="tabpanel"] ~ [role="tabpanel"]{ display:no
   .lightbox{ padding:14px; }
   .lightbox img{ max-height:calc(100vh - 28px); }
 }
+
+/* --- 26. 홈 대표 섹션 (프로젝트) -------------------------------------------
+   홈에서 프로젝트는 이력·기술과 같은 층위가 아니다. 본편이고 나머지는 뒷받침이라
+   번호칩을 빼고 크기로 위계를 준다. 금지 목록(그림자·확대·그라데이션)은 그대로 지킨다. */
+
+.section.is-lead{ padding:52px 0 48px; }
+
+.sec-h.is-lead{ margin-bottom:14px; }
+.sec-h.is-lead h2{
+  font-size:23px;
+  letter-spacing:.04em;
+}
+
+.is-lead .sec-sub{ font-size:14px; margin-bottom:22px; }
+
+/* 카드 — 썸네일을 키우고 안쪽 여백을 늘린다 */
+.is-lead .cards{ gap:18px; }
+.is-lead .card{ padding:22px; }
+.is-lead .card-thumb{
+  margin:-22px -22px 17px;
+  aspect-ratio:16 / 9;
+}
+.is-lead .card h3{ font-size:19px; margin-bottom:9px; }
+.is-lead .card p{ font-size:13.8px; }
+.is-lead .card-stat{ font-size:12px; }
+
+@media (max-width:820px){
+  .section.is-lead{ padding:40px 0 36px; }
+  .sec-h.is-lead h2{ font-size:20px; }
+  .is-lead .card{ padding:18px; }
+  .is-lead .card-thumb{ margin:-18px -18px 15px; }
+}
