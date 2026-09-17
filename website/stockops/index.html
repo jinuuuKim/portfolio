@@ -93,7 +93,8 @@
 
     <p style="margin-top:12px">수기 보고로 이루어지던 구조를 클라우드로 옮기면서,
        한 리전에 장애가 발생해도 서비스가 멈추지 않도록
-       서울(Primary)·오하이오(Failover) 두 리전에 고가용성 인프라를 설계했다.</p>
+       서울·오하이오 두 리전에 고가용성 인프라를 설계했다.
+       평시에는 지연 기준으로 두 리전이 함께 트래픽을 받고, 쓰기는 서울 한 곳으로 모은다.</p>
 
     <h3 class="sub-h">요구사항 → 설계 대응</h3>
     <div class="table-scroll">
@@ -144,8 +145,8 @@
   <div class="wrap">
     <div class="sec-h"><span class="sec-n">03</span><h2>아키텍처</h2></div>
 
-    <p class="sec-sub">서울(Primary)·오하이오(Failover) 두 리전. 리전 간은 VPC Peering으로 잇고,
-       진입은 Global Accelerator가 지연 기준으로 라우팅한다.</p>
+    <p class="sec-sub">서울·오하이오 두 리전. 리전 간은 VPC Peering으로 잇고,
+       진입은 Global Accelerator가 지연 기준으로 라우팅한다. 리전 장애 시에는 헬스체크로 한쪽에 몰아준다.</p>
 
     <figure>
       <img src="../assets/img/stockops-arch.webp"
