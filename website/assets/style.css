@@ -613,6 +613,7 @@ a.card:hover{ text-decoration:none; }
 /* 3열 개념 카드 */
 .grid-3{ display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin:16px 0; }
 .grid-2{ display:grid; grid-template-columns:repeat(2,1fr); gap:14px; margin:16px 0; }
+.grid-2 > figure{ margin:0; }
 .mini{
   border:1px solid var(--line);
   border-radius:var(--radius);
@@ -832,7 +833,7 @@ details.term .plus{
 details.term[open] > summary{ background:var(--bg-alt); }
 details.term[open] .plus{ transform:rotate(45deg); }
 details.term .body{
-  padding:0 14px 13px;
+  padding:12px 14px 14px;
   font-size:13.3px;
   color:var(--text-2);
 }
