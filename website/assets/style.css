@@ -715,19 +715,24 @@ figure.is-missing .ph{
   border-radius:var(--radius);
   cursor:zoom-out;
 }
+/* 라이트박스는 어두운 배경 위다. v2에서 --ink-* 가 「밝은 면」 값으로 바뀌었으므로
+   여기서는 토큰을 쓰지 않고 밝은 색을 직접 지정한다. (안 그러면 검은 글자가 묻힌다) */
 .lightbox-close{
-  position:fixed; top:16px; right:20px;
+  position:fixed; top:16px; right:20px; z-index:101;
   font-family:var(--mono);
   font-size:12px;
   letter-spacing:.08em;
-  color:var(--ink-text);
-  background:transparent;
-  border:1px solid var(--ink-line);
-  border-radius:var(--radius);
-  padding:6px 11px;
+  color:#fff;
+  background:rgba(255,255,255,.12);
+  border:1px solid rgba(255,255,255,.45);
+  border-radius:999px;
+  padding:8px 14px;
   cursor:pointer;
+  backdrop-filter:blur(6px);
+  transition:background .25s var(--e2), border-color .25s var(--e2);
 }
-.lightbox-close:hover{ background:var(--ink-line); }
+.lightbox-close:hover{ background:rgba(255,255,255,.26); border-color:#fff; }
+.lightbox-close:focus-visible{ outline:2px solid #fff; outline-offset:2px; }
 
 /* --- 14. 접이식 용어집 (§3.5) ---------------------------------------------- */
 

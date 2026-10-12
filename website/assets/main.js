@@ -345,6 +345,11 @@
       el.classList.add('rv');
       if (i > 0 && i < 4) el.classList.add('s' + i);
     });
+    // 메타 표는 칸 단위로 한 칸씩 — 덩어리로 뜨는 것보다 눈이 따라간다
+    Array.prototype.forEach.call(
+      document.querySelectorAll('.hero-meta > div'),
+      function (el, i) { el.classList.add('rv', 's' + Math.min(3, i + 1)); }
+    );
     Array.prototype.forEach.call(document.querySelectorAll('.section'), function (el) {
       el.classList.add('rv');
     });
@@ -370,6 +375,41 @@
         function (el) { el.classList.add('in'); }
       );
     });
+  }
+
+
+  /* --- 8. 읽기 진행 막대 (전 페이지) ------------------------------------- */
+  // progress-bar: 스크롤 비율만큼 가로로 찬다. 긴 상세 문서에서 특히 쓸모가 있다.
+  (function () {
+    var bar = document.createElement('div');
+    bar.className = 'progress';
+    document.body.appendChild(bar);
+    var ticking = false;
+    function draw() {
+      var h = document.documentElement.scrollHeight - window.innerHeight;
+      var r = h > 0 ? (window.scrollY || 0) / h : 0;
+      bar.style.transform = 'scaleX(' + Math.min(1, Math.max(0, r)) + ')';
+      ticking = false;
+    }
+    function onScroll() {
+      if (!ticking) { ticking = true; requestAnimationFrame(draw); }
+    }
+    draw();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll, { passive: true });
+  })();
+
+  /* --- 9. 도식·스크린샷 진입 --------------------------------------------- */
+  // 섹션 전체가 한 번에 뜨면 큰 이미지가 밋밋하게 들어온다. 그림만 따로 한 박자 늦게.
+  var figs = document.querySelectorAll('.section figure, .section .fig-row > figure');
+  if (figs.length && 'IntersectionObserver' in window) {
+    Array.prototype.forEach.call(figs, function (el) { el.classList.add('fx'); });
+    var figIO = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) { e.target.classList.add('in'); figIO.unobserve(e.target); }
+      });
+    }, { rootMargin: '0px 0px -12% 0px', threshold: 0.12 });
+    Array.prototype.forEach.call(figs, function (el) { figIO.observe(el); });
   }
 
 })();

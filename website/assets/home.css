@@ -266,20 +266,17 @@ p{ margin:0; } ul{ margin:0; padding:0; list-style:none; }
 .two{ display:grid; grid-template-columns:minmax(0,.84fr) minmax(0,1.16fr); gap:clamp(34px,5vw,80px); align-items:start; }
 @media (max-width:1000px){ .two{ grid-template-columns:1fr; gap:48px; } }
 
-/* ---- 이력·기술 본문에만 둥근 서체 ----
-   Gowun Dodum은 400 하나뿐이다. 가짜 굵게(synthesis)는 뭉개지므로 끄고,
-   강조는 text-stroke로 아주 살짝만 두껍게 해 한 서체로 통일한다. */
-#about .tl b, #about .tl span, #about .certs b, #about .certs em,
-#about .sk span, #about .note, #about .sec-sub{
-  font-family:var(--round); font-synthesis:none; letter-spacing:0;
-}
-#about .tl b, #about .certs b{
-  font-weight:400; -webkit-text-stroke:.34px currentColor; letter-spacing:-.005em;
-}
+/* ---- 이력·기술 본문 가독성 ----
+   Pretendard 한 서체로 통일한다. 둥근 서체(고운돋움)를 썼다가 되돌렸다 —
+   굵기가 400 하나뿐이라 제목에 가짜 굵게가 걸리고, 01 섹션과 서체가 갈려
+   같은 층위의 두 섹션이 다른 페이지처럼 보였다.
+   읽기 편한 느낌은 서체를 바꾸는 대신 크기·자간·행간으로 만든다. */
+#about .tl b, #about .certs b{ font-weight:600; letter-spacing:-.012em; }
 #about .tl b{ font-size:16px; }
-#about .certs b{ font-size:15px; }
-#about .tl span, #about .certs em{ font-size:14px; line-height:1.68; }
-#about .sk span{ font-size:14.5px; }
+#about .certs b{ font-size:15.5px; }
+#about .tl span, #about .certs em{ font-size:14px; line-height:1.72; letter-spacing:-.004em; }
+#about .sk span{ font-size:14.5px; letter-spacing:-.008em; }
+#about .note{ line-height:1.7; }
 
 /* 흰 패널로 묶어 구조를 보이게 한다 */
 .panel{
