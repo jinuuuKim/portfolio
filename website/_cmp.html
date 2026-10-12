@@ -1,0 +1,171 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap">
+<style>/* ==========================================================================
+   김진우 포트폴리오 — 공용 토큰 (v2)
+   팔레트·서체·이징을 여기 한 곳에서만 정의한다.
+   home.css(홈)와 style.css(프로젝트 상세)가 함께 읽는다.
+   ========================================================================== */
+
+:root{
+  --paper:    #fbfaf8;
+  --paper-2:  #f3f1ec;
+  --card:     #ffffff;
+  --ink:      #15171b;
+  --ink-2:    #4b505a;
+  --ink-3:    #8b9099;
+  --line:     #e4e1da;
+  --line-2:   #cfcbc2;
+
+  /* 같은 채도·온도대의 3색. 프로젝트마다 하나씩 배정해 「다채롭되 흩어지지 않게」 */
+  --c1: #d9481f;   /* 버밀리온 — 인프라 */
+  --c2: #0e6b61;   /* 딥 틸    — 보안 */
+  --c3: #a9761f;   /* 오커     — 네트워크 */
+  --accent: var(--c1);
+
+  --wrap-wide: 1460px;
+  --pad:  clamp(20px, 4.2vw, 64px);
+  --nav-h: 62px;
+
+  --sans: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont,
+          system-ui, "Segoe UI", Roboto, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Consolas, monospace;
+  /* 이력·기술 본문 전용 — 끝이 둥글고 가독성이 높다 */
+  --round: "Gowun Dodum", var(--sans);
+
+  --e:  cubic-bezier(.19,1,.22,1);
+  --e2: cubic-bezier(.33,.9,.28,1);
+}
+
+/* --- 구 토큰 이름 매핑 ------------------------------------------------------
+   style.css 1,200여 줄이 아래 이름으로 쓰여 있다. 이름을 유지한 채 값만 v2로
+   갈아끼워, 상세 페이지 마크업을 건드리지 않고 외형만 바꾼다.
+   --accent 는 페이지마다 바뀌므로 :root 가 아니라 body 에 둔다. -------------- */
+
+body{
+  --accent:      var(--c1);
+
+  --bg:          var(--paper);
+  --bg-alt:      var(--paper-2);
+  --text-2:      var(--ink-2);
+  --text-3:      var(--ink-3);
+  --line-soft:   var(--line-2);
+
+  /* 상세 히어로 — 네이비 색면이었다. v2에서는 페이지 색의 옅은 면으로 바꾼다 */
+  --ink-text:    var(--ink);
+  --ink-body:    var(--ink-2);
+  --ink-label:   var(--ink-3);
+  --ink-line:    var(--line-2);
+  --ink-accent:  var(--accent);
+
+  /* 성과 밴드 — 페이지 색으로 채운다 */
+  --band:        var(--accent);
+  --band-label:  rgba(255,255,255,.72);
+  --band-body:   rgba(255,255,255,.88);
+
+  --radius:      6px;
+  --wrap:        1180px;
+  --nav-h:       62px;
+
+  /* 상단바 폭은 모든 페이지에서 같다. 페이지를 오갈 때 링크가 튀면 안 된다.
+     본문 폭(홈 1460 / 상세 1180)과는 무관하게 고정한다. */
+  --nav-wrap:    var(--wrap-wide);
+}
+body.p1{ --accent:var(--c1); }
+body.p2{ --accent:var(--c2); }
+body.p3{ --accent:var(--c3); }
+
+/* --text 와 --ink 는 같은 값이라 :root 에서 한 번만 정의한다 */
+:root{ --text: #15171b; }
+
+
+/* ==========================================================================
+   상단바 — 홈과 상세가 같은 모양을 쓴다. 여기 한 곳에서만 정의한다.
+   래퍼 이름이 페이지마다 .nav-in / .nav-inner 로 갈려 있어 둘 다 받는다.
+   ========================================================================== */
+.nav{
+  position:fixed; inset:0 0 auto 0; z-index:60; height:var(--nav-h);
+  display:flex; align-items:center; border-bottom:1px solid transparent;
+  transition:background .4s var(--e2), border-color .4s var(--e2);
+}
+.nav.solid{
+  background:rgba(251,250,248,.85); backdrop-filter:blur(12px) saturate(1.3);
+  border-bottom-color:var(--line);
+}
+.nav-in,.nav-inner{
+  display:flex; align-items:center; width:100%;
+  max-width:var(--nav-wrap); margin:0 auto; padding-inline:var(--pad);
+  height:auto;
+}
+.nav-brand{
+  font-family:var(--mono); font-size:13.5px; font-weight:700;
+  text-decoration:none; color:var(--ink); flex-shrink:0;
+}
+.nav-brand i{ font-style:normal; color:var(--c1); }
+.nav-brand:hover{ text-decoration:none; color:var(--ink); }
+.nav-links{
+  margin-left:auto; display:flex; align-items:center; gap:26px;
+  overflow-x:auto; scrollbar-width:none;
+}
+.nav-links::-webkit-scrollbar{ display:none; }
+.nav-links a{
+  position:relative; font-size:13.5px; font-weight:500; text-decoration:none;
+  color:var(--ink-2); white-space:nowrap; transition:color .25s var(--e2);
+}
+.nav-links a::after{
+  content:""; position:absolute; left:0; right:0; bottom:-5px; height:1.5px;
+  background:currentColor; transform:scaleX(0); transform-origin:right;
+  transition:transform .4s var(--e);
+}
+.nav-links a:hover{ color:var(--ink); text-decoration:none; }
+.nav-links a:hover::after{ transform:scaleX(1); transform-origin:left; }
+.nav-links a.p1:hover{ color:var(--c1) } .nav-links a.p2:hover{ color:var(--c2) } .nav-links a.p3:hover{ color:var(--c3) }
+/* 현재 보고 있는 페이지 */
+.nav-links a.is-active{ color:var(--accent); }
+.nav-links a.is-active::after{ transform:scaleX(1); transform-origin:left; background:var(--accent); }
+.nav-sep{ width:1px; height:13px; background:var(--line-2); flex-shrink:0; }
+@media (max-width:860px){ .nav-links a.opt{ display:none; } }
+
+:root{ --wrap-wide:760px; --wrap:614px; }   /* 1460:1180 비율을 패널 폭에 맞춰 축소 */
+.nav{position:static !important} .nav-links a.opt{display:inline !important}
+.lab{font:600 12px/1 ui-monospace,monospace;color:#999;padding:24px 0 6px 24px}
+.edge{max-width:var(--nav-wrap);margin:0 auto;padding-inline:var(--pad)}
+.edge div{border-left:2px dashed #d9481f;border-right:2px dashed #d9481f;height:12px}
+body{margin:0;background:#fbfaf8}</style></head><body>
+<p class="lab">HOME</p><nav class="nav">
+  <div class="nav-in">
+    <a class="nav-brand" href="index.html">jinwoo<i>.</i>kim</a>
+    <div class="nav-links">
+      <a href="#work">프로젝트</a>
+      <a href="#about">이력</a>
+      <a href="stockops/index.html" class="opt p1">StockOps</a>
+      <a href="cnapp/index.html" class="opt p2">CNAPP</a>
+      <a href="personal/index.html" class="opt p3">Hybrid</a>
+    </div>
+  </div>
+</nav><div class="edge"><div></div></div>
+<p class="lab">DETAIL — StockOps (body.p1)</p><div class="p1"><nav class="nav">
+  <div class="nav-in">
+    <a class="nav-brand" href="index.html">jinwoo<i>.</i>kim</a>
+    <div class="nav-links">
+      <a href="index.html#work">프로젝트</a>
+      <a href="index.html#about">이력</a>
+      <a href="index.html" class="opt is-active" aria-current="page">StockOps</a>
+      <a href="cnapp/index.html" class="opt p2">CNAPP</a>
+      <a href="personal/index.html" class="opt p3">Hybrid</a>
+    </div>
+  </div>
+</nav><div class="edge"><div></div></div></div>
+<p class="lab">DETAIL — CNAPP (body.p2)</p><div class="p2"><nav class="nav">
+  <div class="nav-in">
+    <a class="nav-brand" href="index.html">jinwoo<i>.</i>kim</a>
+    <div class="nav-links">
+      <a href="index.html#work">프로젝트</a>
+      <a href="index.html#about">이력</a>
+      <a href="index.html" class="opt p1">StockOps</a>
+      <a href="cnapp/index.html" class="opt is-active" aria-current="page">CNAPP</a>
+      <a href="personal/index.html" class="opt p3">Hybrid</a>
+    </div>
+  </div>
+</nav><div class="edge"><div></div></div></div>
+</body></html>

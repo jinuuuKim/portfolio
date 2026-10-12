@@ -63,6 +63,10 @@ body{
   --radius:      6px;
   --wrap:        1180px;
   --nav-h:       62px;
+
+  /* 상단바 폭은 모든 페이지에서 같다. 페이지를 오갈 때 링크가 튀면 안 된다.
+     본문 폭(홈 1460 / 상세 1180)과는 무관하게 고정한다. */
+  --nav-wrap:    var(--wrap-wide);
 }
 body.p1{ --accent:var(--c1); }
 body.p2{ --accent:var(--c2); }
@@ -87,7 +91,7 @@ body.p3{ --accent:var(--c3); }
 }
 .nav-in,.nav-inner{
   display:flex; align-items:center; width:100%;
-  max-width:var(--wrap-wide); margin:0 auto; padding-inline:var(--pad);
+  max-width:var(--nav-wrap); margin:0 auto; padding-inline:var(--pad);
   height:auto;
 }
 .nav-brand{
