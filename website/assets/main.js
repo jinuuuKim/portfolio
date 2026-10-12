@@ -319,4 +319,16 @@
     toc.classList.add('is-visible');
   }
 
+
+  /* --- 6. 상단바 배경 전환 (전 페이지 공용) ------------------------------- */
+  // nav-solid: 맨 위에서는 투명, 조금만 내려가면 배경이 생긴다.
+  var navEl = document.getElementById('nav');
+  if (navEl) {
+    var onNavScroll = function () {
+      navEl.classList.toggle('solid', (window.scrollY || 0) > 40);
+    };
+    onNavScroll();
+    window.addEventListener('scroll', onNavScroll, { passive: true });
+  }
+
 })();

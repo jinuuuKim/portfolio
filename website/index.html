@@ -248,10 +248,6 @@
   requestAnimationFrame(start);                 /* 즉시 — 숨김이 남지 않게 */
   if (document.fonts && document.fonts.ready) { document.fonts.ready.then(start); }
 
-  var nav = document.getElementById('nav');
-  function onScroll(){ nav.classList.toggle('solid', (window.scrollY||0) > 40); }
-  onScroll(); window.addEventListener('scroll', onScroll, { passive:true });
-
   var items = document.querySelectorAll('.rv');
   if (!('IntersectionObserver' in window)) {
     Array.prototype.forEach.call(items, function(el){ el.classList.add('in'); }); return;
