@@ -1,0 +1,72 @@
+/* ==========================================================================
+   김진우 포트폴리오 — 공용 토큰 (v2)
+   팔레트·서체·이징을 여기 한 곳에서만 정의한다.
+   home.css(홈)와 style.css(프로젝트 상세)가 함께 읽는다.
+   ========================================================================== */
+
+:root{
+  --paper:    #fbfaf8;
+  --paper-2:  #f3f1ec;
+  --card:     #ffffff;
+  --ink:      #15171b;
+  --ink-2:    #4b505a;
+  --ink-3:    #8b9099;
+  --line:     #e4e1da;
+  --line-2:   #cfcbc2;
+
+  /* 같은 채도·온도대의 3색. 프로젝트마다 하나씩 배정해 「다채롭되 흩어지지 않게」 */
+  --c1: #d9481f;   /* 버밀리온 — 인프라 */
+  --c2: #0e6b61;   /* 딥 틸    — 보안 */
+  --c3: #a9761f;   /* 오커     — 네트워크 */
+  --accent: var(--c1);
+
+  --wrap-wide: 1460px;
+  --pad:  clamp(20px, 4.2vw, 64px);
+  --nav-h: 62px;
+
+  --sans: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont,
+          system-ui, "Segoe UI", Roboto, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Consolas, monospace;
+  /* 이력·기술 본문 전용 — 끝이 둥글고 가독성이 높다 */
+  --round: "Gowun Dodum", var(--sans);
+
+  --e:  cubic-bezier(.19,1,.22,1);
+  --e2: cubic-bezier(.33,.9,.28,1);
+}
+
+/* --- 구 토큰 이름 매핑 ------------------------------------------------------
+   style.css 1,200여 줄이 아래 이름으로 쓰여 있다. 이름을 유지한 채 값만 v2로
+   갈아끼워, 상세 페이지 마크업을 건드리지 않고 외형만 바꾼다.
+   --accent 는 페이지마다 바뀌므로 :root 가 아니라 body 에 둔다. -------------- */
+
+body{
+  --accent:      var(--c1);
+
+  --bg:          var(--paper);
+  --bg-alt:      var(--paper-2);
+  --text-2:      var(--ink-2);
+  --text-3:      var(--ink-3);
+  --line-soft:   var(--line-2);
+
+  /* 상세 히어로 — 네이비 색면이었다. v2에서는 페이지 색의 옅은 면으로 바꾼다 */
+  --ink-text:    var(--ink);
+  --ink-body:    var(--ink-2);
+  --ink-label:   var(--ink-3);
+  --ink-line:    var(--line-2);
+  --ink-accent:  var(--accent);
+
+  /* 성과 밴드 — 페이지 색으로 채운다 */
+  --band:        var(--accent);
+  --band-label:  rgba(255,255,255,.72);
+  --band-body:   rgba(255,255,255,.88);
+
+  --radius:      6px;
+  --wrap:        1180px;
+  --nav-h:       62px;
+}
+body.p1{ --accent:var(--c1); }
+body.p2{ --accent:var(--c2); }
+body.p3{ --accent:var(--c3); }
+
+/* --text 와 --ink 는 같은 값이라 :root 에서 한 번만 정의한다 */
+:root{ --text: #15171b; }

@@ -7,40 +7,8 @@
 
 /* --- 1. 토큰 (§3.1) -------------------------------------------------------- */
 
-:root{
-  /* 히어로 — 네이비 색면 */
-  --ink:        #0a2540;
-  --ink-line:   #1c3d5c;
-  --ink-text:   #e6edf3;
-  --ink-body:   #a9c1d9;
-  --ink-label:  #6f8aa6;
-  --ink-accent: #79c0ff;
+/* 토큰은 assets/tokens.css 로 이전했다 (v2). 이 파일은 상세 페이지 전용이다. */
 
-  /* 본문 — 흰 배경 */
-  --bg:         #ffffff;
-  --bg-alt:     #f6f9fd;
-  --text:       #18181b;
-  --text-2:     #4a5568;
-  --text-3:     #a1a1aa;
-  --line:       #e5e5e5;
-  --line-soft:  #d4dde8;
-
-  /* 파랑 밴드 — 성과 */
-  --band:       #0969da;
-  --band-label: #b8d9fb;
-  --band-body:  #cfe3fa;
-
-  --radius:     2px;
-
-  /* 레이아웃 */
-  --wrap:       960px;
-  --pad:        24px;
-  --nav-h:      52px;
-
-  --sans: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont,
-          system-ui, "Malgun Gothic", sans-serif;
-  --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Consolas, monospace;
-}
 
 /* --- 2. 리셋 --------------------------------------------------------------- */
 
@@ -156,9 +124,16 @@ strong{ font-weight:600; }
 /* --- 5. 히어로 (§3.5) ------------------------------------------------------ */
 
 .hero{
-  background:var(--ink);
+  position:relative;
+  background:color-mix(in srgb, var(--accent) 7%, var(--paper));
   color:var(--ink-text);
-  padding:48px 0 40px;
+  padding:56px 0 44px;
+  border-bottom:1px solid color-mix(in srgb, var(--accent) 22%, var(--paper));
+}
+/* 상단에 페이지 색 띠 — 홈 카드와 같은 신호 */
+.hero::before{ content:""; position:absolute; inset:0 0 auto 0; height:5px; background:var(--accent); }
+@supports not (background: color-mix(in srgb, red 7%, #fff)){
+  .hero{ background:var(--bg-alt); border-bottom-color:var(--line); }
 }
 .hero-cat{
   display:block;
@@ -769,7 +744,7 @@ figure.is-missing .ph{
 .lightbox{
   position:fixed; inset:0; z-index:100;
   display:none;
-  background:rgba(10,37,64,.92);
+  background:rgba(21,23,27,.94);
   padding:28px;
   overflow:auto;
 }
@@ -1104,12 +1079,12 @@ html.js .tabs:not(.is-ready) > [role="tabpanel"] ~ [role="tabpanel"]{ display:no
   align-items:center; justify-content:center;
   gap:12px;
   border:0;
-  background:rgba(10,37,64,.42);
+  background:rgba(21,23,27,.42);
   color:var(--ink-text);
   cursor:pointer;
   font-family:var(--sans);
 }
-.video-play:hover{ background:rgba(10,37,64,.24); }
+.video-play:hover{ background:rgba(21,23,27,.24); }
 .video-play .mark{
   width:62px; height:62px;
   border:2px solid rgba(255,255,255,.9);
