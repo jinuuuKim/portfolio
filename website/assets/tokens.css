@@ -91,11 +91,15 @@ body.p3{ --accent:var(--c3); }
 }
 .nav-in,.nav-inner{
   display:flex; align-items:center; width:100%;
-  max-width:var(--nav-wrap); margin:0 auto; padding-inline:var(--pad);
-  height:auto;
+  max-width:var(--nav-wrap); margin:0 auto; height:auto;
+  /* --pad 는 상세 페이지에서 좁은 화면일 때 18px 로 덮인다. nav 는 영향받지 않게 직접 쓴다 */
+  padding-inline:clamp(20px, 4.2vw, 64px);
 }
+/* 글자 폭이 페이지마다 달라지면 우측 정렬이 통째로 밀린다.
+   body 의 letter-spacing·font-size 상속을 받지 않도록 전부 고정한다. */
 .nav-brand{
-  font-family:var(--mono); font-size:13.5px; font-weight:700;
+  font-family:var(--mono); font-size:13.5px; font-weight:700; line-height:1;
+  letter-spacing:0; font-feature-settings:normal;
   text-decoration:none; color:var(--ink); flex-shrink:0;
 }
 .nav-brand i{ font-style:normal; color:var(--c1); }
@@ -106,7 +110,8 @@ body.p3{ --accent:var(--c3); }
 }
 .nav-links::-webkit-scrollbar{ display:none; }
 .nav-links a{
-  position:relative; font-size:13.5px; font-weight:500; text-decoration:none;
+  position:relative; font-family:var(--sans); font-size:13.5px; font-weight:500;
+  letter-spacing:-.006em; line-height:1; text-decoration:none;
   color:var(--ink-2); white-space:nowrap; transition:color .25s var(--e2);
 }
 .nav-links a::after{
@@ -122,3 +127,18 @@ body.p3{ --accent:var(--c3); }
 .nav-links a.is-active::after{ transform:scaleX(1); transform-origin:left; background:var(--accent); }
 .nav-sep{ width:1px; height:13px; background:var(--line-2); flex-shrink:0; }
 @media (max-width:860px){ .nav-links a.opt{ display:none; } }
+
+
+/* ==========================================================================
+   진입 모션 — 홈·상세 공용. 관찰은 main.js 가 한다.
+   ========================================================================== */
+.rv{ opacity:0; transform:translateY(16px);
+     transition:opacity .85s var(--e2), transform .85s var(--e2); }
+.rv.in{ opacity:1; transform:none; }
+.rv.s1{ transition-delay:.08s } .rv.s2{ transition-delay:.16s } .rv.s3{ transition-delay:.24s }
+
+/* JS 가 없으면 전부 보이게 */
+html:not(.js) .rv{ opacity:1 !important; transform:none !important; }
+@media (prefers-reduced-motion: reduce){
+  .rv{ opacity:1 !important; transform:none !important; transition:none !important; }
+}

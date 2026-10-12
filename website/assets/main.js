@@ -331,4 +331,45 @@
     window.addEventListener('scroll', onNavScroll, { passive: true });
   }
 
+
+  /* --- 7. 진입 모션 (전 페이지 공용) ------------------------------------- */
+  // reveal-shared: 상세 페이지에는 .rv 가 마크업에 없으므로 여기서 붙인다.
+  // 히어로는 요소별로 시차를 주고, 본문은 섹션 단위로 한 번에 올린다.
+  // (섹션 안 요소를 하나씩 올리면 읽는 흐름이 끊긴다)
+  var isDetail = /\bp[123]\b/.test(document.body.className);
+  if (isDetail) {
+    var heroBits = document.querySelectorAll(
+      '.hero-cat, .hero h1, .hero-lead, .hero-meta, .hero-links'
+    );
+    Array.prototype.forEach.call(heroBits, function (el, i) {
+      el.classList.add('rv');
+      if (i > 0 && i < 4) el.classList.add('s' + i);
+    });
+    Array.prototype.forEach.call(document.querySelectorAll('.section'), function (el) {
+      el.classList.add('rv');
+    });
+  }
+
+  var revealTargets = document.querySelectorAll('.rv');
+  if (!('IntersectionObserver' in window)) {
+    Array.prototype.forEach.call(revealTargets, function (el) { el.classList.add('in'); });
+  } else {
+    var revealIO = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) { e.target.classList.add('in'); revealIO.unobserve(e.target); }
+      });
+    }, { rootMargin: '0px 0px -10% 0px', threshold: 0.08 });
+    Array.prototype.forEach.call(revealTargets, function (el) { revealIO.observe(el); });
+  }
+
+  // 히어로는 화면 안에 이미 있으므로 즉시 올린다 (관찰 대기 없이)
+  if (isDetail) {
+    requestAnimationFrame(function () {
+      Array.prototype.forEach.call(
+        document.querySelectorAll('.hero .rv'),
+        function (el) { el.classList.add('in'); }
+      );
+    });
+  }
+
 })();

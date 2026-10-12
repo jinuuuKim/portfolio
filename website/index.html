@@ -248,14 +248,6 @@
   requestAnimationFrame(start);                 /* 즉시 — 숨김이 남지 않게 */
   if (document.fonts && document.fonts.ready) { document.fonts.ready.then(start); }
 
-  var items = document.querySelectorAll('.rv');
-  if (!('IntersectionObserver' in window)) {
-    Array.prototype.forEach.call(items, function(el){ el.classList.add('in'); }); return;
-  }
-  var io = new IntersectionObserver(function(es){
-    es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
-  }, { rootMargin:'0px 0px -10% 0px', threshold:.1 });
-  Array.prototype.forEach.call(items, function(el){ io.observe(el); });
 })();
 </script>
 
